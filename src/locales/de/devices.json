@@ -1,0 +1,118 @@
+{
+  "types": {
+    "switch": "Schalter",
+    "dimmer": "Dimmer",
+    "cct": "Wei\u00dftonlicht",
+    "rgb": "RGB-Licht",
+    "rgbw": "RGBW-Licht",
+    "cover": "Jalousie",
+    "sensor": "Sensor",
+    "energy": "Energiemonitor",
+    "input": "Eingang",
+    "unknown": "Unbekannt"
+  },
+  "controls": {
+    "on": "Ein",
+    "off": "Aus",
+    "channel": "Kanal {{n}}",
+    "brightness": "Helligkeit",
+    "colorTemperature": "Farbtemperatur",
+    "warm": "Warm",
+    "cool": "K\u00fchl",
+    "color": "Farbe",
+    "white": "Wei\u00df",
+    "colorBrightness": "Farbhelligkeit",
+    "open": "\u00d6ffnen",
+    "close": "Schlie\u00dfen",
+    "stop": "Stop",
+    "goToPosition": "Position anfahren",
+    "position": "Position",
+    "state": {
+      "open": "Offen",
+      "closed": "Geschlossen",
+      "opening": "\u00d6ffnet",
+      "closing": "Schlie\u00dft",
+      "stopped": "Gestoppt",
+      "calibrating": "Kalibrieren"
+    },
+    "input": {
+      "pressed": "Gedr\u00fcckt",
+      "released": "Losgelassen",
+      "closed": "Geschlossen",
+      "open": "Offen"
+    }
+  },
+  "power": {
+    "activePower": "Leistung",
+    "apparentPower": "Scheinleistung",
+    "voltage": "Spannung",
+    "current": "Strom",
+    "powerFactor": "Leistungsfaktor",
+    "frequency": "Frequenz",
+    "totalEnergy": "Gesamtenergie",
+    "returnedEnergy": "R\u00fcckgesp. Energie",
+    "phaseA": "Phase A",
+    "phaseB": "Phase B",
+    "total": "Gesamt"
+  },
+  "sensors": {
+    "temperature": "Temperatur",
+    "humidity": "Luftfeuchtigkeit",
+    "flood": "Wasser / \u00dcberschwemmung",
+    "floodDetected": "Wasser erkannt!",
+    "floodClear": "Trocken",
+    "smoke": "Rauch",
+    "smokeAlarm": "Rauchalarm!",
+    "smokeClear": "Klar",
+    "mute": "Stummschalten",
+    "illuminance": "Beleuchtungsst\u00e4rke",
+    "illuminanceLevel": {
+      "dark": "Dunkel",
+      "twilight": "D\u00e4mmerung",
+      "bright": "Hell"
+    },
+    "motion": "Bewegung",
+    "motionDetected": "Bewegung erkannt",
+    "motionClear": "Keine Bewegung",
+    "lastMotion": "Letzte Bewegung {{time}}",
+    "battery": "Akku",
+    "externalPower": "Externes Netzteil",
+    "voltage": "Spannung"
+  },
+  "info": {
+    "model": "Modell",
+    "firmware": "Firmware",
+    "ipAddress": "IP-Adresse",
+    "uptime": "Betriebszeit",
+    "lastSeen": "Zuletzt gesehen",
+    "generation": "Generation",
+    "channelName": "Kanalname"
+  },
+  "firmware": {
+    "checkForUpdate": "Nach Update suchen",
+    "updateAvailable": "Update verf\u00fcgbar: {{version}}",
+    "upToDate": "Aktuell",
+    "updateConfirm": "Auf {{version}} aktualisieren?",
+    "updating": "Aktualisiere\u2026",
+    "updateSuccess": "Ger\u00e4t erfolgreich aktualisiert.",
+    "updateFailed": "Update fehlgeschlagen. Bitte erneut versuchen."
+  },
+  "schedule": {
+    "title": "Zeitpläne",
+    "addSchedule": "Zeitplan hinzufügen",
+    "deleteSchedule": "Zeitplan löschen",
+    "noSchedules": "Keine Zeitpläne konfiguriert.",
+    "confirmDelete": "Diesen Zeitplan löschen?",
+    "time": "Uhrzeit",
+    "days": "Tage",
+    "action": "Aktion"
+  },
+  "dangerZone": {
+    "title": "Gefahrenbereich",
+    "reboot": "Ger\u00e4t neu starten",
+    "factoryReset": "Werkseinstellungen",
+    "factoryResetConfirm": "Alle Einstellungen werden gel\u00f6scht. Fortfahren?",
+    "rebooting": "Neustart\u2026",
+    "rebootSuccess": "Ger\u00e4t wird neu gestartet."
+  }
+}

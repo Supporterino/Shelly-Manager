@@ -1,0 +1,27 @@
+{
+  "title": "Discover Devices",
+  "methods": {
+    "mdns": "Auto-discover (mDNS)",
+    "scan": "Scan subnet",
+    "manual": "Add manually"
+  },
+  "steps": {
+    "chooseMethod": "Choose Method",
+    "searching": "Searching\u2026",
+    "review": "Review & Add"
+  },
+  "form": {
+    "ipAddress": "IP Address",
+    "port": "Port",
+    "deviceName": "Device Name (optional)",
+    "username": "Username",
+    "password": "Password",
+    "cidr": "IP Range (CIDR)",
+    "add": "Add Device",
+    "verify": "Verifying\u2026"
+  },
+  "found_one": "Found {{count}} device",
+  "found_other": "Found {{count}} devices",
+  "noDevicesFound": "No devices found. Try a different method.",
+  "addSelected": "Add Selected"
+}

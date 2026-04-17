@@ -1,0 +1,40 @@
+{
+  "appName": "Shelly Manager",
+  "actions": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen",
+    "delete": "Löschen",
+    "retry": "Wiederholen",
+    "close": "Schließen"
+  },
+  "status": {
+    "online": "Online",
+    "offline": "Offline",
+    "connecting": "Verbinde",
+    "error": "Fehler"
+  },
+  "errors": {
+    "networkUnreachable": "Gerät nicht erreichbar. Netzwerk prüfen.",
+    "noNetwork": "Keine Netzwerkverbindung. WLAN oder mobile Daten prüfen.",
+    "authFailed": "Authentifizierung fehlgeschlagen. Passwort prüfen.",
+    "unknown": "Ein unerwarteter Fehler ist aufgetreten."
+  },
+  "filter": {
+    "searchPlaceholder": "Nach Name oder IP suchen…",
+    "all": "Alle",
+    "online": "Online",
+    "offline": "Offline"
+  },
+  "sort": {
+    "label": "Sortieren",
+    "name": "Name",
+    "status": "Status",
+    "lastSeen": "Zuletzt gesehen"
+  },
+  "nav": {
+    "dashboard": "Geräte",
+    "discover": "Entdecken",
+    "settings": "Einstellungen"
+  }
+}

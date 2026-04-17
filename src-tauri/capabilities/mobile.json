@@ -1,0 +1,11 @@
+{
+  "$schema": "../gen/schemas/mobile-schema.json",
+  "identifier": "mobile-capability",
+  "platforms": ["iOS", "android"],
+  "windows": ["main"],
+  "permissions": [
+    { "identifier": "http:default", "allow": [{ "url": "http://*/*" }] },
+    "websocket:default",
+    "store:default"
+  ]
+}

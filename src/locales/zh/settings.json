@@ -1,0 +1,42 @@
+{
+  "title": "Settings",
+  "sections": {
+    "appearance": "Appearance",
+    "language": "Language",
+    "discovery": "Discovery",
+    "about": "About"
+  },
+  "theme": {
+    "label": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "temperatureUnit": {
+    "label": "Temperature Unit",
+    "celsius": "\u00b0C",
+    "fahrenheit": "\u00b0F"
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "de": "Deutsch",
+    "fr": "Fran\u00e7ais",
+    "es": "Espa\u00f1ol",
+    "zh": "\u4e2d\u6587",
+    "ja": "\u65e5\u672c\u8a9e"
+  },
+  "polling": {
+    "label": "Polling interval",
+    "seconds": "{{count}}s"
+  },
+  "discovery": {
+    "defaultCidr": "Default CIDR",
+    "defaultMethods": "Default methods"
+  },
+  "about": {
+    "version": "Version",
+    "tauriVersion": "Tauri version",
+    "license": "License"
+  }
+}

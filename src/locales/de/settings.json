@@ -1,0 +1,42 @@
+{
+  "title": "Einstellungen",
+  "sections": {
+    "appearance": "Erscheinungsbild",
+    "language": "Sprache",
+    "discovery": "Entdeckung",
+    "about": "\u00dcber"
+  },
+  "theme": {
+    "label": "Design",
+    "light": "Hell",
+    "dark": "Dunkel",
+    "system": "System"
+  },
+  "temperatureUnit": {
+    "label": "Temperatureinheit",
+    "celsius": "\u00b0C",
+    "fahrenheit": "\u00b0F"
+  },
+  "language": {
+    "label": "Sprache",
+    "en": "English",
+    "de": "Deutsch",
+    "fr": "Fran\u00e7ais",
+    "es": "Espa\u00f1ol",
+    "zh": "\u4e2d\u6587",
+    "ja": "\u65e5\u672c\u8a9e"
+  },
+  "polling": {
+    "label": "Abfrageintervall",
+    "seconds": "{{count}}s"
+  },
+  "discovery": {
+    "defaultCidr": "Standard-CIDR",
+    "defaultMethods": "Standardmethoden"
+  },
+  "about": {
+    "version": "Version",
+    "tauriVersion": "Tauri-Version",
+    "license": "Lizenz"
+  }
+}

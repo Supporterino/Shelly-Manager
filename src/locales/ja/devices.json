@@ -1,0 +1,118 @@
+{
+  "types": {
+    "switch": "Switch",
+    "dimmer": "Dimmer",
+    "cct": "Tunable White",
+    "rgb": "RGB Light",
+    "rgbw": "RGBW Light",
+    "cover": "Cover / Blind",
+    "sensor": "Sensor",
+    "energy": "Energy Monitor",
+    "input": "Input",
+    "unknown": "Unknown"
+  },
+  "controls": {
+    "on": "On",
+    "off": "Off",
+    "channel": "Channel {{n}}",
+    "brightness": "Brightness",
+    "colorTemperature": "Colour Temperature",
+    "warm": "Warm",
+    "cool": "Cool",
+    "color": "Colour",
+    "white": "White",
+    "colorBrightness": "Colour Brightness",
+    "open": "Open",
+    "close": "Close",
+    "stop": "Stop",
+    "goToPosition": "Go to Position",
+    "position": "Position",
+    "state": {
+      "open": "Open",
+      "closed": "Closed",
+      "opening": "Opening",
+      "closing": "Closing",
+      "stopped": "Stopped",
+      "calibrating": "Calibrating"
+    },
+    "input": {
+      "pressed": "Pressed",
+      "released": "Released",
+      "closed": "Closed",
+      "open": "Open"
+    }
+  },
+  "power": {
+    "activePower": "Power",
+    "apparentPower": "Apparent Power",
+    "voltage": "Voltage",
+    "current": "Current",
+    "powerFactor": "Power Factor",
+    "frequency": "Frequency",
+    "totalEnergy": "Total Energy",
+    "returnedEnergy": "Returned Energy",
+    "phaseA": "Phase A",
+    "phaseB": "Phase B",
+    "total": "Total"
+  },
+  "sensors": {
+    "temperature": "Temperature",
+    "humidity": "Humidity",
+    "flood": "Water / Flood",
+    "floodDetected": "Water detected!",
+    "floodClear": "Dry",
+    "smoke": "Smoke",
+    "smokeAlarm": "Smoke alarm!",
+    "smokeClear": "Clear",
+    "mute": "Mute",
+    "illuminance": "Illuminance",
+    "illuminanceLevel": {
+      "dark": "Dark",
+      "twilight": "Twilight",
+      "bright": "Bright"
+    },
+    "motion": "Motion",
+    "motionDetected": "Motion detected",
+    "motionClear": "No motion",
+    "lastMotion": "Last motion {{time}}",
+    "battery": "Battery",
+    "externalPower": "External Power",
+    "voltage": "Voltage"
+  },
+  "info": {
+    "model": "Model",
+    "firmware": "Firmware",
+    "ipAddress": "IP Address",
+    "uptime": "Uptime",
+    "lastSeen": "Last seen",
+    "generation": "Generation",
+    "channelName": "Channel Name"
+  },
+  "firmware": {
+    "checkForUpdate": "Check for Update",
+    "updateAvailable": "Update available: {{version}}",
+    "upToDate": "Up to date",
+    "updateConfirm": "Update to {{version}}?",
+    "updating": "Updating\u2026",
+    "updateSuccess": "Device updated successfully.",
+    "updateFailed": "Update failed. Please try again."
+  },
+  "schedule": {
+    "title": "Schedules",
+    "addSchedule": "Add Schedule",
+    "deleteSchedule": "Delete Schedule",
+    "noSchedules": "No schedules configured.",
+    "confirmDelete": "Delete this schedule?",
+    "time": "時間",
+    "days": "曜日",
+    "action": "アクション"
+  },
+  "dangerZone": {
+    "title": "Danger Zone",
+    "reboot": "Reboot Device",
+    "factoryReset": "Factory Reset",
+    "factoryResetConfirm": "This will erase all settings on the device. Continue?",
+    "rebooting": "Rebooting\u2026",
+    "rebootSuccess": "Device is restarting."
+  }
+}

@@ -1,0 +1,10 @@
+/* Safe area insets for notched iOS devices and Android gesture navigation */
+:root {
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Bottom nav accounts for home indicator / gesture bar on mobile */
+.bottom-nav {
+  padding-bottom: var(--safe-area-bottom);
+}

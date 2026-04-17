@@ -1,0 +1,137 @@
+import { createFileRoute, Link } from '@tanstack/react-router'
+import {
+  Button,
+  Center,
+  Chip,
+  Group,
+  Select,
+  Stack,
+  Text,
+  TextInput,
+  Title,
+} from '@mantine/core'
+import { IconPlus, IconSearch } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
+import { useMemo, useState } from 'react'
+import { useDeviceStore } from '../store/deviceStore'
+import { useAppStore } from '../store/appStore'
+import { useWsStatusStore } from '../store/wsStatusStore'
+import { DeviceGrid } from '../components/devices/DeviceGrid'
+import type { StoredDevice } from '../types/device'
+
+export const Route = createFileRoute('/')({
+  component: DashboardPage,
+})
+
+type StatusFilter = 'all' | 'online' | 'offline'
+type SortKey = 'name' | 'status' | 'lastSeen'
+
+function DashboardPage() {
+  const { t } = useTranslation('common')
+  const { t: td } = useTranslation('discovery')
+  const devicesRecord = useDeviceStore((s) => s.devices)
+  const devices = useMemo(() => Object.values(devicesRecord), [devicesRecord])
+  const locale = useAppStore((s) => s.preferences.locale || 'en')
+  const wsConnected = useWsStatusStore((s) => s.connected)
+
+  const [search, setSearch] = useState('')
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
+  const [sortKey, setSortKey] = useState<SortKey>('name')
+
+  const filtered = useMemo(() => {
+    let result = devices as StoredDevice[]
+
+    // Search by name or IP
+    if (search.trim()) {
+      const q = search.trim().toLowerCase()
+      result = result.filter(
+        (d) => d.name.toLowerCase().includes(q) || d.ip.includes(q)
+      )
+    }
+
+    // Status filter
+    if (statusFilter !== 'all') {
+      result = result.filter((d) => {
+        const isOnline = wsConnected[d.id] === true
+        return statusFilter === 'online' ? isOnline : !isOnline
+      })
+    }
+
+    // Sort
+    result = [...result].sort((a, b) => {
+      if (sortKey === 'name') return a.name.localeCompare(b.name)
+      if (sortKey === 'lastSeen') return b.lastSeenAt - a.lastSeenAt
+      if (sortKey === 'status') {
+        const aOn = wsConnected[a.id] === true ? 1 : 0
+        const bOn = wsConnected[b.id] === true ? 1 : 0
+        return bOn - aOn
+      }
+      return 0
+    })
+
+    return result
+  }, [devices, search, statusFilter, sortKey, wsConnected])
+
+  if (devices.length === 0) {
+    return (
+      <Center h="60vh">
+        <Stack align="center" gap="md">
+          <Title order={3} c="dimmed">{t('appName')}</Title>
+          <Text c="dimmed">{td('noDevicesFound')}</Text>
+          <Button component={Link} to="/discover" leftSection={<IconPlus size={16} />}>
+            {td('addSelected')}
+          </Button>
+        </Stack>
+      </Center>
+    )
+  }
+
+  return (
+    <Stack gap="md">
+      {/* Header */}
+      <Group justify="space-between" align="center">
+        <Title order={2}>{t('appName')}</Title>
+        <Button component={Link} to="/discover" leftSection={<IconPlus size={16} />} variant="light">
+          {td('addSelected')}
+        </Button>
+      </Group>
+
+      {/* Filter / sort toolbar */}
+      <Group gap="sm" wrap="wrap">
+        <TextInput
+          placeholder={t('filter.searchPlaceholder')}
+          leftSection={<IconSearch size={14} />}
+          value={search}
+          onChange={(e) => setSearch(e.currentTarget.value)}
+          size="sm"
+          style={{ flex: 1, minWidth: 180 }}
+        />
+        <Chip.Group
+          value={statusFilter}
+          onChange={(v) => setStatusFilter((v as StatusFilter) || 'all')}
+        >
+          <Group gap="xs">
+            <Chip value="all" size="sm">{t('filter.all')}</Chip>
+            <Chip value="online" size="sm">{t('filter.online')}</Chip>
+            <Chip value="offline" size="sm">{t('filter.offline')}</Chip>
+          </Group>
+        </Chip.Group>
+        <Select
+          data={[
+            { value: 'name', label: t('sort.name') },
+            { value: 'status', label: t('sort.status') },
+            { value: 'lastSeen', label: t('sort.lastSeen') },
+          ]}
+          value={sortKey}
+          onChange={(v) => setSortKey((v as SortKey) ?? 'name')}
+          allowDeselect={false}
+          size="sm"
+          w={130}
+          label={t('sort.label')}
+        />
+      </Group>
+
+      <DeviceGrid devices={filtered} locale={locale} />
+    </Stack>
+  )
+}

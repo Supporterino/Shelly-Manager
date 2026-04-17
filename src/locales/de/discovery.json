@@ -1,0 +1,27 @@
+{
+  "title": "Ger\u00e4te entdecken",
+  "methods": {
+    "mdns": "Automatisch (mDNS)",
+    "scan": "Subnetz scannen",
+    "manual": "Manuell hinzuf\u00fcgen"
+  },
+  "steps": {
+    "chooseMethod": "Methode w\u00e4hlen",
+    "searching": "Suche\u2026",
+    "review": "\u00dcberpr\u00fcfen & Hinzuf\u00fcgen"
+  },
+  "form": {
+    "ipAddress": "IP-Adresse",
+    "port": "Port",
+    "deviceName": "Ger\u00e4tename (optional)",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "cidr": "IP-Bereich (CIDR)",
+    "add": "Ger\u00e4t hinzuf\u00fcgen",
+    "verify": "Pr\u00fcfe\u2026"
+  },
+  "found_one": "{{count}} Ger\u00e4t gefunden",
+  "found_other": "{{count}} Ger\u00e4te gefunden",
+  "noDevicesFound": "Keine Ger\u00e4te gefunden. Andere Methode versuchen.",
+  "addSelected": "Ausgew\u00e4hlte hinzuf\u00fcgen"
+}

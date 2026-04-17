@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!--
+        Shelly devices are accessed by raw LAN IP address (e.g. 192.168.1.42) over
+        plain HTTP. Android 9+ blocks cleartext traffic by default, and the
+        <domain> element only accepts hostnames — not CIDR ranges or bare IPs.
+
+        Using base-config with cleartextTrafficPermitted="true" allows cleartext
+        connections from this app only (not system-wide). This is appropriate for
+        a local-network device manager that never communicates with the internet
+        over cleartext.
+    -->
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>
