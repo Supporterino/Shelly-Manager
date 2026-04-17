@@ -11,16 +11,12 @@
       <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="0.18"/>
       <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
     </linearGradient>
-
-    <clipPath id="bgClip">
-      <rect width="1024" height="1024" rx="220" ry="220"/>
-    </clipPath>
   </defs>
 
   <!-- ── Background ─────────────────────────────────────── -->
-  <rect width="1024" height="1024" rx="220" ry="220" fill="url(#bgGrad)"/>
-  <rect width="1024" height="560" rx="220" ry="220"
-        fill="url(#shineGrad)" clip-path="url(#bgClip)"/>
+  <!-- No rx/ry: the full square must be opaque — Apple/Google clip the shape themselves -->
+  <rect width="1024" height="1024" fill="url(#bgGrad)"/>
+  <rect width="1024" height="560" fill="url(#shineGrad)"/>
 
   <!-- ── WiFi arcs (centred at 512, 620) ───────────────── -->
   <!--
