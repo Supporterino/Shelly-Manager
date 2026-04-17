@@ -40,7 +40,6 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<!-- Required for LAN device access on iOS 14+ -->
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Shelly Manager needs access to your local network to discover and control Shelly smart devices.</string>
 	<key>NSBonjourServices</key>

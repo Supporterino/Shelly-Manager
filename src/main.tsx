@@ -36,7 +36,7 @@ const queryClient = new QueryClient({
 })
 
 const theme = createTheme({
-  primaryColor: 'orange',
+  primaryColor: 'blue',
   defaultRadius: 'md',
 })
 

@@ -24,7 +24,7 @@ export function InputDisplay({ deviceId: _deviceId, componentId, status, device 
     ? t('controls.input.released')
     : '—'
 
-  const stateColor = input?.state === true ? 'orange' : 'gray'
+  const stateColor = input?.state === true ? 'blue' : 'gray'
 
   return (
     <Stack gap="xs">

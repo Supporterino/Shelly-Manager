@@ -51,10 +51,10 @@ describe('BottomNav', () => {
   it('highlights the Devices tab when pathname is /', () => {
     mockRouterState.mockReturnValue({ location: { pathname: '/' } })
     renderWithProviders(<BottomNav />)
-    // The active label gets c="orange"; inactive ones get c="dimmed".
+    // The active label gets c="blue"; inactive ones get c="dimmed".
     // Mantine renders c prop as data-c attribute on Text component.
     const devicesLabel = screen.getByText('Devices')
-    // Active: c="orange" → not "dimmed"
+    // Active: c="blue" → not "dimmed"
     expect(devicesLabel).not.toHaveAttribute('data-c', 'dimmed')
   })
 
@@ -64,7 +64,7 @@ describe('BottomNav', () => {
     const devicesLabel = screen.getByText('Devices')
     const discoverLabel = screen.getByText('Discover')
     // Only Discover should be active
-    expect(devicesLabel).not.toHaveAttribute('data-c', 'orange')
+    expect(devicesLabel).not.toHaveAttribute('data-c', 'blue')
     expect(discoverLabel).not.toHaveAttribute('data-c', 'dimmed')
   })
 

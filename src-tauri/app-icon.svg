@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <!-- Radial gradient: bright Mantine blue centre → deep navy edge -->
+    <radialGradient id="bgGrad" cx="50%" cy="45%" r="60%">
+      <stop offset="0%"   stop-color="#339af0"/>
+      <stop offset="100%" stop-color="#1864ab"/>
+    </radialGradient>
+
+    <!-- Subtle top-gloss shine -->
+    <linearGradient id="shineGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+
+    <clipPath id="bgClip">
+      <rect width="1024" height="1024" rx="220" ry="220"/>
+    </clipPath>
+  </defs>
+
+  <!-- ── Background ─────────────────────────────────────── -->
+  <rect width="1024" height="1024" rx="220" ry="220" fill="url(#bgGrad)"/>
+  <rect width="1024" height="560" rx="220" ry="220"
+        fill="url(#shineGrad)" clip-path="url(#bgClip)"/>
+
+  <!-- ── WiFi arcs (centred at 512, 620) ───────────────── -->
+  <!--
+    Arc radii: 390 / 260 / 130  (each 130 px apart)
+    All arcs span ±65° around the top (–90° SVG = 12-o'clock).
+    Computed endpoints for each arc using r·cos(65°) and r·sin(65°):
+      r=390: x±165, y±354  → (347,266) and (677,266)   centre y=620-354=266 ✓
+      r=260: x±110, y±236  → (402,384) and (622,384)
+      r=130: x± 55, y±118  → (457,502) and (567,502)
+  -->
+
+  <!-- Outermost arc -->
+  <path d="M 347,266 A 390,390 0 0 1 677,266"
+        fill="none" stroke="white" stroke-width="72" stroke-linecap="round"/>
+
+  <!-- Middle arc -->
+  <path d="M 402,384 A 260,260 0 0 1 622,384"
+        fill="none" stroke="white" stroke-width="72" stroke-linecap="round"/>
+
+  <!-- Inner arc -->
+  <path d="M 457,502 A 130,130 0 0 1 567,502"
+        fill="none" stroke="white" stroke-width="72" stroke-linecap="round"/>
+
+  <!-- Dot -->
+  <circle cx="512" cy="756" r="62" fill="white"/>
+</svg>

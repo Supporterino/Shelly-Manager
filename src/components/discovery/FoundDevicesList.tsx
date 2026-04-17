@@ -78,7 +78,7 @@ export function FoundDevicesList({ devices, onAdd }: FoundDevicesListProps) {
             onChange={() => toggle(device.id)}
             label={
               <Group gap="sm" wrap="nowrap">
-                <ThemeIcon size="sm" variant="light" color="orange">
+                <ThemeIcon size="sm" variant="light" color="blue">
                   <Icon size={12} />
                 </ThemeIcon>
                 <Stack gap={0}>
@@ -101,7 +101,7 @@ export function FoundDevicesList({ devices, onAdd }: FoundDevicesListProps) {
       })}
 
       <Button
-        color="orange"
+        color="blue"
         onClick={handleAdd}
         disabled={selected.size === 0}
         mt="xs"

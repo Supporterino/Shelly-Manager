@@ -41,7 +41,7 @@ export function DiscoveryProgress({ status, progress, found }: DiscoveryProgress
           const Icon = SOURCE_ICON[host.source]
           return (
             <Group key={`${host.ip}-${i}`} gap="sm">
-              <ThemeIcon size="sm" variant="light" color="orange">
+              <ThemeIcon size="sm" variant="light" color="blue">
                 <Icon size={12} />
               </ThemeIcon>
               <Text size="sm" ff="monospace">
@@ -52,7 +52,7 @@ export function DiscoveryProgress({ status, progress, found }: DiscoveryProgress
                   {host.hostname}
                 </Text>
               )}
-              <Badge size="xs" variant="outline" color="orange">
+              <Badge size="xs" variant="outline" color="blue">
                 {host.source}
               </Badge>
             </Group>

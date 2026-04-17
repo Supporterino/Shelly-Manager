@@ -9,7 +9,7 @@ const stateColor: Record<string, string> = {
   open: 'green',
   closed: 'gray',
   opening: 'blue',
-  closing: 'orange',
+  closing: 'yellow',
   stopped: 'yellow',
   calibrating: 'violet',
 }

@@ -79,7 +79,7 @@ function DiscoverPage() {
       <Stack gap="lg">
         <Title order={2}>{t('title')}</Title>
 
-        <Stepper active={step} color="orange" allowNextStepsSelect={false}>
+        <Stepper active={step} color="blue" allowNextStepsSelect={false}>
           <Stepper.Step
             label={t('steps.chooseMethod')}
             loading={false}
@@ -94,7 +94,7 @@ function DiscoverPage() {
               />
               <Group justify="flex-end" mt="sm">
                 <Button
-                  color="orange"
+                  color="blue"
                   onClick={handleStartDiscovery}
                   disabled={
                     methods.filter((m) => m !== 'manual').length === 0 &&
@@ -129,7 +129,7 @@ function DiscoverPage() {
                   {tc('actions.cancel')}
                 </Button>
                 {status === 'done' || status === 'error' ? (
-                  <Button color="orange" onClick={() => setStep(2)}>
+                  <Button color="blue" onClick={() => setStep(2)}>
                     {t('steps.review')}
                   </Button>
                 ) : null}

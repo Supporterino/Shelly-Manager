@@ -32,7 +32,7 @@ function SingleSwitchInline({ deviceId, switchId, status }: {
   return (
     <ActionIcon
       variant={on ? 'filled' : 'light'}
-      color={on ? 'orange' : 'gray'}
+      color={on ? 'blue' : 'gray'}
       size="lg"
       onClick={() => mutation.mutate({ on: !on })}
       loading={mutation.isPending}

@@ -33,9 +33,9 @@ export function BottomNav() {
             <Icon
               size={22}
               stroke={1.5}
-              color={pathname === to ? 'var(--mantine-color-orange-6)' : undefined}
+              color={pathname === to ? 'var(--mantine-color-blue-6)' : undefined}
             />
-            <Text size="xs" c={pathname === to ? 'orange' : 'dimmed'}>
+            <Text size="xs" c={pathname === to ? 'blue' : 'dimmed'}>
               {label}
             </Text>
           </Stack>

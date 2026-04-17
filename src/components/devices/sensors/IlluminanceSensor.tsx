@@ -15,7 +15,7 @@ interface Props {
 const levelColor: Record<string, string> = {
   dark: 'gray',
   twilight: 'yellow',
-  bright: 'orange',
+  bright: 'yellow',
 }
 
 export function IlluminanceSensor({ componentId: _c, status, device: _d }: Props) {

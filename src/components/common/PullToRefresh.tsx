@@ -84,7 +84,7 @@ export function PullToRefresh({ onRefresh, children, disabled = false }: Props) 
           zIndex: 10,
         }}
       >
-        <Loader size="sm" color="orange" />
+        <Loader size="sm" color="blue" />
       </Stack>
 
       {/* Content */}

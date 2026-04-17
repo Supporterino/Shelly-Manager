@@ -105,7 +105,7 @@ export function ManualAddForm({ onDeviceFound }: ManualAddFormProps) {
         <Group justify="flex-end">
           <Button
             type="submit"
-            color="orange"
+            color="blue"
             disabled={verifying || !ip.trim()}
             leftSection={verifying ? <Loader size={14} /> : undefined}
           >

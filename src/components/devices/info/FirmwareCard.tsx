@@ -78,7 +78,7 @@ export function FirmwareCard({ device, currentVersion }: Props) {
         </Group>
 
         {newVersion && (
-          <Text size="xs" c="orange">
+          <Text size="xs" c="blue">
             {t('firmware.updateAvailable', { version: newVersion })}
           </Text>
         )}
@@ -104,7 +104,7 @@ export function FirmwareCard({ device, currentVersion }: Props) {
           {newVersion && (
             <Button
               size="xs"
-              color="orange"
+              color="blue"
               disabled={busy}
               onClick={() => setConfirmOpen(true)}
             >
@@ -121,7 +121,7 @@ export function FirmwareCard({ device, currentVersion }: Props) {
         title={t('firmware.checkForUpdate')}
         message={t('firmware.updateConfirm', { version: newVersion ?? '' })}
         confirmLabel={t('firmware.updating')}
-        confirmColor="orange"
+        confirmColor="blue"
         loading={busy}
       />
     </Card>

@@ -184,7 +184,7 @@ function DeviceSettingsPage() {
           <Text fw={600} c="red">{t('dangerZone.title')}</Text>
           <Group gap="xs">
             <Button
-              color="orange"
+              color="yellow"
               variant="light"
               size="sm"
               onClick={() => setRebootConfirm(true)}
@@ -218,7 +218,7 @@ function DeviceSettingsPage() {
         onConfirm={() => rebootMutation.mutate()}
         title={t('dangerZone.reboot')}
         message={t('dangerZone.rebooting')}
-        confirmColor="orange"
+        confirmColor="yellow"
         loading={rebootMutation.isPending}
       />
       <ConfirmModal

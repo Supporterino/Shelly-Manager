@@ -31,7 +31,7 @@ export function MotionSensor({ componentId: _c, status, device: _d }: Props) {
       value={
         <Group gap="xs" align="center">
           <Badge
-            color={ms?.motion ? 'orange' : 'gray'}
+            color={ms?.motion ? 'blue' : 'gray'}
             variant={ms?.motion ? 'filled' : 'light'}
             style={ms?.motion ? { animation: 'pulse 1s infinite' } : undefined}
           >

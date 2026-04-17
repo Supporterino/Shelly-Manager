@@ -120,7 +120,7 @@ export function AddScheduleForm({ device, onAdded, onCancel }: Props) {
         </Button>
         <Button
           size="xs"
-          color="orange"
+          color="blue"
           loading={mutation.isPending}
           onClick={() => mutation.mutate()}
           disabled={days.length === 0}
