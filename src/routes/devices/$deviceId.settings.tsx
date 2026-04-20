@@ -1,10 +1,12 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import {
+  ActionIcon,
   Button,
   Divider,
   Group,
   PasswordInput,
   ScrollArea,
+  SimpleGrid,
   Stack,
   Text,
   TextInput,
@@ -14,6 +16,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { notifications } from '@mantine/notifications'
 import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
+import { IconArrowLeft } from '@tabler/icons-react'
 import { useDeviceStore } from '../../store/deviceStore'
 import { ShellyClient } from '../../services/shellyClient'
 import { FirmwareCard } from '../../components/devices/info/FirmwareCard'
@@ -95,7 +98,14 @@ function DeviceSettingsPage() {
   return (
     <ScrollArea h="100%">
       <Stack gap="md" p="md">
-        <Title order={3}>{device.name}</Title>
+        <Group gap="xs" align="center" wrap="nowrap">
+          <Link to="/devices/$deviceId" params={{ deviceId }}>
+            <ActionIcon variant="subtle" size="lg" aria-label={tc('actions.back')}>
+              <IconArrowLeft size={18} />
+            </ActionIcon>
+          </Link>
+          <Title order={3}>{device.name}</Title>
+        </Group>
 
         {/* Name */}
         <Stack gap="xs">
@@ -182,11 +192,12 @@ function DeviceSettingsPage() {
         {/* Danger zone */}
         <Stack gap="xs">
           <Text fw={600} c="red">{t('dangerZone.title')}</Text>
-          <Group gap="xs">
+          <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="xs">
             <Button
               color="yellow"
               variant="light"
               size="sm"
+              fullWidth
               onClick={() => setRebootConfirm(true)}
             >
               {t('dangerZone.reboot')}
@@ -195,6 +206,7 @@ function DeviceSettingsPage() {
               color="red"
               variant="light"
               size="sm"
+              fullWidth
               onClick={() => setResetConfirm(true)}
             >
               {t('dangerZone.factoryReset')}
@@ -203,11 +215,12 @@ function DeviceSettingsPage() {
               color="red"
               variant="subtle"
               size="sm"
+              fullWidth
               onClick={() => setRemoveConfirm(true)}
             >
               {tc('actions.delete')}
             </Button>
-          </Group>
+          </SimpleGrid>
         </Stack>
       </Stack>
 

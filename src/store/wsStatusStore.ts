@@ -4,13 +4,16 @@ import { subscribeWithSelector } from 'zustand/middleware'
 interface WsStatusStore {
   /** deviceId → full or partial component statuses */
   statuses: Record<string, Record<string, unknown>>
-  /** deviceId → connection state */
+  /** deviceId → WebSocket connection state */
   connected: Record<string, boolean>
+  /** deviceId → HTTP poll reachability (independent of WS) */
+  httpConnected: Record<string, boolean>
   updateStatus: (
     deviceId: string,
     delta: Record<string, unknown>
   ) => void
   setConnected: (deviceId: string, value: boolean) => void
+  setHttpConnected: (deviceId: string, value: boolean) => void
   clearDevice: (deviceId: string) => void
 }
 
@@ -43,6 +46,7 @@ export const useWsStatusStore = create<WsStatusStore>()(
   subscribeWithSelector((set) => ({
     statuses: {},
     connected: {},
+    httpConnected: {},
 
     updateStatus: (deviceId, delta) => {
       set((state) => {
@@ -62,11 +66,18 @@ export const useWsStatusStore = create<WsStatusStore>()(
       }))
     },
 
+    setHttpConnected: (deviceId, value) => {
+      set((state) => ({
+        httpConnected: { ...state.httpConnected, [deviceId]: value },
+      }))
+    },
+
     clearDevice: (deviceId) => {
       set((state) => {
         const { [deviceId]: _s, ...statuses } = state.statuses
         const { [deviceId]: _c, ...connected } = state.connected
-        return { statuses, connected }
+        const { [deviceId]: _h, ...httpConnected } = state.httpConnected
+        return { statuses, connected, httpConnected }
       })
     },
   }))

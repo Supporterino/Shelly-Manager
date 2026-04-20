@@ -7,7 +7,8 @@
     "delete": "Löschen",
     "retry": "Wiederholen",
     "close": "Schließen",
-    "refresh": "Aktualisieren"
+    "refresh": "Aktualisieren",
+    "back": "Zur\u00fcck"
   },
   "status": {
     "online": "Online",

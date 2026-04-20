@@ -93,6 +93,7 @@
     "updateAvailable": "Update available: {{version}}",
     "upToDate": "Up to date",
     "updateConfirm": "Update to {{version}}?",
+    "updateNow": "\u4eca\u3059\u3050\u66f4\u65b0",
     "updating": "Updating\u2026",
     "updateSuccess": "Device updated successfully.",
     "updateFailed": "Update failed. Please try again."

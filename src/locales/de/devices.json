@@ -93,6 +93,7 @@
     "updateAvailable": "Update verf\u00fcgbar: {{version}}",
     "upToDate": "Aktuell",
     "updateConfirm": "Auf {{version}} aktualisieren?",
+    "updateNow": "Jetzt aktualisieren",
     "updating": "Aktualisiere\u2026",
     "updateSuccess": "Ger\u00e4t erfolgreich aktualisiert.",
     "updateFailed": "Update fehlgeschlagen. Bitte erneut versuchen."

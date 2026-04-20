@@ -1,4 +1,4 @@
-import { Badge, Button, Card, Group, Loader, Stack, Text } from '@mantine/core'
+import { Badge, Button, Card, Group, Loader, Progress, Stack, Text } from '@mantine/core'
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { notifications } from '@mantine/notifications'
@@ -20,9 +20,21 @@ interface Props {
 // Exponential backoff delays in ms — total ~68 s max wait
 const POLL_DELAYS_MS = [3000, 5000, 8000, 10000, 12000, 15000, 15000]
 
-async function pollUntilOnline(ip: string, port: number): Promise<boolean> {
-  for (const delay of POLL_DELAYS_MS) {
-    await new Promise<void>((resolve) => setTimeout(resolve, delay))
+// Cumulative elapsed time at the end of each step (ms)
+const CUMULATIVE_MS = POLL_DELAYS_MS.reduce<number[]>(
+  (acc, d) => [...acc, (acc.at(-1) ?? 0) + d],
+  [],
+)
+const TOTAL_MS = CUMULATIVE_MS.at(-1)!
+
+async function pollUntilOnline(
+  ip: string,
+  port: number,
+  onStep?: (step: number) => void,
+): Promise<boolean> {
+  for (let i = 0; i < POLL_DELAYS_MS.length; i++) {
+    await new Promise<void>((resolve) => setTimeout(resolve, POLL_DELAYS_MS[i]))
+    onStep?.(i + 1)
     const result = await verifyShellyHost(ip, port)
     if (result) return true
   }
@@ -34,6 +46,7 @@ export function FirmwareCard({ device, currentVersion }: Props) {
   const [updateInfo, setUpdateInfo] = useState<FirmwareInfo | null>(null)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [isPolling, setIsPolling] = useState(false)
+  const [pollStep, setPollStep] = useState(0)
 
   const checkMutation = useMutation({
     mutationFn: () => new ShellyClient(device).checkForUpdate(),
@@ -52,8 +65,9 @@ export function FirmwareCard({ device, currentVersion }: Props) {
       await new ShellyClient(device).triggerUpdate('stable')
       setConfirmOpen(false)
       setIsPolling(true)
-      const online = await pollUntilOnline(device.ip, device.port)
+      const online = await pollUntilOnline(device.ip, device.port, setPollStep)
       setIsPolling(false)
+      setPollStep(0)
       if (!online) throw new Error(t('firmware.updateFailed'))
     },
     onSuccess: () => {
@@ -62,12 +76,16 @@ export function FirmwareCard({ device, currentVersion }: Props) {
     },
     onError: (err: Error) => {
       setIsPolling(false)
+      setPollStep(0)
       notifications.show({ color: 'red', message: err.message })
     },
   })
 
   const newVersion = updateInfo?.stable?.version
   const busy = isPolling || updateMutation.isPending
+
+  // Progress 0–100 based on which poll step has completed
+  const progressValue = pollStep === 0 ? 0 : (CUMULATIVE_MS[pollStep - 1] / TOTAL_MS) * 100
 
   return (
     <Card withBorder radius="md" p="sm">
@@ -83,11 +101,14 @@ export function FirmwareCard({ device, currentVersion }: Props) {
           </Text>
         )}
 
-        {isPolling && (
-          <Group gap="xs">
-            <Loader size="xs" />
-            <Text size="xs" c="dimmed">{t('firmware.updating')}</Text>
-          </Group>
+        {busy && (
+          <Stack gap={4}>
+            <Group gap="xs">
+              <Loader size="xs" />
+              <Text size="xs" c="dimmed">{t('firmware.updating')}</Text>
+            </Group>
+            {isPolling && <Progress value={progressValue} size="xs" />}
+          </Stack>
         )}
 
         <Group gap="xs">
@@ -120,7 +141,7 @@ export function FirmwareCard({ device, currentVersion }: Props) {
         onConfirm={() => updateMutation.mutate()}
         title={t('firmware.checkForUpdate')}
         message={t('firmware.updateConfirm', { version: newVersion ?? '' })}
-        confirmLabel={t('firmware.updating')}
+        confirmLabel={t('firmware.updateNow')}
         confirmColor="blue"
         loading={busy}
       />

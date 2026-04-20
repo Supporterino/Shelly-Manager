@@ -37,6 +37,7 @@ function DashboardPage() {
   const devices = useMemo(() => Object.values(devicesRecord), [devicesRecord])
   const locale = useAppStore((s) => s.preferences.locale || 'en')
   const wsConnected = useWsStatusStore((s) => s.connected)
+  const httpConnected = useWsStatusStore((s) => s.httpConnected)
 
   const queryClient = useQueryClient()
   const [search, setSearch] = useState('')
@@ -61,7 +62,7 @@ function DashboardPage() {
     // Status filter
     if (statusFilter !== 'all') {
       result = result.filter((d) => {
-        const isOnline = wsConnected[d.id] === true
+        const isOnline = wsConnected[d.id] === true || httpConnected[d.id] === true
         return statusFilter === 'online' ? isOnline : !isOnline
       })
     }
@@ -71,15 +72,15 @@ function DashboardPage() {
       if (sortKey === 'name') return a.name.localeCompare(b.name)
       if (sortKey === 'lastSeen') return b.lastSeenAt - a.lastSeenAt
       if (sortKey === 'status') {
-        const aOn = wsConnected[a.id] === true ? 1 : 0
-        const bOn = wsConnected[b.id] === true ? 1 : 0
+        const aOn = wsConnected[a.id] === true || httpConnected[a.id] === true ? 1 : 0
+        const bOn = wsConnected[b.id] === true || httpConnected[b.id] === true ? 1 : 0
         return bOn - aOn
       }
       return 0
     })
 
     return result
-  }, [devices, search, statusFilter, sortKey, wsConnected])
+  }, [devices, search, statusFilter, sortKey, wsConnected, httpConnected])
 
   if (devices.length === 0) {
     return (

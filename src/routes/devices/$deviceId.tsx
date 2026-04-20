@@ -9,7 +9,7 @@ import {
   Title,
   Tooltip,
 } from '@mantine/core'
-import { IconRefresh, IconSettings } from '@tabler/icons-react'
+import { IconArrowLeft, IconRefresh, IconSettings } from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
 import { useDeviceStore } from '../../store/deviceStore'
@@ -93,14 +93,21 @@ function DeviceDetailPage() {
   return (
     <Stack gap="md" p="md">
       {/* Header */}
-      <Group justify="space-between" align="center">
-        <Stack gap={2}>
-          <Group gap="xs" align="center">
-            <Title order={3}>{device.name}</Title>
-            <DeviceStatusBadge status={connectionStatus} />
-          </Group>
-          <Text size="xs" c="dimmed">{device.ip}:{device.port}</Text>
-        </Stack>
+      <Group justify="space-between" align="center" wrap="nowrap">
+        <Group gap="xs" align="center" wrap="nowrap" style={{ flex: 1, minWidth: 0 }}>
+          <Link to="/">
+            <ActionIcon variant="subtle" size="lg" aria-label={tc('actions.back')}>
+              <IconArrowLeft size={18} />
+            </ActionIcon>
+          </Link>
+          <Stack gap={2} style={{ minWidth: 0 }}>
+            <Title order={3} lineClamp={1}>{device.name}</Title>
+            <Group gap="xs" align="center">
+              <DeviceStatusBadge status={connectionStatus} />
+              <Text size="xs" c="dimmed" truncate="end">{device.ip}:{device.port}</Text>
+            </Group>
+          </Stack>
+        </Group>
         <Group gap="xs">
           <Tooltip label={tc('actions.refresh')}>
             <ActionIcon
