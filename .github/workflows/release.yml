@@ -1,0 +1,146 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  # ── Step 1: Create a draft GitHub Release ────────────────────────────────────
+  create-release:
+    runs-on: ubuntu-latest
+    outputs:
+      release_id: ${{ steps.create.outputs.result }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create draft release
+        id: create
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const tag = context.ref.replace('refs/tags/', '')
+            const { data } = await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: tag,
+              name: `Shelly Manager ${tag}`,
+              body: '## Downloads\n\nSee the assets below to download the installer for your platform.',
+              draft: true,
+              prerelease: tag.includes('-'),
+            })
+            return data.id
+
+  # ── Step 2: Build on all desktop platforms ────────────────────────────────────
+  build:
+    needs: create-release
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # macOS – Apple Silicon
+          - platform: macos-latest
+            rust-target: aarch64-apple-darwin
+            tauri-args: '--target aarch64-apple-darwin'
+
+          # macOS – Intel
+          - platform: macos-latest
+            rust-target: x86_64-apple-darwin
+            tauri-args: '--target x86_64-apple-darwin'
+
+          # Linux – x86_64  (.deb + .AppImage + .rpm)
+          - platform: ubuntu-22.04
+            rust-target: ''
+            tauri-args: ''
+
+          # Windows – x86_64  (.msi + NSIS .exe)
+          - platform: windows-latest
+            rust-target: ''
+            tauri-args: ''
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # ── Runtime: Bun ──────────────────────────────────────────────────────────
+      - uses: oven-sh/setup-bun@v2
+
+      # ── Runtime: Rust ─────────────────────────────────────────────────────────
+      - name: Install Rust (stable)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          # Cross-compilation targets needed for macOS universal-style builds
+          targets: ${{ matrix.rust-target }}
+
+      - name: Cache Rust artifacts
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      # ── Linux system libraries ────────────────────────────────────────────────
+      - name: Install Linux dependencies
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libappindicator3-dev \
+            librsvg2-dev \
+            patchelf
+
+      # ── macOS: handle provisioning profile ───────────────────────────────────
+      # The tauri.conf.json references profile.provisionprofile for the macOS
+      # bundle. In CI we create a placeholder so the build does not fail.
+      # For notarised / App Store builds, replace this with a real profile
+      # stored in a repository secret and decoded here.
+      - name: Create placeholder provisioning profile (macOS)
+        if: matrix.platform == 'macos-latest'
+        working-directory: src-tauri
+        run: touch profile.provisionprofile
+
+      # ── Frontend dependencies ─────────────────────────────────────────────────
+      - name: Install frontend dependencies
+        run: bun install
+
+      # ── Build & upload to the draft release ──────────────────────────────────
+      - name: Build and upload release assets
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Code-signing env vars (optional – leave empty for unsigned builds).
+          # macOS notarisation:
+          #   APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          #   APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          #   APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          #   APPLE_ID: ${{ secrets.APPLE_ID }}
+          #   APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          #   APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          # Windows code signing:
+          #   TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          #   TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          releaseId: ${{ needs.create-release.outputs.release_id }}
+          args: ${{ matrix.tauri-args }}
+
+  # ── Step 3: Publish the release once all builds succeed ───────────────────────
+  publish-release:
+    runs-on: ubuntu-latest
+    needs: [create-release, build]
+    permissions:
+      contents: write
+    steps:
+      - name: Publish release
+        uses: actions/github-script@v7
+        env:
+          RELEASE_ID: ${{ needs.create-release.outputs.release_id }}
+        with:
+          script: |
+            await github.rest.repos.updateRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: process.env.RELEASE_ID,
+              draft: false,
+            })
