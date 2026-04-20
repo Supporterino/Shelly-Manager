@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!--
+    ═══════════════════════════════════════════════════════════════════════
+    DEVICE DOTS  —  white shapes on transparent background
+    ═══════════════════════════════════════════════════════════════════════
+
+    Three equal circles in a row below the power ring represent the
+    individual Shelly devices being managed.
+
+    Placement:
+      y = 910  →  ring-bottom stroke edge ≈ 853, gap ≈ 57 px
+      dot bottom : 910 + 25 = 935  →  bottom padding ≈ 89 px
+      spacing: centres at x = 362, 512, 662  (150 px apart)
+      radius: 25 px
+
+    Opacity 0.75 keeps them clearly secondary to the main symbol while
+    staying visible against the dark gradient edges.
+    ═══════════════════════════════════════════════════════════════════════
+  -->
+
+  <g opacity="0.75">
+    <circle cx="362" cy="910" r="25" fill="white"/>
+    <circle cx="512" cy="910" r="25" fill="white"/>
+    <circle cx="662" cy="910" r="25" fill="white"/>
+  </g>
+</svg>

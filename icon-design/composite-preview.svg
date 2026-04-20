@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!--
+    ═══════════════════════════════════════════════════════════════════════
+    COMPOSITE PREVIEW  —  all four layers stacked in correct order
+    ═══════════════════════════════════════════════════════════════════════
+    Layer order (bottom → top):
+      1. background        blue radial gradient
+      2. device-dots       three indicator circles  (secondary)
+      3. power-wifi-symbol power ring + WiFi arcs   (hero glyph)
+      4. highlight         top-centre gloss sheen
+
+    A feDropShadow filter is applied to the hero glyph group to give it
+    the subtle "floating object" depth typical of Big Sur icons.
+    The shadow is soft (stdDeviation=18), offset slightly downward (dy=10)
+    and coloured with the deep-blue rather than pure black so it blends
+    with the background rather than punching through it.
+    ═══════════════════════════════════════════════════════════════════════
+  -->
+
+  <defs>
+    <!-- ── Background gradient ──────────────────────────────────────── -->
+    <radialGradient id="bg" cx="512" cy="430" r="668" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#339af0"/>
+      <stop offset="100%" stop-color="#1864ab"/>
+    </radialGradient>
+
+    <!-- ── Highlight gradient ───────────────────────────────────────── -->
+    <radialGradient id="gloss" cx="512" cy="100" r="600" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="white" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- ── Drop shadow for hero glyph ───────────────────────────────── -->
+    <filter id="symbol-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow
+        dx="0" dy="10" stdDeviation="18"
+        flood-color="#0d3b75" flood-opacity="0.45"
+      />
+    </filter>
+  </defs>
+
+  <!-- ══ LAYER 1: Background ══════════════════════════════════════════ -->
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+
+  <!-- ══ LAYER 2: Device dots (secondary, rendered behind symbol) ═════ -->
+  <g opacity="0.75">
+    <circle cx="362" cy="910" r="25" fill="white"/>
+    <circle cx="512" cy="910" r="25" fill="white"/>
+    <circle cx="662" cy="910" r="25" fill="white"/>
+  </g>
+
+  <!-- ══ LAYER 3: Power ring + WiFi symbol (hero glyph) ══════════════ -->
+  <g filter="url(#symbol-shadow)">
+
+    <!-- Power ring: 280° arc, 80° gap at top ─────────────────────── -->
+    <!--   Centre (512,620)  r=200  stroke=65  gap from 310°→230° CW  -->
+    <path
+      d="M 641,467 A 200,200 0 1 1 383,467"
+      stroke="white" stroke-width="65" fill="none" stroke-linecap="round"
+    />
+
+    <!-- WiFi dot ─────────────────────────────────────────────────── -->
+    <circle cx="512" cy="340" r="20" fill="white"/>
+
+    <!-- WiFi arc 1  r=65  (innermost) ───────────────────────────── -->
+    <path
+      d="M 462,298 A 65,65 0 0 1 562,298"
+      stroke="white" stroke-width="50" fill="none" stroke-linecap="round"
+    />
+
+    <!-- WiFi arc 2  r=128 ────────────────────────────────────────── -->
+    <path
+      d="M 414,258 A 128,128 0 0 1 610,258"
+      stroke="white" stroke-width="50" fill="none" stroke-linecap="round"
+    />
+
+    <!-- WiFi arc 3  r=191  (outermost) ──────────────────────────── -->
+    <path
+      d="M 366,217 A 191,191 0 0 1 658,217"
+      stroke="white" stroke-width="50" fill="none" stroke-linecap="round"
+    />
+
+  </g>
+
+  <!-- ══ LAYER 4: Highlight gloss (top-most) ══════════════════════════ -->
+  <rect width="1024" height="1024" fill="url(#gloss)"/>
+
+</svg>

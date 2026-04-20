@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <!--
+      Background: radial gradient from Mantine Blue 5 (#339af0) at center-top
+      to Mantine Blue 9 (#1864ab) at the edges — matches existing app-icon brand.
+      Center is offset to y=430 (42% of 1024) so the bright area sits in the
+      upper half where the WiFi arcs live, giving visual weight to the symbol.
+      Radius 668px reaches the farthest canvas corner from that centre point.
+    -->
+    <radialGradient id="bg" cx="512" cy="430" r="668" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#339af0"/>
+      <stop offset="100%" stop-color="#1864ab"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+</svg>

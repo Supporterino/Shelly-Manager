@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!--
+    ═══════════════════════════════════════════════════════════════════════
+    POWER-WIFI SYMBOL  —  white shapes on transparent background
+    ═══════════════════════════════════════════════════════════════════════
+
+    GEOMETRY REFERENCE
+    ──────────────────
+    Canvas: 1024 × 1024 px
+
+    ── Power ring ────────────────────────────────────────────────────────
+      Centre      : (512, 620)
+      Radius      : 200 px
+      Stroke      : 65 px  round linecaps
+      Gap         : 80° at the top  (40° either side of 270°, i.e. "up")
+      Arc span    : 280°, clockwise, from 310° → through bottom → 230°
+      Arc path    : M 641,467  A 200,200 0 1 1 383,467
+        (large-arc-flag=1, sweep-flag=1 ← clockwise in screen coords)
+      Ring bottom : y = 620 + 200 + 33 = 853  →  bottom padding ≈ 99 px
+
+    ── WiFi arcs ─────────────────────────────────────────────────────────
+      All centred at (512, 340); span 100° clockwise (220° → 270° → 320°)
+        large-arc-flag = 0, sweep-flag = 1
+
+      Radii spaced 63 px apart so visual gaps are even (~23 px each):
+        Arc 1  r=65   Arc 2  r=128   Arc 3  r=191
+      Stroke  : 50 px  round linecaps
+
+      Endpoints derived from: (cx ± r·cos40°, cy − r·sin40°)
+        cos 40° ≈ 0.766   sin 40° ≈ 0.643
+
+        Arc 1 : start (462, 298)  end (562, 298)
+        Arc 2 : start (414, 258)  end (610, 258)
+        Arc 3 : start (366, 217)  end (658, 217)
+
+      Arc top points  (y = 340 − r):
+        Arc 1 top : y = 275   Arc 2 top : y = 212   Arc 3 top : y = 149
+      Visual outer tops (− stroke/2 = −25):
+        Arc 1 : 250   Arc 2 : 187   Arc 3 : 124   →  top padding ≈ 124 px
+
+    ── WiFi dot ──────────────────────────────────────────────────────────
+      cx=512  cy=340  r=20
+      Bottom of dot : y = 360
+      Ring inner-top stroke edge : 620 − 200 − 33 = 387  →  gap ≈ 27 px
+    ═══════════════════════════════════════════════════════════════════════
+  -->
+
+  <!-- ── Power ring: 280° arc, gap at top ─────────────────────────────── -->
+  <path
+    d="M 641,467 A 200,200 0 1 1 383,467"
+    stroke="white" stroke-width="65" fill="none" stroke-linecap="round"
+  />
+
+  <!-- ── WiFi dot ──────────────────────────────────────────────────────── -->
+  <circle cx="512" cy="340" r="20" fill="white"/>
+
+  <!-- ── WiFi arc 1  (r = 65) ──────────────────────────────────────────── -->
+  <path
+    d="M 462,298 A 65,65 0 0 1 562,298"
+    stroke="white" stroke-width="50" fill="none" stroke-linecap="round"
+  />
+
+  <!-- ── WiFi arc 2  (r = 128) ─────────────────────────────────────────── -->
+  <path
+    d="M 414,258 A 128,128 0 0 1 610,258"
+    stroke="white" stroke-width="50" fill="none" stroke-linecap="round"
+  />
+
+  <!-- ── WiFi arc 3  (r = 191) ─────────────────────────────────────────── -->
+  <path
+    d="M 366,217 A 191,191 0 0 1 658,217"
+    stroke="white" stroke-width="50" fill="none" stroke-linecap="round"
+  />
+</svg>

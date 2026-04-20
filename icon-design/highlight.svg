@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!--
+    ═══════════════════════════════════════════════════════════════════════
+    HIGHLIGHT  —  gloss sheen on transparent background (Big Sur style)
+    ═══════════════════════════════════════════════════════════════════════
+
+    A soft white radial centred at the top of the canvas, simulating a
+    diffuse light source above the icon. This gives the flat-colour
+    background its characteristic macOS "glassy" depth without being
+    heavy or skeuomorphic.
+
+    Two-stop radial gradient:
+      cx = 512  (horizontally centred)
+      cy = 100  (near the top edge)
+      r  = 600  (fades to nothing before reaching the bottom half)
+
+    White at 22 % opacity → 0 % opacity. The low starting opacity keeps
+    the blue hue dominant while providing a visible surface highlight.
+    ═══════════════════════════════════════════════════════════════════════
+  -->
+  <defs>
+    <radialGradient id="gloss" cx="512" cy="100" r="600" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="white" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1024" height="1024" fill="url(#gloss)"/>
+</svg>
