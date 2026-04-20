@@ -11,6 +11,7 @@
 		0919D96F274A877778EA6533 /* libapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 566516EBB44778116AF888FC /* libapp.a */; };
 		1B7D00787D950F612ABC5781 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = C9F35C701E547B7FE54F5CDE /* main.mm */; };
 		2919645BE1BD7009DF718026 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D250D515E4443DB58B23E465 /* MetalKit.framework */; };
+		2E74BF642F9655900001FC55 /* ShellyManager.icon in Resources */ = {isa = PBXBuildFile; fileRef = 2E74BF632F9655900001FC55 /* ShellyManager.icon */; };
 		3A8A698F1761DA3E68B1CBD2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A88B542BCC18172712DED4D3 /* LaunchScreen.storyboard */; };
 		3E12344D37A666C3106E4A7E /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0052008A3DF737490C2D7171 /* Security.framework */; };
 		4E2938AFAFB57DDA193551DD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 651834FC260BC3C230533007 /* UIKit.framework */; };
@@ -25,6 +26,7 @@
 		0052008A3DF737490C2D7171 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		29107C9056F8A9F620901F56 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		2BFEA7B84E0D184F6C6C654D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2E74BF632F9655900001FC55 /* ShellyManager.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; name = ShellyManager.icon; path = "/Users/supporterino/WebstormProjects/Shelly-Manager/icon-design/ShellyManager.icon"; sourceTree = "<absolute>"; };
 		41D7A981C26D20ED06019A1B /* bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bindings.h; sourceTree = "<group>"; };
 		566516EBB44778116AF888FC /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
 		651834FC260BC3C230533007 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -116,6 +118,7 @@
 		B01C8738E8D93BF13EA2E755 = {
 			isa = PBXGroup;
 			children = (
+				2E74BF632F9655900001FC55 /* ShellyManager.icon */,
 				A57B75F73CC95487CB905FC2 /* assets */,
 				2BFEA7B84E0D184F6C6C654D /* Assets.xcassets */,
 				A88B542BCC18172712DED4D3 /* LaunchScreen.storyboard */,
@@ -207,6 +210,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1BBE1FA7A98C17D130E5459 /* Assets.xcassets in Resources */,
+				2E74BF642F9655900001FC55 /* ShellyManager.icon in Resources */,
 				3A8A698F1761DA3E68B1CBD2 /* LaunchScreen.storyboard in Resources */,
 				AC2D1AC09069E5F2F942A9A4 /* assets in Resources */,
 			);
@@ -318,7 +322,8 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ARCHS = arm64;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = ShellyManager;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "shelly-manager_iOS/shelly-manager_iOS.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = 9687ZZBJM5;
@@ -361,7 +366,8 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ARCHS = arm64;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = ShellyManager;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "shelly-manager_iOS/shelly-manager_iOS.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = 9687ZZBJM5;

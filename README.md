@@ -1,10 +1,6 @@
 # Shelly Manager
 
-> **This project is currently under active development and is not yet ready for use.**
-
 A local-network manager for Shelly smart devices, built as a cross-platform desktop and mobile app.
-
-## Target
 
 Shelly Manager lets you discover, monitor, and control Shelly Gen 2/3/4 devices on your local network — no cloud required. All communication happens directly over your LAN using the Shelly JSON-RPC 2.0 API.
 
@@ -12,28 +8,165 @@ Shelly Manager lets you discover, monitor, and control Shelly Gen 2/3/4 devices 
 
 **Supported devices:** Shelly Gen 2, Gen 3, Gen 4 (JSON-RPC 2.0)
 
-Features planned:
+---
 
-- Automatic device discovery via mDNS and subnet scan
-- Manual device addition by IP
-- Real-time status updates via WebSocket
-- Control of switches, dimmers, RGB/RGBW lights, covers, and sensors
-- Energy monitoring
-- Firmware update management
-- Schedules
-- Multi-language UI (English, German, French, Spanish, Chinese, Japanese)
+## Features
+
+- **Device Discovery** — Automatic discovery via mDNS (`_shelly._tcp.local.`) and subnet scan (TCP/CIDR), plus manual addition by IP address
+- **Real-Time Control** — Switch relays, dim lights, set RGB/RGBW colors and color temperature, open/close covers
+- **Live Status** — WebSocket-based real-time status updates with delta merging via `NotifyStatus` / `NotifyFullStatus`
+- **Energy Monitoring** — Power, voltage, current, and cumulative energy readouts for supported devices
+- **Sensor Display** — Temperature, humidity, motion, flood, smoke, illuminance, and voltmeter sensors
+- **Firmware Management** — Check for updates and trigger OTA firmware upgrades across all devices from a single view
+- **Schedules** — List, create, and delete device schedules
+- **Authentication** — SHA-256 Digest auth (RFC 7616) for password-protected devices
+- **Multi-Language UI** — English, German, French, Spanish, Chinese (Simplified), Japanese
+
+---
 
 ## Tech Stack
 
 | Layer | Technology |
 |---|---|
 | App framework | Tauri v2 |
-| Frontend | React 19 + TypeScript |
-| UI | Mantine v9 + Tabler icons |
-| Routing | TanStack Router |
-| State | Zustand + TanStack Query |
-| i18n | react-i18next |
+| Package manager | Bun |
+| Frontend | React 19 + TypeScript 5 |
+| UI | Mantine v9 + Tabler Icons v3 |
+| Routing | TanStack Router v1 (file-based, hash history) |
+| State | Zustand v5 + TanStack Query v5 |
+| Persistence | tauri-plugin-store v2 |
+| HTTP to devices | tauri-plugin-http v2 |
+| WebSocket | tauri-plugin-websocket v2 |
+| mDNS discovery | Custom Rust command (`mdns-sd` crate) |
+| Subnet scan | Custom Rust command (Tokio async TCP) |
+| i18n | react-i18next + i18next v26 |
+| Linting / Formatting | Biome |
+| Tests | Vitest + React Testing Library |
 
-## Status
+---
 
-Under development. See [PLAN.md](./PLAN.md) for the full build plan and phase progress.
+## Getting Started
+
+### Prerequisites
+
+- [Bun](https://bun.sh) (package manager and runtime)
+- [Rust](https://rustup.rs) (for the Tauri backend)
+- [Tauri prerequisites](https://tauri.app/start/prerequisites/) for your target platform
+
+### Install dependencies
+
+```bash
+bun install
+```
+
+### Run in development
+
+```bash
+bun run tauri dev
+```
+
+This starts Vite on `localhost:1420` and opens the Tauri desktop window. Hot-module replacement is enabled.
+
+### Build for production
+
+```bash
+bun run tauri build
+```
+
+Produces a native installer or app bundle in `src-tauri/target/release/bundle/`.
+
+---
+
+## Development
+
+### Project structure
+
+```
+src/
+├── routes/          TanStack Router file-based routes
+├── components/      React components
+│   ├── layout/      AppShell, BottomNav, SidebarNav
+│   ├── devices/     DeviceCard, controls/*, sensors/*, energy/*, info/*
+│   ├── discovery/   DiscoveryProgress, ManualAddForm, FoundDevicesList
+│   ├── firmware/    FirmwareTable, FirmwareDeviceCard
+│   └── common/      ErrorAlert, ConfirmModal, AppLoader
+├── services/        shellyClient, wsManager, discovery, i18n
+├── store/           deviceStore, wsStatusStore, appStore (Zustand)
+├── hooks/           Custom React hooks (useDeviceStatus, useDeviceControl, …)
+├── types/           TypeScript interfaces
+├── utils/           auth, rpc, formatters, deviceTypeMap, firmware
+└── locales/         Translation JSON files (en, de, fr, es, zh, ja)
+
+src-tauri/
+├── src/lib.rs       All Rust: discover_mdns, scan_subnet commands + plugin registration
+├── capabilities/    Tauri v2 permissions
+└── tauri.conf.json
+```
+
+### Scripts
+
+| Command | Description |
+|---|---|
+| `bun run dev` | Start Vite dev server only |
+| `bun run build` | Build frontend |
+| `bun run tauri dev` | Start full app in dev mode |
+| `bun run tauri build` | Build production app |
+| `bun run test` | Run all tests once |
+| `bun run test:watch` | Run tests in watch mode |
+| `bun run test:coverage` | Run tests with coverage report |
+| `bun run lint` | Lint with Biome |
+| `bun run format` | Format with Biome |
+| `bun run check` | Type-check with `tsc` |
+
+### Key conventions
+
+- **Never use `window.fetch`** for device requests — use `@tauri-apps/plugin-http`. Browser fetch cannot reach LAN addresses on iOS/Android.
+- **Never edit `src/routeTree.gen.ts`** — it is auto-generated by the TanStack Router Vite plugin.
+- **All user-visible text** must go through `useTranslation` and live in `src/locales/en/*.json`.
+- **Components** should stay under ~120 lines. Split larger components into sub-components.
+- **Tests** are required for every new service or utility.
+
+---
+
+## Architecture Notes
+
+### Device communication
+
+All Shelly Gen 2/3/4 devices are accessed via JSON-RPC 2.0:
+
+- **HTTP** — one-shot requests via `POST /rpc` using `@tauri-apps/plugin-http`
+- **WebSocket** — persistent connection to `ws://<device-ip>/rpc` for real-time push notifications
+
+Authentication uses SHA-256 Digest (RFC 7616), implemented in `src/utils/auth.ts`. `Shelly.GetDeviceInfo` is always exempt from auth.
+
+### State management
+
+- **Zustand** stores (`deviceStore`, `wsStatusStore`, `appStore`) hold client-side state and persist to disk via `tauri-plugin-store`.
+- **TanStack Query** manages server state (device status, config, info) with query key hierarchy `['device', deviceId, 'status']`.
+
+### Discovery
+
+| Method | Implementation |
+|---|---|
+| mDNS | Rust `discover_mdns` command — browses `_shelly._tcp.local.` and `_http._tcp.local.` |
+| Subnet scan | Rust `scan_subnet` command — async TCP connect across a CIDR range (max /19) |
+| Manual | Frontend validates IP with `GET /shelly` before adding |
+
+---
+
+## Internationalization
+
+Translation files live in `src/locales/<lang>/` across four namespaces: `common`, `devices`, `discovery`, `settings`.
+
+To add a new language:
+
+1. Copy `src/locales/en/` to `src/locales/<code>/` and translate all values
+2. Add the code to `supportedLngs` in `src/services/i18n.ts`
+3. Add an entry to `SUPPORTED_LOCALES` in `src/components/settings/LanguageSelect.tsx`
+4. Add the native language name under `language` in `settings.json`
+
+---
+
+## License
+
+This project does not currently have a license. All rights reserved.
