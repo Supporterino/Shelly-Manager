@@ -4,99 +4,88 @@
  * and an inline AddScheduleForm for creating new ones.
  * Part of Phase 5.6
  */
-import { useState } from 'react'
-import {
-  ActionIcon,
-  Badge,
-  Button,
-  Divider,
-  Group,
-  Loader,
-  Stack,
-  Text,
-} from '@mantine/core'
-import { IconPlus, IconTrash } from '@tabler/icons-react'
-import { notifications } from '@mantine/notifications'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useTranslation } from 'react-i18next'
-import type { TFunction } from 'i18next'
-import { ShellyClient } from '../../services/shellyClient'
-import type { ScheduleJob } from '../../types/shelly'
-import type { StoredDevice } from '../../types/device'
-import { AddScheduleForm } from './AddScheduleForm'
-import { ConfirmModal } from '../common/ConfirmModal'
+
+import { ActionIcon, Badge, Button, Divider, Group, Loader, Stack, Text } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
+import { IconPlus, IconTrash } from '@tabler/icons-react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type { TFunction } from 'i18next';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ShellyClient } from '../../services/shellyClient';
+import type { StoredDevice } from '../../types/device';
+import type { ScheduleJob } from '../../types/shelly';
+import { ConfirmModal } from '../common/ConfirmModal';
+import { AddScheduleForm } from './AddScheduleForm';
 
 /** Converts a Shelly cron timespec to a human-readable string.
  *  e.g. "0 0 22 * * 1,2,3" → "22:00 – Mon, Tue, Wed"
  */
 function parseTimespec(timespec: string, locale: string): string {
-  const parts = timespec.trim().split(/\s+/)
+  const parts = timespec.trim().split(/\s+/);
   // Shelly cron: sec min hour dom month dow
-  if (parts.length < 6) return timespec
+  if (parts.length < 6) return timespec;
 
-  const hour = parts[2]
-  const min = parts[1]
-  const dowPart = parts[5]
+  const hour = parts[2];
+  const min = parts[1];
+  const dowPart = parts[5];
 
-  const time = `${hour.padStart(2, '0')}:${min.padStart(2, '0')}`
+  const time = `${hour.padStart(2, '0')}:${min.padStart(2, '0')}`;
 
-  if (dowPart === '*') return time
+  if (dowPart === '*') return time;
 
   const dayNums = dowPart
     .split(',')
     .map(Number)
-    .sort((a, b) => a - b)
+    .sort((a, b) => a - b);
 
   const dayLabels = dayNums.map((d) =>
     new Intl.DateTimeFormat(locale, { weekday: 'short' }).format(
-      new Date(2025, 0, 5 + d) // Jan 5, 2025 = Sunday
-    )
-  )
+      new Date(2025, 0, 5 + d), // Jan 5, 2025 = Sunday
+    ),
+  );
 
-  return `${time} – ${dayLabels.join(', ')}`
+  return `${time} – ${dayLabels.join(', ')}`;
 }
 
-function describeCall(
-  calls: ScheduleJob['calls'],
-  t: TFunction<'devices'>
-): string {
-  const call = calls[0]
-  if (!call) return ''
-  const on = (call.params as { on?: boolean } | undefined)?.on
+function describeCall(calls: ScheduleJob['calls'], t: TFunction<'devices'>): string {
+  const call = calls[0];
+  if (!call) return '';
+  const on = (call.params as { on?: boolean } | undefined)?.on;
   if (call.method === 'Switch.Set') {
-    return on ? t('controls.on') : t('controls.off')
+    return on ? t('controls.on') : t('controls.off');
   }
-  return call.method
+  return call.method;
 }
 
 interface Props {
-  device: StoredDevice
+  device: StoredDevice;
 }
 
 export function ScheduleSection({ device }: Props) {
-  const { t, i18n } = useTranslation('devices')
-  const { t: tc } = useTranslation('common')
-  const queryClient = useQueryClient()
+  const { t, i18n } = useTranslation('devices');
+  const { t: tc } = useTranslation('common');
+  const queryClient = useQueryClient();
 
-  const [showForm, setShowForm] = useState(false)
-  const [deleteTarget, setDeleteTarget] = useState<number | null>(null)
+  const [showForm, setShowForm] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['device', device.id, 'schedules'],
     queryFn: () => new ShellyClient(device).scheduleList(),
-  })
+  });
 
   const deleteMutation = useMutation({
     mutationFn: (id: number) => new ShellyClient(device).scheduleDelete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['device', device.id, 'schedules'] })
+      queryClient.invalidateQueries({ queryKey: ['device', device.id, 'schedules'] });
     },
     onError: (err: Error) =>
       notifications.show({ color: 'red', title: 'Error', message: err.message }),
     onSettled: () => setDeleteTarget(null),
-  })
+  });
 
-  const jobs: ScheduleJob[] = data?.jobs ?? []
+  const jobs: ScheduleJob[] = data?.jobs ?? [];
 
   return (
     <Stack gap="xs">
@@ -171,5 +160,5 @@ export function ScheduleSection({ device }: Props) {
         loading={deleteMutation.isPending}
       />
     </Stack>
-  )
+  );
 }

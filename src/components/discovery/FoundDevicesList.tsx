@@ -1,30 +1,30 @@
-import { useState } from 'react'
 import {
-  Stack,
+  ActionIcon,
+  Badge,
   Checkbox,
   Group,
-  Text,
-  Badge,
-  ActionIcon,
   Indicator,
-  Tooltip,
+  Stack,
+  Text,
   ThemeIcon,
-} from '@mantine/core'
+  Tooltip,
+} from '@mantine/core';
 import {
-  IconDevices,
   IconBolt,
-  IconSun,
-  IconFlame,
-  IconDroplet,
-  IconShield,
   IconCheck,
-} from '@tabler/icons-react'
-import { useTranslation } from 'react-i18next'
-import type { StoredDevice, DeviceType } from '../../types/device'
+  IconDevices,
+  IconDroplet,
+  IconFlame,
+  IconShield,
+  IconSun,
+} from '@tabler/icons-react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import type { DeviceType, StoredDevice } from '../../types/device';
 
 interface FoundDevicesListProps {
-  devices: StoredDevice[]
-  onAdd: (selected: StoredDevice[]) => void
+  devices: StoredDevice[];
+  onAdd: (selected: StoredDevice[]) => void;
 }
 
 const TYPE_ICON: Record<DeviceType, React.ComponentType<{ size?: number }>> = {
@@ -38,28 +38,26 @@ const TYPE_ICON: Record<DeviceType, React.ComponentType<{ size?: number }>> = {
   energy: IconBolt,
   input: IconDevices,
   unknown: IconDevices,
-}
+};
 
 export function FoundDevicesList({ devices, onAdd }: FoundDevicesListProps) {
-  const { t } = useTranslation('discovery')
-  const [selected, setSelected] = useState<Set<string>>(
-    () => new Set(devices.map((d) => d.id))
-  )
+  const { t } = useTranslation('discovery');
+  const [selected, setSelected] = useState<Set<string>>(() => new Set(devices.map((d) => d.id)));
 
   function toggle(id: string) {
     setSelected((prev) => {
-      const next = new Set(prev)
+      const next = new Set(prev);
       if (next.has(id)) {
-        next.delete(id)
+        next.delete(id);
       } else {
-        next.add(id)
+        next.add(id);
       }
-      return next
-    })
+      return next;
+    });
   }
 
   function handleAdd() {
-    onAdd(devices.filter((d) => selected.has(d.id)))
+    onAdd(devices.filter((d) => selected.has(d.id)));
   }
 
   if (devices.length === 0) {
@@ -67,13 +65,13 @@ export function FoundDevicesList({ devices, onAdd }: FoundDevicesListProps) {
       <Text size="sm" c="dimmed">
         {t('noDevicesFound')}
       </Text>
-    )
+    );
   }
 
   return (
     <Stack gap="sm">
       {devices.map((device) => {
-        const Icon = TYPE_ICON[device.type]
+        const Icon = TYPE_ICON[device.type];
         return (
           <Checkbox
             key={device.id}
@@ -100,12 +98,17 @@ export function FoundDevicesList({ devices, onAdd }: FoundDevicesListProps) {
               </Group>
             }
           />
-        )
+        );
       })}
 
       <Group justify="flex-end" mt="xs">
         <Tooltip label={`${t('addSelected')} (${selected.size})`}>
-          <Indicator label={String(selected.size)} size={16} disabled={selected.size === 0} color="blue">
+          <Indicator
+            label={String(selected.size)}
+            size={16}
+            disabled={selected.size === 0}
+            color="blue"
+          >
             <ActionIcon
               variant="filled"
               size="lg"
@@ -120,5 +123,5 @@ export function FoundDevicesList({ devices, onAdd }: FoundDevicesListProps) {
         </Tooltip>
       </Group>
     </Stack>
-  )
+  );
 }

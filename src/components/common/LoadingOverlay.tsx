@@ -1,11 +1,11 @@
-import { Box, Loader, Overlay } from '@mantine/core'
+import { Box, Loader, Overlay } from '@mantine/core';
 
 interface LoadingOverlayProps {
-  visible: boolean
+  visible: boolean;
 }
 
 export function LoadingOverlay({ visible }: LoadingOverlayProps) {
-  if (!visible) return null
+  if (!visible) return null;
 
   return (
     <Box pos="relative">
@@ -19,5 +19,5 @@ export function LoadingOverlay({ visible }: LoadingOverlayProps) {
         <Loader size="xl" />
       </Box>
     </Box>
-  )
+  );
 }

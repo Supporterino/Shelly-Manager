@@ -1,19 +1,19 @@
-import { Badge, Checkbox, Table, Text } from '@mantine/core'
-import { Link } from '@tanstack/react-router'
-import { useTranslation } from 'react-i18next'
-import { FirmwareRowActions } from './FirmwareRowActions'
-import type { DeviceFirmwareState } from '../../hooks/useFirmwareManager'
-import type { StoredDevice } from '../../types/device'
+import { Badge, Checkbox, Table, Text } from '@mantine/core';
+import { Link } from '@tanstack/react-router';
+import { useTranslation } from 'react-i18next';
+import type { DeviceFirmwareState } from '../../hooks/useFirmwareManager';
+import type { StoredDevice } from '../../types/device';
+import { FirmwareRowActions } from './FirmwareRowActions';
 
 interface Props {
-  devices: StoredDevice[]
-  firmwareStates: Record<string, DeviceFirmwareState>
-  selectedIds: Set<string>
-  globalBusy: boolean
-  onToggleSelect: (id: string) => void
-  onToggleSelectAll: () => void
-  onCheckDevice: (device: StoredDevice) => void
-  onUpdateDevice: (device: StoredDevice) => void
+  devices: StoredDevice[];
+  firmwareStates: Record<string, DeviceFirmwareState>;
+  selectedIds: Set<string>;
+  globalBusy: boolean;
+  onToggleSelect: (id: string) => void;
+  onToggleSelectAll: () => void;
+  onCheckDevice: (device: StoredDevice) => void;
+  onUpdateDevice: (device: StoredDevice) => void;
 }
 
 export function FirmwareTable({
@@ -26,26 +26,22 @@ export function FirmwareTable({
   onCheckDevice,
   onUpdateDevice,
 }: Props) {
-  const { t } = useTranslation('devices')
+  const { t } = useTranslation('devices');
 
-  const allSelected = devices.length > 0 && devices.every((d) => selectedIds.has(d.id))
-  const someSelected = devices.some((d) => selectedIds.has(d.id))
+  const allSelected = devices.length > 0 && devices.every((d) => selectedIds.has(d.id));
+  const someSelected = devices.some((d) => selectedIds.has(d.id));
 
   const rows = devices.map((device) => {
     const state = firmwareStates[device.id] ?? {
       status: 'idle' as const,
       currentVersion: device.model,
       pollStep: 0,
-    }
+    };
 
     return (
       <Table.Tr
         key={device.id}
-        bg={
-          selectedIds.has(device.id)
-            ? 'var(--mantine-color-blue-light)'
-            : undefined
-        }
+        bg={selectedIds.has(device.id) ? 'var(--mantine-color-blue-light)' : undefined}
       >
         {/* Select checkbox */}
         <Table.Td>
@@ -94,8 +90,8 @@ export function FirmwareTable({
           />
         </Table.Td>
       </Table.Tr>
-    )
-  })
+    );
+  });
 
   return (
     <Table.ScrollContainer minWidth={540}>
@@ -128,5 +124,5 @@ export function FirmwareTable({
         <Table.Tbody>{rows}</Table.Tbody>
       </Table>
     </Table.ScrollContainer>
-  )
+  );
 }

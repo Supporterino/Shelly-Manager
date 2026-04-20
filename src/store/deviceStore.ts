@@ -1,16 +1,16 @@
-import { create } from 'zustand'
-import { subscribeWithSelector } from 'zustand/middleware'
-import type { StoredDevice } from '../types/device'
-import { loadDevices, saveDevices } from '../services/devicePersistence'
+import { create } from 'zustand';
+import { subscribeWithSelector } from 'zustand/middleware';
+import { loadDevices, saveDevices } from '../services/devicePersistence';
+import type { StoredDevice } from '../types/device';
 
 interface DeviceStore {
-  devices: Record<string, StoredDevice>
-  isHydrated: boolean
-  addDevice: (device: StoredDevice) => void
-  updateDevice: (id: string, patch: Partial<StoredDevice>) => void
-  removeDevice: (id: string) => void
-  hydrate: () => Promise<void>
-  persist: () => Promise<void>
+  devices: Record<string, StoredDevice>;
+  isHydrated: boolean;
+  addDevice: (device: StoredDevice) => void;
+  updateDevice: (id: string, patch: Partial<StoredDevice>) => void;
+  removeDevice: (id: string) => void;
+  hydrate: () => Promise<void>;
+  persist: () => Promise<void>;
 }
 
 export const useDeviceStore = create<DeviceStore>()(
@@ -21,46 +21,46 @@ export const useDeviceStore = create<DeviceStore>()(
     addDevice: (device) => {
       set((state) => ({
         devices: { ...state.devices, [device.id]: device },
-      }))
+      }));
     },
 
     updateDevice: (id, patch) => {
       set((state) => {
-        const existing = state.devices[id]
-        if (!existing) return state
+        const existing = state.devices[id];
+        if (!existing) return state;
         return {
           devices: {
             ...state.devices,
             [id]: { ...existing, ...patch },
           },
-        }
-      })
+        };
+      });
     },
 
     removeDevice: (id) => {
       set((state) => {
-        const { [id]: _removed, ...rest } = state.devices
-        return { devices: rest }
-      })
+        const { [id]: _removed, ...rest } = state.devices;
+        return { devices: rest };
+      });
     },
 
     hydrate: async () => {
-      const devices = await loadDevices()
-      set({ devices, isHydrated: true })
+      const devices = await loadDevices();
+      set({ devices, isHydrated: true });
     },
 
     persist: async () => {
-      await saveDevices(get().devices)
+      await saveDevices(get().devices);
     },
-  }))
-)
+  })),
+);
 
 // Auto-persist on every write after hydration
 useDeviceStore.subscribe(
   (state) => state.devices,
   (_devices) => {
     if (useDeviceStore.getState().isHydrated) {
-      useDeviceStore.getState().persist().catch(console.error)
+      useDeviceStore.getState().persist().catch(console.error);
     }
-  }
-)
+  },
+);

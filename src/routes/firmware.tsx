@@ -1,4 +1,3 @@
-import { createFileRoute } from '@tanstack/react-router'
 import {
   ActionIcon,
   Box,
@@ -10,71 +9,75 @@ import {
   Text,
   Title,
   Tooltip,
-} from '@mantine/core'
-import { notifications } from '@mantine/notifications'
-import { useTranslation } from 'react-i18next'
-import { useCallback, useMemo, useState } from 'react'
-import { IconCloudDownload, IconRefresh } from '@tabler/icons-react'
-import { Link } from '@tanstack/react-router'
-import { useDeviceStore } from '../store/deviceStore'
-import { useWsStatusStore } from '../store/wsStatusStore'
-import { useFirmwareManager } from '../hooks/useFirmwareManager'
-import { FirmwareTable } from '../components/firmware/FirmwareTable'
-import { FirmwareDeviceList } from '../components/firmware/FirmwareDeviceList'
-import { ConfirmModal } from '../components/common/ConfirmModal'
-import type { StoredDevice } from '../types/device'
+} from '@mantine/core';
+import { notifications } from '@mantine/notifications';
+import { IconCloudDownload, IconRefresh } from '@tabler/icons-react';
+import { createFileRoute, Link } from '@tanstack/react-router';
+import { useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ConfirmModal } from '../components/common/ConfirmModal';
+import { FirmwareDeviceList } from '../components/firmware/FirmwareDeviceList';
+import { FirmwareTable } from '../components/firmware/FirmwareTable';
+import { useFirmwareManager } from '../hooks/useFirmwareManager';
+import { useDeviceStore } from '../store/deviceStore';
+import { useWsStatusStore } from '../store/wsStatusStore';
+import type { StoredDevice } from '../types/device';
 
 export const Route = createFileRoute('/firmware')({
   component: FirmwarePage,
-})
+});
 
 function FirmwarePage() {
-  const { t } = useTranslation('devices')
-  const { t: tc } = useTranslation('common')
+  const { t } = useTranslation('devices');
+  const { t: tc } = useTranslation('common');
 
-  const devicesRecord = useDeviceStore((s) => s.devices)
-  const devices = useMemo(() => Object.values(devicesRecord), [devicesRecord])
+  const devicesRecord = useDeviceStore((s) => s.devices);
+  const devices = useMemo(() => Object.values(devicesRecord), [devicesRecord]);
   const liveStatuses = useWsStatusStore((s) => s.statuses) as Record<
     string,
     Record<string, unknown>
-  >
+  >;
 
-  const { firmwareStates, checkDevice, updateDevice: _updateDevice, checkAll, checkSelected, updateSelected } =
-    useFirmwareManager(devices, liveStatuses)
+  const {
+    firmwareStates,
+    checkDevice,
+    updateDevice: _updateDevice,
+    checkAll,
+    checkSelected,
+    updateSelected,
+  } = useFirmwareManager(devices, liveStatuses);
 
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
-  const [batchConfirmOpen, setBatchConfirmOpen] = useState(false)
-  const [batchTargets, setBatchTargets] = useState<StoredDevice[]>([])
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [batchConfirmOpen, setBatchConfirmOpen] = useState(false);
+  const [batchTargets, setBatchTargets] = useState<StoredDevice[]>([]);
 
   // ── Derived state ──────────────────────────────────────────────────────────
 
   const anyBusy = useMemo(
     () =>
-      Object.values(firmwareStates).some(
-        (s) => s.status === 'checking' || s.status === 'updating',
-      ),
+      Object.values(firmwareStates).some((s) => s.status === 'checking' || s.status === 'updating'),
     [firmwareStates],
-  )
+  );
 
   const devicesWithUpdates = useMemo(
     () => devices.filter((d) => firmwareStates[d.id]?.status === 'update-available'),
     [devices, firmwareStates],
-  )
+  );
 
   const selectedDevices = useMemo(
     () => devices.filter((d) => selectedIds.has(d.id)),
     [devices, selectedIds],
-  )
+  );
 
   const selectedWithUpdates = useMemo(
     () => selectedDevices.filter((d) => firmwareStates[d.id]?.status === 'update-available'),
     [selectedDevices, firmwareStates],
-  )
+  );
 
   const updateCount =
     batchTargets.length > 0
       ? batchTargets.length
-      : selectedWithUpdates.length || devicesWithUpdates.length
+      : selectedWithUpdates.length || devicesWithUpdates.length;
 
   // ── Summary line ───────────────────────────────────────────────────────────
 
@@ -84,81 +87,79 @@ function FirmwarePage() {
         firmwareStates[d.id]?.status === 'up-to-date' ||
         firmwareStates[d.id]?.status === 'update-available' ||
         firmwareStates[d.id]?.status === 'done',
-    ).length
+    ).length;
 
-    if (checkedCount === 0) return null
+    if (checkedCount === 0) return null;
 
     if (devicesWithUpdates.length > 0) {
-      return t('firmware.summaryAvailable', { count: devicesWithUpdates.length })
+      return t('firmware.summaryAvailable', { count: devicesWithUpdates.length });
     }
 
     if (checkedCount === devices.length) {
-      return t('firmware.summaryAllUpToDate')
+      return t('firmware.summaryAllUpToDate');
     }
 
-    return null
-  }, [devices, devicesWithUpdates.length, firmwareStates, t])
+    return null;
+  }, [devices, devicesWithUpdates.length, firmwareStates, t]);
 
   // ── Selection helpers ──────────────────────────────────────────────────────
 
   const handleToggleSelect = useCallback((id: string) => {
     setSelectedIds((prev) => {
-      const next = new Set(prev)
+      const next = new Set(prev);
       if (next.has(id)) {
-        next.delete(id)
+        next.delete(id);
       } else {
-        next.add(id)
+        next.add(id);
       }
-      return next
-    })
-  }, [])
+      return next;
+    });
+  }, []);
 
   const handleToggleSelectAll = useCallback(() => {
     setSelectedIds((prev) =>
-      prev.size === devices.length
-        ? new Set()
-        : new Set(devices.map((d) => d.id)),
-    )
-  }, [devices])
+      prev.size === devices.length ? new Set() : new Set(devices.map((d) => d.id)),
+    );
+  }, [devices]);
 
   // ── Action handlers ────────────────────────────────────────────────────────
 
   const handleCheckAll = () => {
-    void checkAll(devices)
-  }
+    void checkAll(devices);
+  };
 
   const handleCheckSelected = () => {
-    void checkSelected(selectedDevices)
-  }
+    void checkSelected(selectedDevices);
+  };
 
   const handleUpdateAll = () => {
-    const targets = devicesWithUpdates
-    setBatchTargets(targets)
-    setBatchConfirmOpen(true)
-  }
+    const targets = devicesWithUpdates;
+    setBatchTargets(targets);
+    setBatchConfirmOpen(true);
+  };
 
   const handleUpdateSelected = () => {
-    const targets = selectedWithUpdates
-    setBatchTargets(targets)
-    setBatchConfirmOpen(true)
-  }
+    const targets = selectedWithUpdates;
+    setBatchTargets(targets);
+    setBatchConfirmOpen(true);
+  };
 
   const handleBatchConfirm = () => {
-    setBatchConfirmOpen(false)
-    const targets = batchTargets
-    setBatchTargets([])
+    setBatchConfirmOpen(false);
+    const targets = batchTargets;
+    setBatchTargets([]);
     void updateSelected(targets).then(() => {
       notifications.show({
         color: 'green',
         message: t('firmware.updateSuccess'),
-      })
-    })
-  }
+      });
+    });
+  };
 
   const handleUpdateDevice = (device: StoredDevice) => {
-    setBatchTargets([device])
-    setBatchConfirmOpen(true)
-  }
+    setBatchTargets([device]);
+    setBatchConfirmOpen(true);
+  };
 
   // ── Empty state ────────────────────────────────────────────────────────────
 
@@ -175,7 +176,7 @@ function FirmwarePage() {
           </Button>
         </Stack>
       </Center>
-    )
+    );
   }
 
   return (
@@ -277,8 +278,8 @@ function FirmwarePage() {
       <ConfirmModal
         opened={batchConfirmOpen}
         onClose={() => {
-          setBatchConfirmOpen(false)
-          setBatchTargets([])
+          setBatchConfirmOpen(false);
+          setBatchTargets([]);
         }}
         onConfirm={handleBatchConfirm}
         title={t('firmware.updateAll')}
@@ -288,5 +289,5 @@ function FirmwarePage() {
         loading={anyBusy}
       />
     </Stack>
-  )
+  );
 }

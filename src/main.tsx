@@ -1,28 +1,28 @@
-import './services/i18n' // initialize i18next — must be first
-import { Suspense } from 'react'
-import ReactDOM from 'react-dom/client'
-import { I18nextProvider } from 'react-i18next'
-import i18next from 'i18next'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { createHashHistory, createRouter, RouterProvider } from '@tanstack/react-router'
-import { MantineProvider, createTheme } from '@mantine/core'
-import { Notifications } from '@mantine/notifications'
-import '@mantine/core/styles.css'
-import '@mantine/notifications/styles.css'
-import './styles/global.css'
-import { AppLoader } from './components/common/AppLoader'
-import { routeTree } from './routeTree.gen'
+import './services/i18n'; // initialize i18next — must be first
+import { createTheme, MantineProvider } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { createHashHistory, createRouter, RouterProvider } from '@tanstack/react-router';
+import i18next from 'i18next';
+import { Suspense } from 'react';
+import ReactDOM from 'react-dom/client';
+import { I18nextProvider } from 'react-i18next';
+import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
+import './styles/global.css';
+import { AppLoader } from './components/common/AppLoader';
+import { routeTree } from './routeTree.gen';
 
-const hashHistory = createHashHistory()
+const hashHistory = createHashHistory();
 
 const router = createRouter({
   routeTree,
   history: hashHistory,
-})
+});
 
 declare module '@tanstack/react-router' {
   interface Register {
-    router: typeof router
+    router: typeof router;
   }
 }
 
@@ -33,12 +33,12 @@ const queryClient = new QueryClient({
       retry: 2,
     },
   },
-})
+});
 
 const theme = createTheme({
   primaryColor: 'blue',
   defaultRadius: 'md',
-})
+});
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <I18nextProvider i18n={i18next}>
@@ -54,5 +54,5 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         </Suspense>
       </QueryClientProvider>
     </MantineProvider>
-  </I18nextProvider>
-)
+  </I18nextProvider>,
+);

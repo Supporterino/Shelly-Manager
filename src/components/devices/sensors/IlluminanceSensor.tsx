@@ -1,26 +1,26 @@
-import { Badge, Group } from '@mantine/core'
-import { IconSun } from '@tabler/icons-react'
-import { useTranslation } from 'react-i18next'
-import { SensorCard } from './SensorCard'
-import type { IlluminanceStatus } from '../../../types/shelly'
-import type { StoredDevice } from '../../../types/device'
+import { Badge, Group } from '@mantine/core';
+import { IconSun } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
+import type { StoredDevice } from '../../../types/device';
+import type { IlluminanceStatus } from '../../../types/shelly';
+import { SensorCard } from './SensorCard';
 
 interface Props {
-  deviceId: string
-  componentId: number
-  status: unknown
-  device: StoredDevice
+  deviceId: string;
+  componentId: number;
+  status: unknown;
+  device: StoredDevice;
 }
 
 const levelColor: Record<string, string> = {
   dark: 'gray',
   twilight: 'yellow',
   bright: 'yellow',
-}
+};
 
 export function IlluminanceSensor({ componentId: _c, status, device: _d }: Props) {
-  const { t } = useTranslation('devices')
-  const is = status as IlluminanceStatus | undefined
+  const { t } = useTranslation('devices');
+  const is = status as IlluminanceStatus | undefined;
 
   return (
     <SensorCard
@@ -37,5 +37,5 @@ export function IlluminanceSensor({ componentId: _c, status, device: _d }: Props
         ) : undefined
       }
     />
-  )
+  );
 }

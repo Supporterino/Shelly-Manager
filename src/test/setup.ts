@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom'
+import '@testing-library/jest-dom';
 
 // Mantine uses window.matchMedia for color scheme detection — not available in jsdom
 Object.defineProperty(window, 'matchMedia', {
@@ -13,14 +13,14 @@ Object.defineProperty(window, 'matchMedia', {
     removeEventListener: () => {},
     dispatchEvent: () => false,
   }),
-})
+});
 
 // Mantine Select (Combobox) ScrollArea uses ResizeObserver — not available in jsdom
 window.ResizeObserver = class ResizeObserver {
   observe() {}
   unobserve() {}
   disconnect() {}
-}
+};
 
 // Mantine Combobox calls scrollIntoView on option elements — not implemented in jsdom
-window.HTMLElement.prototype.scrollIntoView = () => {}
+window.HTMLElement.prototype.scrollIntoView = () => {};

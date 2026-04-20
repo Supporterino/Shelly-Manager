@@ -1,10 +1,10 @@
-import { AppShell } from '@mantine/core'
-import { ReactNode } from 'react'
-import { BottomNav } from './BottomNav'
-import { SidebarNav } from './SidebarNav'
+import { AppShell } from '@mantine/core';
+import type { ReactNode } from 'react';
+import { BottomNav } from './BottomNav';
+import { SidebarNav } from './SidebarNav';
 
 interface AppShellLayoutProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 export function AppShellLayout({ children }: AppShellLayoutProps) {
@@ -34,5 +34,5 @@ export function AppShellLayout({ children }: AppShellLayoutProps) {
       </AppShell.Footer>
       <AppShell.Main>{children}</AppShell.Main>
     </AppShell>
-  )
+  );
 }

@@ -1,19 +1,19 @@
-import { Group, UnstyledButton, Stack, Text } from '@mantine/core'
-import { Link, useRouterState } from '@tanstack/react-router'
-import { useTranslation } from 'react-i18next'
-import { IconCloudDownload, IconDevices, IconSearch, IconSettings } from '@tabler/icons-react'
+import { Group, Stack, Text, UnstyledButton } from '@mantine/core';
+import { IconCloudDownload, IconDevices, IconSearch, IconSettings } from '@tabler/icons-react';
+import { Link, useRouterState } from '@tanstack/react-router';
+import { useTranslation } from 'react-i18next';
 
 export function BottomNav() {
-  const { t } = useTranslation('common')
-  const routerState = useRouterState()
-  const pathname = routerState.location.pathname
+  const { t } = useTranslation('common');
+  const routerState = useRouterState();
+  const pathname = routerState.location.pathname;
 
   const links = [
     { to: '/', label: t('nav.dashboard'), icon: IconDevices },
     { to: '/discover', label: t('nav.discover'), icon: IconSearch },
     { to: '/firmware', label: t('nav.firmware'), icon: IconCloudDownload },
     { to: '/settings', label: t('nav.settings'), icon: IconSettings },
-  ]
+  ];
 
   return (
     <Group
@@ -24,12 +24,7 @@ export function BottomNav() {
       style={{ alignItems: 'flex-start', paddingTop: 8 }}
     >
       {links.map(({ to, label, icon: Icon }) => (
-        <UnstyledButton
-          key={to}
-          component={Link}
-          to={to}
-          style={{ flex: 1 }}
-        >
+        <UnstyledButton key={to} component={Link} to={to} style={{ flex: 1 }}>
           <Stack align="center" gap={2}>
             <Icon
               size={22}
@@ -43,5 +38,5 @@ export function BottomNav() {
         </UnstyledButton>
       ))}
     </Group>
-  )
+  );
 }

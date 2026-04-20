@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query'
-import { ShellyClient } from '../services/shellyClient'
-import type { StoredDevice } from '../types/device'
+import { useQuery } from '@tanstack/react-query';
+import { ShellyClient } from '../services/shellyClient';
+import type { StoredDevice } from '../types/device';
 
 /**
  * Fetches static device identity via Shelly.GetDeviceInfo.
@@ -13,5 +13,5 @@ export function useDeviceInfo(device: StoredDevice) {
     queryFn: () => new ShellyClient(device).getDeviceInfo(),
     staleTime: 60_000,
     refetchOnWindowFocus: false,
-  })
+  });
 }

@@ -1,13 +1,13 @@
-import { Card, Group, Stack, Text } from '@mantine/core'
-import type { ReactNode } from 'react'
+import { Card, Group, Stack, Text } from '@mantine/core';
+import type { ReactNode } from 'react';
 
 interface SensorCardProps {
-  icon: ReactNode
-  label: string
-  value: ReactNode
-  alert?: boolean
-  alertColor?: string
-  extra?: ReactNode
+  icon: ReactNode;
+  label: string;
+  value: ReactNode;
+  alert?: boolean;
+  alertColor?: string;
+  extra?: ReactNode;
 }
 
 export function SensorCard({
@@ -29,11 +29,15 @@ export function SensorCard({
       <Stack gap="xs">
         <Group gap="xs" align="center">
           {icon}
-          <Text size="sm" c="dimmed">{label}</Text>
+          <Text size="sm" c="dimmed">
+            {label}
+          </Text>
         </Group>
-        <Text fw={700} size="lg">{value}</Text>
+        <Text fw={700} size="lg">
+          {value}
+        </Text>
         {extra}
       </Stack>
     </Card>
-  )
+  );
 }

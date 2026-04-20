@@ -7,7 +7,7 @@
  * error objects.
  */
 
-export type NetworkErrorKind = 'no_network' | 'unreachable' | 'auth' | 'unknown'
+export type NetworkErrorKind = 'no_network' | 'unreachable' | 'auth' | 'unknown';
 
 /**
  * Patterns whose presence in the error message string indicates the device
@@ -25,7 +25,7 @@ const UNREACHABLE_PATTERNS = [
   'connection reset',
   'econnreset',
   'network unreachable', // caught below first
-]
+];
 
 /**
  * Patterns that indicate no working network interface at all.
@@ -36,9 +36,9 @@ const NO_NETWORK_PATTERNS = [
   'no network',
   'offline',
   'network not available',
-  'failed to fetch',          // generic browser-style fetch failure
+  'failed to fetch', // generic browser-style fetch failure
   'unable to connect',
-]
+];
 
 /**
  * Patterns that indicate an authentication failure.
@@ -50,23 +50,23 @@ const AUTH_PATTERNS = [
   'auth failed',
   'forbidden',
   '403',
-]
+];
 
 export function classifyNetworkError(error: unknown): NetworkErrorKind {
-  const msg = errorToString(error).toLowerCase()
+  const msg = errorToString(error).toLowerCase();
 
-  if (NO_NETWORK_PATTERNS.some(p => msg.includes(p))) return 'no_network'
-  if (UNREACHABLE_PATTERNS.some(p => msg.includes(p))) return 'unreachable'
-  if (AUTH_PATTERNS.some(p => msg.includes(p))) return 'auth'
-  return 'unknown'
+  if (NO_NETWORK_PATTERNS.some((p) => msg.includes(p))) return 'no_network';
+  if (UNREACHABLE_PATTERNS.some((p) => msg.includes(p))) return 'unreachable';
+  if (AUTH_PATTERNS.some((p) => msg.includes(p))) return 'auth';
+  return 'unknown';
 }
 
 function errorToString(error: unknown): string {
-  if (error instanceof Error) return error.message
-  if (typeof error === 'string') return error
+  if (error instanceof Error) return error.message;
+  if (typeof error === 'string') return error;
   try {
-    return JSON.stringify(error)
+    return JSON.stringify(error);
   } catch {
-    return String(error)
+    return String(error);
   }
 }

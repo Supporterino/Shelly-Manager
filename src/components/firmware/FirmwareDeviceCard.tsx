@@ -10,23 +10,23 @@ import {
   Stack,
   Text,
   Tooltip,
-} from '@mantine/core'
-import { IconCloudDownload, IconRefresh } from '@tabler/icons-react'
-import { Link } from '@tanstack/react-router'
-import { useTranslation } from 'react-i18next'
-import type { DeviceFirmwareState } from '../../hooks/useFirmwareManager'
-import type { StoredDevice } from '../../types/device'
-import { pollProgress } from '../../utils/firmware'
-import { FirmwareStatusBadge } from './FirmwareRowActions'
+} from '@mantine/core';
+import { IconCloudDownload, IconRefresh } from '@tabler/icons-react';
+import { Link } from '@tanstack/react-router';
+import { useTranslation } from 'react-i18next';
+import type { DeviceFirmwareState } from '../../hooks/useFirmwareManager';
+import type { StoredDevice } from '../../types/device';
+import { pollProgress } from '../../utils/firmware';
+import { FirmwareStatusBadge } from './FirmwareRowActions';
 
 interface Props {
-  device: StoredDevice
-  state: DeviceFirmwareState
-  globalBusy: boolean
-  selected: boolean
-  onToggleSelect: () => void
-  onCheckDevice: () => void
-  onUpdateDevice: () => void
+  device: StoredDevice;
+  state: DeviceFirmwareState;
+  globalBusy: boolean;
+  selected: boolean;
+  onToggleSelect: () => void;
+  onCheckDevice: () => void;
+  onUpdateDevice: () => void;
 }
 
 export function FirmwareDeviceCard({
@@ -38,10 +38,10 @@ export function FirmwareDeviceCard({
   onCheckDevice,
   onUpdateDevice,
 }: Props) {
-  const { t } = useTranslation('devices')
+  const { t } = useTranslation('devices');
 
-  const canUpdate = state.status === 'update-available'
-  const isUpdating = state.status === 'updating'
+  const canUpdate = state.status === 'update-available';
+  const isUpdating = state.status === 'updating';
 
   return (
     <Card
@@ -142,5 +142,5 @@ export function FirmwareDeviceCard({
         </Group>
       </Stack>
     </Card>
-  )
+  );
 }

@@ -12,92 +12,92 @@
  * 3. Store the computed auth object for the session lifetime (nonce doesn't rotate for WS).
  */
 
-import WebSocket from '@tauri-apps/plugin-websocket'
-import { notifications } from '@mantine/notifications'
-import type { StoredDevice } from '../types/device'
-import { buildRpcFrame } from '../utils/rpc'
-import { computeDigestAuth } from '../utils/auth'
-import { useWsStatusStore } from '../store/wsStatusStore'
+import { notifications } from '@mantine/notifications';
+import WebSocket from '@tauri-apps/plugin-websocket';
+import { useWsStatusStore } from '../store/wsStatusStore';
+import type { StoredDevice } from '../types/device';
+import { computeDigestAuth } from '../utils/auth';
+import { buildRpcFrame } from '../utils/rpc';
 
 interface WsAuthChallenge {
-  realm: string
-  nonce: number
-  algorithm?: string
+  realm: string;
+  nonce: number;
+  algorithm?: string;
 }
 
 interface ShellyWsFrame {
-  id?: number
-  src?: string
-  method?: string
-  params?: Record<string, unknown>
-  result?: Record<string, unknown>
-  error?: { code: number; message: string }
-  auth_type?: string
-  auth?: WsAuthChallenge
+  id?: number;
+  src?: string;
+  method?: string;
+  params?: Record<string, unknown>;
+  result?: Record<string, unknown>;
+  error?: { code: number; message: string };
+  auth_type?: string;
+  auth?: WsAuthChallenge;
 }
 
 interface ShellyNotifyEvent {
-  component: string
-  event: string
-  ts?: number
+  component: string;
+  event: string;
+  ts?: number;
 }
 
 class WsManager {
   /** deviceId → active WebSocket handle */
-  private readonly connections: Map<string, WebSocket> = new Map()
+  private readonly connections: Map<string, WebSocket> = new Map();
 
   // ── Public API ─────────────────────────────────────────────────────────────
 
   async connect(device: StoredDevice): Promise<void> {
     // Skip if already connected
-    if (this.connections.has(device.id)) return
+    if (this.connections.has(device.id)) return;
 
-    const { updateStatus, setConnected } = useWsStatusStore.getState()
+    const { updateStatus, setConnected } = useWsStatusStore.getState();
 
-    let ws: WebSocket
+    let ws: WebSocket;
     try {
-      ws = await WebSocket.connect(`ws://${device.ip}:${device.port}/rpc`)
+      ws = await WebSocket.connect(`ws://${device.ip}:${device.port}/rpc`);
     } catch {
-      setConnected(device.id, false)
-      return
+      setConnected(device.id, false);
+      return;
     }
 
     // Computed once per session after the initial auth handshake
-    let sessionAuth: Awaited<ReturnType<typeof computeDigestAuth>> | undefined
+    let sessionAuth: Awaited<ReturnType<typeof computeDigestAuth>> | undefined;
 
     ws.addListener((event) => {
-      if (typeof event.data !== 'string') return
+      if (typeof event.data !== 'string') return;
 
-      let frame: ShellyWsFrame
+      let frame: ShellyWsFrame;
       try {
-        frame = JSON.parse(event.data) as ShellyWsFrame
+        frame = JSON.parse(event.data) as ShellyWsFrame;
       } catch {
-        return
+        return;
       }
 
       // ── Auth challenge ──────────────────────────────────────────────────────
       if (frame.error?.code === 401 && frame.auth_type === 'digest' && frame.auth) {
         if (!device.auth?.password) {
           // No credentials stored — mark as offline
-          setConnected(device.id, false)
-          return
+          setConnected(device.id, false);
+          return;
         }
-        const challenge = frame.auth
+        const challenge = frame.auth;
         computeDigestAuth(challenge.realm, challenge.nonce, device.auth.password)
           .then((auth) => {
-            sessionAuth = auth
-            const authFrame = buildRpcFrame('Shelly.GetStatus', undefined, auth)
-            void ws.send(JSON.stringify(authFrame))
+            sessionAuth = auth;
+            const authFrame = buildRpcFrame('Shelly.GetStatus', undefined, auth);
+            void ws.send(JSON.stringify(authFrame));
           })
-          .catch(() => setConnected(device.id, false))
-        return
+          .catch(() => setConnected(device.id, false));
+        return;
       }
 
       // ── Initial GetStatus response → connected ──────────────────────────────
       if (frame.id !== undefined && frame.result != null) {
-        updateStatus(device.id, frame.result)
-        setConnected(device.id, true)
-        return
+        updateStatus(device.id, frame.result);
+        setConnected(device.id, true);
+        return;
       }
 
       // ── NotifyStatus / NotifyFullStatus → deep-merge delta ──────────────────
@@ -105,55 +105,55 @@ class WsManager {
         (frame.method === 'NotifyStatus' || frame.method === 'NotifyFullStatus') &&
         frame.params != null
       ) {
-        updateStatus(device.id, frame.params)
-        return
+        updateStatus(device.id, frame.params);
+        return;
       }
 
       // ── NotifyEvent → toast notification ────────────────────────────────────
       if (frame.method === 'NotifyEvent' && frame.params != null) {
-        const events = frame.params.events as ShellyNotifyEvent[] | undefined
+        const events = frame.params.events as ShellyNotifyEvent[] | undefined;
         if (Array.isArray(events)) {
           for (const ev of events) {
             notifications.show({
               message: `${device.name}: ${ev.component} — ${ev.event}`,
               autoClose: 3000,
-            })
+            });
           }
         }
-        return
+        return;
       }
 
       // ── Connection closed (device disconnected) ─────────────────────────────
       if (event.type === 'Close') {
-        setConnected(device.id, false)
-        this.connections.delete(device.id)
+        setConnected(device.id, false);
+        this.connections.delete(device.id);
       }
-    })
+    });
 
-    this.connections.set(device.id, ws)
+    this.connections.set(device.id, ws);
 
     // Send the initial GetStatus to trigger push notification subscription.
     // sessionAuth is still undefined here — auth is resolved on first 401 response.
-    const initFrame = buildRpcFrame('Shelly.GetStatus', undefined, sessionAuth)
+    const initFrame = buildRpcFrame('Shelly.GetStatus', undefined, sessionAuth);
     try {
-      await ws.send(JSON.stringify(initFrame))
+      await ws.send(JSON.stringify(initFrame));
     } catch {
-      setConnected(device.id, false)
+      setConnected(device.id, false);
     }
   }
 
   disconnect(deviceId: string): void {
-    const ws = this.connections.get(deviceId)
+    const ws = this.connections.get(deviceId);
     if (ws) {
-      void ws.disconnect()
-      this.connections.delete(deviceId)
-      useWsStatusStore.getState().setConnected(deviceId, false)
+      void ws.disconnect();
+      this.connections.delete(deviceId);
+      useWsStatusStore.getState().setConnected(deviceId, false);
     }
   }
 
   isConnected(deviceId: string): boolean {
-    return this.connections.has(deviceId)
+    return this.connections.has(deviceId);
   }
 }
 
-export const wsManager = new WsManager()
+export const wsManager = new WsManager();

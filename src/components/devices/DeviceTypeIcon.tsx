@@ -1,16 +1,16 @@
 import {
-  IconToggleRight,
-  IconBulb,
-  IconSunElectricity,
-  IconColorSwatch,
-  IconColorFilter,
-  IconLayoutDistributeVertical,
-  IconTemperature,
   IconBolt,
+  IconBulb,
   IconClick,
+  IconColorFilter,
+  IconColorSwatch,
+  IconLayoutDistributeVertical,
   IconQuestionMark,
-} from '@tabler/icons-react'
-import type { DeviceType } from '../../types/device'
+  IconSunElectricity,
+  IconTemperature,
+  IconToggleRight,
+} from '@tabler/icons-react';
+import type { DeviceType } from '../../types/device';
 
 const iconMap: Record<DeviceType, React.ComponentType<{ size?: number; stroke?: number }>> = {
   switch: IconToggleRight,
@@ -23,15 +23,15 @@ const iconMap: Record<DeviceType, React.ComponentType<{ size?: number; stroke?: 
   energy: IconBolt,
   input: IconClick,
   unknown: IconQuestionMark,
-}
+};
 
 interface DeviceTypeIconProps {
-  type: DeviceType
-  size?: number
-  stroke?: number
+  type: DeviceType;
+  size?: number;
+  stroke?: number;
 }
 
 export function DeviceTypeIcon({ type, size = 20, stroke = 1.5 }: DeviceTypeIconProps) {
-  const Icon = iconMap[type] ?? IconQuestionMark
-  return <Icon size={size} stroke={stroke} />
+  const Icon = iconMap[type] ?? IconQuestionMark;
+  return <Icon size={size} stroke={stroke} />;
 }

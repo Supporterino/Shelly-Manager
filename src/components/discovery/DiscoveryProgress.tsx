@@ -1,32 +1,30 @@
-import { Stack, Text, Loader, Badge, Group, ThemeIcon } from '@mantine/core'
-import { IconDevices, IconSearch, IconPencil } from '@tabler/icons-react'
-import { useTranslation } from 'react-i18next'
-import type { DiscoveredHost } from '../../types/discovery'
-import type { DiscoveryStatus } from '../../hooks/useDiscovery'
+import { Badge, Group, Loader, Stack, Text, ThemeIcon } from '@mantine/core';
+import { IconDevices, IconPencil, IconSearch } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
+import type { DiscoveryStatus } from '../../hooks/useDiscovery';
+import type { DiscoveredHost } from '../../types/discovery';
 
 interface DiscoveryProgressProps {
-  status: DiscoveryStatus
-  progress: DiscoveredHost[]
-  found: number
+  status: DiscoveryStatus;
+  progress: DiscoveredHost[];
+  found: number;
 }
 
 const SOURCE_ICON = {
   mdns: IconSearch,
   scan: IconDevices,
   manual: IconPencil,
-}
+};
 
 export function DiscoveryProgress({ status, progress, found }: DiscoveryProgressProps) {
-  const { t } = useTranslation('discovery')
+  const { t } = useTranslation('discovery');
 
   return (
     <Stack gap="md">
       <Group gap="sm">
         {status === 'running' && <Loader size="sm" />}
         <Text fw={500}>
-          {status === 'running'
-            ? t('steps.searching')
-            : t('found', { count: found })}
+          {status === 'running' ? t('steps.searching') : t('found', { count: found })}
         </Text>
       </Group>
 
@@ -37,10 +35,10 @@ export function DiscoveryProgress({ status, progress, found }: DiscoveryProgress
       )}
 
       <Stack gap="xs">
-        {progress.map((host, i) => {
-          const Icon = SOURCE_ICON[host.source]
+        {progress.map((host) => {
+          const Icon = SOURCE_ICON[host.source];
           return (
-            <Group key={`${host.ip}-${i}`} gap="sm">
+            <Group key={host.ip} gap="sm">
               <ThemeIcon size="sm" variant="light" color="blue">
                 <Icon size={12} />
               </ThemeIcon>
@@ -56,7 +54,7 @@ export function DiscoveryProgress({ status, progress, found }: DiscoveryProgress
                 {host.source}
               </Badge>
             </Group>
-          )
+          );
         })}
       </Stack>
 
@@ -66,5 +64,5 @@ export function DiscoveryProgress({ status, progress, found }: DiscoveryProgress
         </Text>
       )}
     </Stack>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import type { RpcAuth } from './rpc'
+import type { RpcAuth } from './rpc';
 
 /**
  * SHA-256 Digest authentication for Shelly Gen 2+ devices (RFC 7616).
@@ -13,11 +13,11 @@ import type { RpcAuth } from './rpc'
  */
 
 async function sha256Hex(input: string): Promise<string> {
-  const encoder = new TextEncoder()
-  const data = encoder.encode(input)
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data)
-  const hashArray = Array.from(new Uint8Array(hashBuffer))
-  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
+  const encoder = new TextEncoder();
+  const data = encoder.encode(input);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
 /**
@@ -26,16 +26,14 @@ async function sha256Hex(input: string): Promise<string> {
 export async function computeDigestAuth(
   realm: string,
   nonce: number,
-  password: string
+  password: string,
 ): Promise<RpcAuth> {
-  const cnonce = Math.floor(Math.random() * 0xffffffff)
-  const nc = '00000001'
+  const cnonce = Math.floor(Math.random() * 0xffffffff);
+  const nc = '00000001';
 
-  const ha1 = await sha256Hex(`admin:${realm}:${password}`)
-  const ha2 = await sha256Hex('dummy_method:dummy_uri')
-  const response = await sha256Hex(
-    `${ha1}:${nonce}:${nc}:${cnonce}:auth:${ha2}`
-  )
+  const ha1 = await sha256Hex(`admin:${realm}:${password}`);
+  const ha2 = await sha256Hex('dummy_method:dummy_uri');
+  const response = await sha256Hex(`${ha1}:${nonce}:${nc}:${cnonce}:auth:${ha2}`);
 
   return {
     realm,
@@ -44,21 +42,19 @@ export async function computeDigestAuth(
     cnonce,
     response,
     algorithm: 'SHA-256',
-  }
+  };
 }
 
 /**
  * Parse the WWW-Authenticate header from a Shelly 401 response.
  * Returns { realm, nonce } extracted from the Digest challenge.
  */
-export function parseWwwAuthenticate(
-  header: string
-): { realm: string; nonce: number } | null {
-  const realmMatch = header.match(/realm="([^"]+)"/)
-  const nonceMatch = header.match(/nonce=(\d+)/)
-  if (!realmMatch || !nonceMatch) return null
+export function parseWwwAuthenticate(header: string): { realm: string; nonce: number } | null {
+  const realmMatch = header.match(/realm="([^"]+)"/);
+  const nonceMatch = header.match(/nonce=(\d+)/);
+  if (!realmMatch || !nonceMatch) return null;
   return {
     realm: realmMatch[1],
     nonce: parseInt(nonceMatch[1], 10),
-  }
+  };
 }

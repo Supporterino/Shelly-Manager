@@ -1,33 +1,31 @@
-import { Box, Card, Group, Stack, Text } from '@mantine/core'
-import { useTranslation } from 'react-i18next'
-import { useNavigate } from '@tanstack/react-router'
-import { DeviceStatusBadge } from './DeviceStatusBadge'
-import { DeviceTypeIcon } from './DeviceTypeIcon'
-import { DeviceCardInlineControl } from './DeviceCardInlineControl'
-import { useDeviceStatus } from '../../hooks/useDeviceStatus'
-import { useWsStatus } from '../../hooks/useWsStatus'
-import type { StoredDevice, ConnectionStatus } from '../../types/device'
+import { Box, Card, Group, Stack, Text } from '@mantine/core';
+import { useNavigate } from '@tanstack/react-router';
+import { useTranslation } from 'react-i18next';
+import { useDeviceStatus } from '../../hooks/useDeviceStatus';
+import { useWsStatus } from '../../hooks/useWsStatus';
+import type { ConnectionStatus, StoredDevice } from '../../types/device';
+import { DeviceCardInlineControl } from './DeviceCardInlineControl';
+import { DeviceStatusBadge } from './DeviceStatusBadge';
+import { DeviceTypeIcon } from './DeviceTypeIcon';
 
 interface Props {
-  device: StoredDevice
-  locale: string
+  device: StoredDevice;
+  locale: string;
 }
 
 export function DeviceCard({ device, locale }: Props) {
-  const { t } = useTranslation('devices')
-  const navigate = useNavigate()
-  const { data: polledStatus } = useDeviceStatus(device)
-  const { wsStatus, isConnected } = useWsStatus(device.id)
+  const { t } = useTranslation('devices');
+  const navigate = useNavigate();
+  const { data: polledStatus } = useDeviceStatus(device);
+  const { wsStatus, isConnected } = useWsStatus(device.id);
 
-  const status = isConnected
-    ? (wsStatus as typeof polledStatus)
-    : polledStatus
+  const status = isConnected ? (wsStatus as typeof polledStatus) : polledStatus;
 
   const connectionStatus: ConnectionStatus = isConnected
     ? 'online'
     : polledStatus !== undefined
-    ? 'online'
-    : 'offline'
+      ? 'online'
+      : 'offline';
 
   return (
     <Box
@@ -41,8 +39,12 @@ export function DeviceCard({ device, locale }: Props) {
             <Group gap="xs" align="center" style={{ minWidth: 0 }}>
               <DeviceTypeIcon type={device.type} size={22} />
               <Stack gap={0} style={{ minWidth: 0 }}>
-                <Text fw={600} size="sm" lineClamp={1}>{device.name}</Text>
-                <Text size="xs" c="dimmed">{device.model}</Text>
+                <Text fw={600} size="sm" lineClamp={1}>
+                  {device.name}
+                </Text>
+                <Text size="xs" c="dimmed">
+                  {device.model}
+                </Text>
               </Stack>
             </Group>
             <Box style={{ flexShrink: 0 }}>
@@ -50,18 +52,17 @@ export function DeviceCard({ device, locale }: Props) {
             </Box>
           </Group>
 
-          <Text size="xs" c="dimmed">{t('info.ipAddress')}: {device.ip}</Text>
+          <Text size="xs" c="dimmed">
+            {t('info.ipAddress')}: {device.ip}
+          </Text>
 
           {/* Intercept clicks on controls so they don't trigger card navigation */}
-          <div onClick={(e) => e.stopPropagation()}>
-            <DeviceCardInlineControl
-              device={device}
-              status={status}
-              locale={locale}
-            />
+          {/* biome-ignore lint/a11y/noStaticElementInteractions: propagation stopper only — interactive controls are inside */}
+          <div onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
+            <DeviceCardInlineControl device={device} status={status} locale={locale} />
           </div>
         </Stack>
       </Card>
     </Box>
-  )
+  );
 }

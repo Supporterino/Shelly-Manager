@@ -1,27 +1,21 @@
-import { ActionIcon, Badge, Group, Loader, Progress, Stack, Tooltip } from '@mantine/core'
-import {
-  IconCheck,
-  IconCloudDownload,
-  IconMinus,
-  IconRefresh,
-  IconX,
-} from '@tabler/icons-react'
-import { useTranslation } from 'react-i18next'
-import type { DeviceFirmwareState } from '../../hooks/useFirmwareManager'
-import { pollProgress } from '../../utils/firmware'
+import { ActionIcon, Badge, Group, Loader, Progress, Stack, Tooltip } from '@mantine/core';
+import { IconCheck, IconCloudDownload, IconMinus, IconRefresh, IconX } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
+import type { DeviceFirmwareState } from '../../hooks/useFirmwareManager';
+import { pollProgress } from '../../utils/firmware';
 
 interface Props {
-  state: DeviceFirmwareState
-  onCheck: () => void
-  onUpdate: () => void
+  state: DeviceFirmwareState;
+  onCheck: () => void;
+  onUpdate: () => void;
   /** Disables all controls when a global bulk operation is running */
-  globalBusy: boolean
+  globalBusy: boolean;
 }
 
 /** Status badge — used in both the desktop table row and the mobile card */
 export function FirmwareStatusBadge({ state }: { state: DeviceFirmwareState }) {
-  const { t } = useTranslation('devices')
-  const { t: tc } = useTranslation('common')
+  const { t } = useTranslation('devices');
+  const { t: tc } = useTranslation('common');
 
   switch (state.status) {
     case 'idle':
@@ -29,7 +23,7 @@ export function FirmwareStatusBadge({ state }: { state: DeviceFirmwareState }) {
         <Badge variant="light" color="gray" size="sm">
           {t('firmware.notChecked')}
         </Badge>
-      )
+      );
     case 'checking':
       return (
         <Badge
@@ -40,29 +34,19 @@ export function FirmwareStatusBadge({ state }: { state: DeviceFirmwareState }) {
         >
           {tc('status.connecting')}
         </Badge>
-      )
+      );
     case 'up-to-date':
       return (
-        <Badge
-          variant="light"
-          color="green"
-          size="sm"
-          leftSection={<IconCheck size={12} />}
-        >
+        <Badge variant="light" color="green" size="sm" leftSection={<IconCheck size={12} />}>
           {t('firmware.upToDateShort')}
         </Badge>
-      )
+      );
     case 'update-available':
       return (
-        <Badge
-          variant="light"
-          color="blue"
-          size="sm"
-          leftSection={<IconCloudDownload size={12} />}
-        >
+        <Badge variant="light" color="blue" size="sm" leftSection={<IconCloudDownload size={12} />}>
           {t('firmware.updateAvailableShort', { version: state.availableVersion ?? '' })}
         </Badge>
-      )
+      );
     case 'updating':
       return (
         <Badge
@@ -73,49 +57,34 @@ export function FirmwareStatusBadge({ state }: { state: DeviceFirmwareState }) {
         >
           {t('firmware.updating')}
         </Badge>
-      )
+      );
     case 'done':
       return (
-        <Badge
-          variant="light"
-          color="teal"
-          size="sm"
-          leftSection={<IconCheck size={12} />}
-        >
+        <Badge variant="light" color="teal" size="sm" leftSection={<IconCheck size={12} />}>
           {t('firmware.done')}
         </Badge>
-      )
+      );
     case 'failed':
       return (
         <Tooltip label={state.error ?? t('firmware.failed')} withArrow>
-          <Badge
-            variant="light"
-            color="red"
-            size="sm"
-            leftSection={<IconX size={12} />}
-          >
+          <Badge variant="light" color="red" size="sm" leftSection={<IconX size={12} />}>
             {t('firmware.failed')}
           </Badge>
         </Tooltip>
-      )
+      );
     case 'skipped':
       return (
-        <Badge
-          variant="light"
-          color="gray"
-          size="sm"
-          leftSection={<IconMinus size={12} />}
-        >
+        <Badge variant="light" color="gray" size="sm" leftSection={<IconMinus size={12} />}>
           {t('firmware.offlineSkipped')}
         </Badge>
-      )
+      );
   }
 }
 
 export function FirmwareRowActions({ state, onCheck, onUpdate, globalBusy }: Props) {
-  const { t } = useTranslation('devices')
-  const canUpdate = state.status === 'update-available'
-  const isUpdating = state.status === 'updating'
+  const { t } = useTranslation('devices');
+  const canUpdate = state.status === 'update-available';
+  const isUpdating = state.status === 'updating';
 
   return (
     <Stack gap={6}>
@@ -172,5 +141,5 @@ export function FirmwareRowActions({ state, onCheck, onUpdate, globalBusy }: Pro
         />
       )}
     </Stack>
-  )
+  );
 }

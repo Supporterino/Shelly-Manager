@@ -1,9 +1,5 @@
-import type {
-  DeviceType,
-  ShellyComponentSummary,
-  ShellyComponentType,
-} from '../types/device'
-import type { ShellyGetStatusResult } from '../types/shelly'
+import type { DeviceType, ShellyComponentSummary, ShellyComponentType } from '../types/device';
+import type { ShellyGetStatusResult } from '../types/shelly';
 
 // Maps GetStatus key prefixes to internal ShellyComponentType
 const NS_TO_COMPONENT_TYPE: Record<string, ShellyComponentType> = {
@@ -24,7 +20,7 @@ const NS_TO_COMPONENT_TYPE: Record<string, ShellyComponentType> = {
   em: 'em',
   em1: 'em1',
   pm1: 'pm1',
-}
+};
 
 // Sort priority: actuators first, sensors last, energy in-between
 const COMPONENT_SORT_ORDER: Record<ShellyComponentType, number> = {
@@ -46,22 +42,17 @@ const COMPONENT_SORT_ORDER: Record<ShellyComponentType, number> = {
   devicepower: 14,
   voltmeter: 15,
   input: 16,
+};
+
+function componentSortOrder(a: ShellyComponentSummary, b: ShellyComponentSummary): number {
+  const aPriority = COMPONENT_SORT_ORDER[a.type] ?? 99;
+  const bPriority = COMPONENT_SORT_ORDER[b.type] ?? 99;
+  if (aPriority !== bPriority) return aPriority - bPriority;
+  return a.id - b.id;
 }
 
-function componentSortOrder(
-  a: ShellyComponentSummary,
-  b: ShellyComponentSummary
-): number {
-  const aPriority = COMPONENT_SORT_ORDER[a.type] ?? 99
-  const bPriority = COMPONENT_SORT_ORDER[b.type] ?? 99
-  if (aPriority !== bPriority) return aPriority - bPriority
-  return a.id - b.id
-}
-
-function namespaceToComponentType(
-  ns: string
-): ShellyComponentType | null {
-  return (NS_TO_COMPONENT_TYPE[ns] as ShellyComponentType) ?? null
+function namespaceToComponentType(ns: string): ShellyComponentType | null {
+  return (NS_TO_COMPONENT_TYPE[ns] as ShellyComponentType) ?? null;
 }
 
 /**
@@ -70,55 +61,49 @@ function namespaceToComponentType(
  */
 export function extractComponents(
   status: ShellyGetStatusResult,
-  app: string
+  app: string,
 ): ShellyComponentSummary[] {
   const isCCT =
     app.toLowerCase().includes('cct') ||
     app.toLowerCase().includes('duo') ||
     Object.keys(status).some(
       (k) =>
-        k.startsWith('light:') &&
-        typeof (status[k] as Record<string, unknown>)?.temp === 'number'
-    )
+        k.startsWith('light:') && typeof (status[k] as Record<string, unknown>)?.temp === 'number',
+    );
 
-  const components: ShellyComponentSummary[] = []
+  const components: ShellyComponentSummary[] = [];
   for (const key of Object.keys(status)) {
-    const colonIndex = key.indexOf(':')
-    if (colonIndex === -1) continue
-    const ns = key.slice(0, colonIndex)
-    const idStr = key.slice(colonIndex + 1)
-    const id = Number(idStr)
-    if (isNaN(id)) continue
+    const colonIndex = key.indexOf(':');
+    if (colonIndex === -1) continue;
+    const ns = key.slice(0, colonIndex);
+    const idStr = key.slice(colonIndex + 1);
+    const id = Number(idStr);
+    if (Number.isNaN(id)) continue;
 
-    let type = namespaceToComponentType(ns)
-    if (type === 'light' && isCCT) type = 'light_cct'
-    if (type) components.push({ type, id })
+    let type = namespaceToComponentType(ns);
+    if (type === 'light' && isCCT) type = 'light_cct';
+    if (type) components.push({ type, id });
   }
 
-  return components.sort(componentSortOrder)
+  return components.sort(componentSortOrder);
 }
 
 /**
  * Derive the top-level DeviceType from the component list and the
  * Shelly `app` string.
  */
-export function deriveDeviceType(
-  app: string,
-  components: ShellyComponentSummary[]
-): DeviceType {
-  const appLower = app.toLowerCase()
+export function deriveDeviceType(app: string, components: ShellyComponentSummary[]): DeviceType {
+  const appLower = app.toLowerCase();
 
-  if (appLower.includes('rgb') && appLower.includes('w')) return 'rgbw'
-  if (appLower.includes('rgb')) return 'rgb'
-  if (appLower.includes('cover')) return 'cover'
+  if (appLower.includes('rgb') && appLower.includes('w')) return 'rgbw';
+  if (appLower.includes('rgb')) return 'rgb';
+  if (appLower.includes('cover')) return 'cover';
   if (appLower.includes('dimmer') || appLower.includes('light')) {
-    const hasCCT =
-      components.some((c) => c.type === 'light_cct') ||
-      appLower.includes('cct')
-    return hasCCT ? 'cct' : 'dimmer'
+    const hasCCT = components.some((c) => c.type === 'light_cct') || appLower.includes('cct');
+    return hasCCT ? 'cct' : 'dimmer';
   }
-  if (appLower.includes('switch') || appLower.includes('plug')) return 'switch'
-  if (appLower.includes('em') || appLower.includes('pm')) return 'energy'
+  if (appLower.includes('switch') || appLower.includes('plug')) return 'switch';
+  if (appLower.includes('em') || appLower.includes('pm')) return 'energy';
   if (
     appLower.includes('sensor') ||
     appLower.includes('ht') ||
@@ -129,16 +114,16 @@ export function deriveDeviceType(
     appLower.includes('door') ||
     appLower.includes('window')
   )
-    return 'sensor'
-  if (appLower.includes('input') || appLower.includes('button')) return 'input'
+    return 'sensor';
+  if (appLower.includes('input') || appLower.includes('button')) return 'input';
 
   // Fallback: infer from components
-  const types = new Set(components.map((c) => c.type))
-  if (types.has('rgb')) return 'rgb'
-  if (types.has('rgbw')) return 'rgbw'
-  if (types.has('light') || types.has('light_cct')) return 'dimmer'
-  if (types.has('cover')) return 'cover'
-  if (types.has('switch')) return 'switch'
-  if (types.has('em') || types.has('em1') || types.has('pm1')) return 'energy'
-  return 'unknown'
+  const types = new Set(components.map((c) => c.type));
+  if (types.has('rgb')) return 'rgb';
+  if (types.has('rgbw')) return 'rgbw';
+  if (types.has('light') || types.has('light_cct')) return 'dimmer';
+  if (types.has('cover')) return 'cover';
+  if (types.has('switch')) return 'switch';
+  if (types.has('em') || types.has('em1') || types.has('pm1')) return 'energy';
+  return 'unknown';
 }

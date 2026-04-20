@@ -1,7 +1,7 @@
-import i18next from 'i18next'
-import { initReactI18next } from 'react-i18next'
-import resourcesToBackend from 'i18next-resources-to-backend'
-import LanguageDetector from 'i18next-browser-languagedetector'
+import i18next from 'i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import resourcesToBackend from 'i18next-resources-to-backend';
+import { initReactI18next } from 'react-i18next';
 
 i18next
   .use(initReactI18next)
@@ -9,9 +9,8 @@ i18next
   .use(
     resourcesToBackend(
       // Vite turns each JSON into a lazy chunk — no HTTP fetch, works in Tauri
-      (language: string, namespace: string) =>
-        import(`../locales/${language}/${namespace}.json`)
-    )
+      (language: string, namespace: string) => import(`../locales/${language}/${namespace}.json`),
+    ),
   )
   .init({
     fallbackLng: 'en',
@@ -23,6 +22,6 @@ i18next
       order: ['localStorage', 'navigator'],
       caches: ['localStorage'],
     },
-  })
+  });
 
-export default i18next
+export default i18next;

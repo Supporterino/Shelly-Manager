@@ -1,27 +1,27 @@
-import { Badge, Group, Progress, Text } from '@mantine/core'
-import { IconBattery } from '@tabler/icons-react'
-import { useTranslation } from 'react-i18next'
-import { SensorCard } from './SensorCard'
-import type { DevicePowerStatus } from '../../../types/shelly'
-import type { StoredDevice } from '../../../types/device'
+import { Badge, Group, Progress, Text } from '@mantine/core';
+import { IconBattery } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
+import type { StoredDevice } from '../../../types/device';
+import type { DevicePowerStatus } from '../../../types/shelly';
+import { SensorCard } from './SensorCard';
 
 interface Props {
-  deviceId: string
-  componentId: number
-  status: unknown
-  device: StoredDevice
+  deviceId: string;
+  componentId: number;
+  status: unknown;
+  device: StoredDevice;
 }
 
 function batteryColor(percent: number): string {
-  if (percent > 50) return 'green'
-  if (percent > 20) return 'yellow'
-  return 'red'
+  if (percent > 50) return 'green';
+  if (percent > 20) return 'yellow';
+  return 'red';
 }
 
 export function BatteryIndicator({ componentId: _c, status, device: _d }: Props) {
-  const { t } = useTranslation('devices')
-  const dp = status as DevicePowerStatus | undefined
-  const percent = dp?.battery?.percent ?? null
+  const { t } = useTranslation('devices');
+  const dp = status as DevicePowerStatus | undefined;
+  const percent = dp?.battery?.percent ?? null;
 
   return (
     <SensorCard
@@ -31,16 +31,12 @@ export function BatteryIndicator({ componentId: _c, status, device: _d }: Props)
       alert={percent != null && percent < 20}
       extra={
         <>
-          {percent != null && (
-            <Progress
-              value={percent}
-              size="sm"
-              color={batteryColor(percent)}
-            />
-          )}
+          {percent != null && <Progress value={percent} size="sm" color={batteryColor(percent)} />}
           <Group justify="space-between">
             {dp?.battery?.V != null && (
-              <Text size="xs" c="dimmed">{dp.battery.V.toFixed(2)} V</Text>
+              <Text size="xs" c="dimmed">
+                {dp.battery.V.toFixed(2)} V
+              </Text>
             )}
             {dp?.external?.present && (
               <Badge size="xs" color="blue" variant="light">
@@ -51,5 +47,5 @@ export function BatteryIndicator({ componentId: _c, status, device: _d }: Props)
         </>
       }
     />
-  )
+  );
 }

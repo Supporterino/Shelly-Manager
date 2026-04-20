@@ -1,11 +1,11 @@
-import { Accordion, Badge, Button, Group, Slider, Stack, Text } from '@mantine/core'
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useCoverControl } from '../../../hooks/useDeviceControl'
-import { formatPower, formatEnergy, formatVoltage, formatCurrent } from '../../../utils/formatters'
-import type { CoverStatus } from '../../../types/shelly'
-import type { StoredDevice, ShellyComponentSummary } from '../../../types/device'
-import { ErrorBadges } from './ErrorBadges'
+import { Accordion, Badge, Button, Group, Slider, Stack, Text } from '@mantine/core';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useCoverControl } from '../../../hooks/useDeviceControl';
+import type { ShellyComponentSummary, StoredDevice } from '../../../types/device';
+import type { CoverStatus } from '../../../types/shelly';
+import { formatCurrent, formatEnergy, formatPower, formatVoltage } from '../../../utils/formatters';
+import { ErrorBadges } from './ErrorBadges';
 
 const stateColor: Record<string, string> = {
   open: 'green',
@@ -14,49 +14,54 @@ const stateColor: Record<string, string> = {
   closing: 'yellow',
   stopped: 'yellow',
   calibrating: 'violet',
-}
+};
 
 interface Props {
-  deviceId: string
-  componentId: number
-  status: unknown
-  device: StoredDevice
+  deviceId: string;
+  componentId: number;
+  status: unknown;
+  device: StoredDevice;
 }
 
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <Group justify="space-between">
-      <Text size="xs" c="dimmed">{label}</Text>
-      <Text size="sm" fw={500}>{value}</Text>
+      <Text size="xs" c="dimmed">
+        {label}
+      </Text>
+      <Text size="sm" fw={500}>
+        {value}
+      </Text>
     </Group>
-  )
+  );
 }
 
 export function CoverControl({ deviceId, componentId, status, device }: Props) {
-  const { t, i18n } = useTranslation('devices')
-  const locale = i18n.language
-  const cover = status as CoverStatus | undefined
+  const { t, i18n } = useTranslation('devices');
+  const locale = i18n.language;
+  const cover = status as CoverStatus | undefined;
   const comp: ShellyComponentSummary | undefined = device.components.find(
-    (c) => c.type === 'cover' && c.id === componentId
-  )
-  const channelLabel = comp?.name ?? t('controls.channel', { n: componentId + 1 })
-  const { open, close, stop, goTo } = useCoverControl(deviceId, componentId)
-  const [targetPos, setTargetPos] = useState(cover?.current_pos ?? 0)
+    (c) => c.type === 'cover' && c.id === componentId,
+  );
+  const channelLabel = comp?.name ?? t('controls.channel', { n: componentId + 1 });
+  const { open, close, stop, goTo } = useCoverControl(deviceId, componentId);
+  const [targetPos, setTargetPos] = useState(cover?.current_pos ?? 0);
 
-  const isMoving =
-    cover?.state === 'opening' || cover?.state === 'closing'
+  const isMoving = cover?.state === 'opening' || cover?.state === 'closing';
 
   const hasEnergyStats =
     cover?.apower != null ||
     cover?.voltage != null ||
     cover?.current != null ||
     cover?.aenergy != null ||
-    cover?.temperature != null
+    cover?.temperature != null;
 
   return (
     <Stack gap="xs">
       <Group justify="space-between" align="center">
-        <Text fw={500} size="sm">{channelLabel}</Text>
+        <Text fw={500} size="sm">
+          {channelLabel}
+        </Text>
         <Group gap="xs" align="center">
           {cover?.last_direction != null && (
             <Text size="xs" c="dimmed">
@@ -171,5 +176,5 @@ export function CoverControl({ deviceId, componentId, status, device }: Props) {
         </Accordion>
       )}
     </Stack>
-  )
+  );
 }

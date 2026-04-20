@@ -1,4 +1,3 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
 import {
   ActionIcon,
   Button,
@@ -12,88 +11,89 @@ import {
   TextInput,
   Title,
   Tooltip,
-} from '@mantine/core'
-import { IconPlus, IconRefresh, IconSearch } from '@tabler/icons-react'
-import { useTranslation } from 'react-i18next'
-import { useMemo, useState } from 'react'
-import { useQueryClient } from '@tanstack/react-query'
-import { useDeviceStore } from '../store/deviceStore'
-import { useAppStore } from '../store/appStore'
-import { useWsStatusStore } from '../store/wsStatusStore'
-import { DeviceGrid } from '../components/devices/DeviceGrid'
-import type { StoredDevice } from '../types/device'
+} from '@mantine/core';
+import { IconPlus, IconRefresh, IconSearch } from '@tabler/icons-react';
+import { useQueryClient } from '@tanstack/react-query';
+import { createFileRoute, Link } from '@tanstack/react-router';
+import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { DeviceGrid } from '../components/devices/DeviceGrid';
+import { useAppStore } from '../store/appStore';
+import { useDeviceStore } from '../store/deviceStore';
+import { useWsStatusStore } from '../store/wsStatusStore';
+import type { StoredDevice } from '../types/device';
 
 export const Route = createFileRoute('/')({
   component: DashboardPage,
-})
+});
 
-type StatusFilter = 'all' | 'online' | 'offline'
-type SortKey = 'name' | 'status' | 'lastSeen'
+type StatusFilter = 'all' | 'online' | 'offline';
+type SortKey = 'name' | 'status' | 'lastSeen';
 
 function DashboardPage() {
-  const { t } = useTranslation('common')
-  const { t: td } = useTranslation('discovery')
-  const devicesRecord = useDeviceStore((s) => s.devices)
-  const devices = useMemo(() => Object.values(devicesRecord), [devicesRecord])
-  const locale = useAppStore((s) => s.preferences.locale || 'en')
-  const wsConnected = useWsStatusStore((s) => s.connected)
-  const httpConnected = useWsStatusStore((s) => s.httpConnected)
+  const { t } = useTranslation('common');
+  const { t: td } = useTranslation('discovery');
+  const devicesRecord = useDeviceStore((s) => s.devices);
+  const devices = useMemo(() => Object.values(devicesRecord), [devicesRecord]);
+  const locale = useAppStore((s) => s.preferences.locale || 'en');
+  const wsConnected = useWsStatusStore((s) => s.connected);
+  const httpConnected = useWsStatusStore((s) => s.httpConnected);
 
-  const queryClient = useQueryClient()
-  const [search, setSearch] = useState('')
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
-  const [sortKey, setSortKey] = useState<SortKey>('name')
+  const queryClient = useQueryClient();
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const [sortKey, setSortKey] = useState<SortKey>('name');
 
   async function handleRefresh() {
-    await queryClient.invalidateQueries({ queryKey: ['device'] })
+    await queryClient.invalidateQueries({ queryKey: ['device'] });
   }
 
   const filtered = useMemo(() => {
-    let result = devices as StoredDevice[]
+    let result = devices as StoredDevice[];
 
     // Search by name or IP
     if (search.trim()) {
-      const q = search.trim().toLowerCase()
-      result = result.filter(
-        (d) => d.name.toLowerCase().includes(q) || d.ip.includes(q)
-      )
+      const q = search.trim().toLowerCase();
+      result = result.filter((d) => d.name.toLowerCase().includes(q) || d.ip.includes(q));
     }
 
     // Status filter
     if (statusFilter !== 'all') {
       result = result.filter((d) => {
-        const isOnline = wsConnected[d.id] === true || httpConnected[d.id] === true
-        return statusFilter === 'online' ? isOnline : !isOnline
-      })
+        const isOnline = wsConnected[d.id] === true || httpConnected[d.id] === true;
+        return statusFilter === 'online' ? isOnline : !isOnline;
+      });
     }
 
     // Sort
     result = [...result].sort((a, b) => {
-      if (sortKey === 'name') return a.name.localeCompare(b.name)
-      if (sortKey === 'lastSeen') return b.lastSeenAt - a.lastSeenAt
+      if (sortKey === 'name') return a.name.localeCompare(b.name);
+      if (sortKey === 'lastSeen') return b.lastSeenAt - a.lastSeenAt;
       if (sortKey === 'status') {
-        const aOn = wsConnected[a.id] === true || httpConnected[a.id] === true ? 1 : 0
-        const bOn = wsConnected[b.id] === true || httpConnected[b.id] === true ? 1 : 0
-        return bOn - aOn
+        const aOn = wsConnected[a.id] === true || httpConnected[a.id] === true ? 1 : 0;
+        const bOn = wsConnected[b.id] === true || httpConnected[b.id] === true ? 1 : 0;
+        return bOn - aOn;
       }
-      return 0
-    })
+      return 0;
+    });
 
-    return result
-  }, [devices, search, statusFilter, sortKey, wsConnected, httpConnected])
+    return result;
+  }, [devices, search, statusFilter, sortKey, wsConnected, httpConnected]);
 
   if (devices.length === 0) {
     return (
       <Center h="60vh">
         <Stack align="center" gap="md">
-          <Title order={3} c="dimmed">{t('appName')}</Title>
+          <Title order={3} c="dimmed">
+            {t('appName')}
+          </Title>
           <Text c="dimmed">{td('noDevicesFound')}</Text>
           <Button component={Link} to="/discover" leftSection={<IconPlus size={16} />}>
             {td('addSelected')}
           </Button>
         </Stack>
       </Center>
-    )
+    );
   }
 
   return (
@@ -166,5 +166,5 @@ function DashboardPage() {
         <DeviceGrid devices={filtered} locale={locale} />
       </ScrollArea>
     </Stack>
-  )
+  );
 }

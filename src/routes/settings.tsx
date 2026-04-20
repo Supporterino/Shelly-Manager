@@ -1,4 +1,3 @@
-import { createFileRoute } from '@tanstack/react-router'
 import {
   Container,
   Divider,
@@ -10,39 +9,42 @@ import {
   Text,
   Title,
   useMantineColorScheme,
-} from '@mantine/core'
-import { useTranslation } from 'react-i18next'
-import { getVersion } from '@tauri-apps/api/app'
-import { useEffect, useState } from 'react'
-import { useAppStore } from '../store/appStore'
-import { LanguageSelect } from '../components/settings/LanguageSelect'
+} from '@mantine/core';
+import { createFileRoute } from '@tanstack/react-router';
+import { getVersion } from '@tauri-apps/api/app';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { LanguageSelect } from '../components/settings/LanguageSelect';
+import { useAppStore } from '../store/appStore';
 
 export const Route = createFileRoute('/settings')({
   component: SettingsPage,
-})
+});
 
 function SettingsPage() {
-  const { t } = useTranslation('settings')
-  const { setColorScheme } = useMantineColorScheme()
-  const preferences = useAppStore((s) => s.preferences)
-  const setTheme = useAppStore((s) => s.setTheme)
-  const setPollingInterval = useAppStore((s) => s.setPollingInterval)
-  const setTemperatureUnit = useAppStore((s) => s.setTemperatureUnit)
-  const [appVersion, setAppVersion] = useState<string>('')
+  const { t } = useTranslation('settings');
+  const { setColorScheme } = useMantineColorScheme();
+  const preferences = useAppStore((s) => s.preferences);
+  const setTheme = useAppStore((s) => s.setTheme);
+  const setPollingInterval = useAppStore((s) => s.setPollingInterval);
+  const setTemperatureUnit = useAppStore((s) => s.setTemperatureUnit);
+  const [appVersion, setAppVersion] = useState<string>('');
 
   useEffect(() => {
-    getVersion().then(setAppVersion).catch(() => setAppVersion('—'))
-  }, [])
+    getVersion()
+      .then(setAppVersion)
+      .catch(() => setAppVersion('—'));
+  }, []);
 
   const handleThemeChange = (value: string) => {
-    const theme = value as 'light' | 'dark' | 'system'
-    void setTheme(theme)
+    const theme = value as 'light' | 'dark' | 'system';
+    void setTheme(theme);
     if (theme === 'system') {
-      setColorScheme('auto')
+      setColorScheme('auto');
     } else {
-      setColorScheme(theme)
+      setColorScheme(theme);
     }
-  }
+  };
 
   return (
     <ScrollArea h="100%">
@@ -131,15 +133,19 @@ function SettingsPage() {
             </Text>
             <Group justify="space-between">
               <Text size="sm">{t('about.version')}</Text>
-              <Text size="sm" c="dimmed">{appVersion}</Text>
+              <Text size="sm" c="dimmed">
+                {appVersion}
+              </Text>
             </Group>
             <Group justify="space-between">
               <Text size="sm">{t('about.license')}</Text>
-              <Text size="sm" c="dimmed">MIT</Text>
+              <Text size="sm" c="dimmed">
+                MIT
+              </Text>
             </Group>
           </Stack>
         </Stack>
       </Container>
     </ScrollArea>
-  )
+  );
 }

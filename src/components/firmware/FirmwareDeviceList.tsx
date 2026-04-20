@@ -1,18 +1,18 @@
-import { Checkbox, Group, Stack, Text } from '@mantine/core'
-import { useTranslation } from 'react-i18next'
-import type { DeviceFirmwareState } from '../../hooks/useFirmwareManager'
-import type { StoredDevice } from '../../types/device'
-import { FirmwareDeviceCard } from './FirmwareDeviceCard'
+import { Checkbox, Group, Stack, Text } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
+import type { DeviceFirmwareState } from '../../hooks/useFirmwareManager';
+import type { StoredDevice } from '../../types/device';
+import { FirmwareDeviceCard } from './FirmwareDeviceCard';
 
 interface Props {
-  devices: StoredDevice[]
-  firmwareStates: Record<string, DeviceFirmwareState>
-  selectedIds: Set<string>
-  globalBusy: boolean
-  onToggleSelect: (id: string) => void
-  onToggleSelectAll: () => void
-  onCheckDevice: (device: StoredDevice) => void
-  onUpdateDevice: (device: StoredDevice) => void
+  devices: StoredDevice[];
+  firmwareStates: Record<string, DeviceFirmwareState>;
+  selectedIds: Set<string>;
+  globalBusy: boolean;
+  onToggleSelect: (id: string) => void;
+  onToggleSelectAll: () => void;
+  onCheckDevice: (device: StoredDevice) => void;
+  onUpdateDevice: (device: StoredDevice) => void;
 }
 
 export function FirmwareDeviceList({
@@ -25,10 +25,10 @@ export function FirmwareDeviceList({
   onCheckDevice,
   onUpdateDevice,
 }: Props) {
-  const { t } = useTranslation('devices')
+  const { t } = useTranslation('devices');
 
-  const allSelected = devices.length > 0 && devices.every((d) => selectedIds.has(d.id))
-  const someSelected = devices.some((d) => selectedIds.has(d.id))
+  const allSelected = devices.length > 0 && devices.every((d) => selectedIds.has(d.id));
+  const someSelected = devices.some((d) => selectedIds.has(d.id));
 
   return (
     <Stack gap="sm">
@@ -52,7 +52,7 @@ export function FirmwareDeviceList({
           status: 'idle' as const,
           currentVersion: device.model,
           pollStep: 0,
-        }
+        };
         return (
           <FirmwareDeviceCard
             key={device.id}
@@ -64,8 +64,8 @@ export function FirmwareDeviceList({
             onCheckDevice={() => onCheckDevice(device)}
             onUpdateDevice={() => onUpdateDevice(device)}
           />
-        )
+        );
       })}
     </Stack>
-  )
+  );
 }
