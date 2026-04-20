@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!--
+        Encryption export compliance (required for App Store review).
+        Shelly Manager uses only standard OS/TLS — no custom cryptography.
+    -->
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
+
+    <!--
+        Local network privacy prompt (macOS 12+, required under App Sandbox).
+        Shown once to the user when the app first attempts LAN access.
+    -->
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>Shelly Manager needs access to your local network to discover and control Shelly smart devices.</string>
+
+    <!--
+        Bonjour service types used for mDNS device discovery.
+        _shelly._tcp  — Shelly Gen 2/3/4 native advertisement
+        _http._tcp    — Fallback HTTP advertisement (gen=2/3/4 TXT filter)
+    -->
+    <key>NSBonjourServices</key>
+    <array>
+        <string>_shelly._tcp</string>
+        <string>_http._tcp</string>
+    </array>
+</dict>
+</plist>
