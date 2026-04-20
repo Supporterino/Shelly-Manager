@@ -1,29 +1,29 @@
 {
-  "title": "Discover Devices",
+  "title": "发现设备",
   "methods": {
-    "mdns": "Auto-discover (mDNS)",
-    "scan": "Scan subnet",
-    "manual": "Add manually"
+    "mdns": "自动发现 (mDNS)",
+    "scan": "扫描子网",
+    "manual": "手动添加"
   },
   "steps": {
-    "chooseMethod": "Choose Method",
-    "searching": "Searching\u2026",
-    "review": "Review & Add"
+    "chooseMethod": "选择方式",
+    "searching": "搜索中…",
+    "review": "确认并添加"
   },
   "form": {
-    "ipAddress": "IP Address",
-    "port": "Port",
-    "deviceName": "Device Name (optional)",
-    "username": "Username",
-    "password": "Password",
-    "cidr": "IP Range (CIDR)",
-    "cidrLargeWarning": "Large subnet detected — scanning may take several minutes. Consider narrowing to /24.",
-    "cidrTooLarge": "Subnet too large — maximum supported is /19 (8192 hosts). Please use a narrower range.",
-    "add": "Add Device",
-    "verify": "Verifying\u2026"
+    "ipAddress": "IP 地址",
+    "port": "端口",
+    "deviceName": "设备名称（可选）",
+    "username": "用户名",
+    "password": "密码",
+    "cidr": "IP 范围 (CIDR)",
+    "cidrLargeWarning": "检测到较大子网 — 扫描可能需要数分钟。建议缩小范围至 /24。",
+    "cidrTooLarge": "子网太大 — 最大支持 /19（8192 个主机）。请使用更小的范围。",
+    "add": "添加设备",
+    "verify": "验证中…"
   },
-  "found_one": "Found {{count}} device",
-  "found_other": "Found {{count}} devices",
-  "noDevicesFound": "No devices found. Try a different method.",
-  "addSelected": "Add Selected"
+  "found_one": "找到 {{count}} 个设备",
+  "found_other": "找到 {{count}} 个设备",
+  "noDevicesFound": "未找到设备，请尝试其他方式。",
+  "addSelected": "添加已选"
 }

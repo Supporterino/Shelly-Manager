@@ -1,42 +1,43 @@
 {
   "appName": "Shelly Manager",
   "actions": {
-    "save": "Save",
-    "cancel": "Cancel",
-    "confirm": "Confirm",
-    "delete": "Delete",
-    "retry": "Retry",
-    "close": "Close",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "delete": "Supprimer",
+    "retry": "Réessayer",
+    "close": "Fermer",
     "refresh": "Actualiser",
     "back": "Retour"
   },
   "status": {
-    "online": "Online",
-    "offline": "Offline",
-    "connecting": "Connecting",
-    "error": "Error"
+    "online": "En ligne",
+    "offline": "Hors ligne",
+    "connecting": "Connexion en cours",
+    "error": "Erreur"
   },
   "errors": {
-    "networkUnreachable": "Device unreachable. Check your network.",
-    "noNetwork": "No network connection. Check your Wi-Fi or mobile data.",
-    "authFailed": "Authentication failed. Check your password.",
-    "unknown": "An unexpected error occurred."
+    "networkUnreachable": "Appareil inaccessible. Vérifiez votre réseau.",
+    "noNetwork": "Pas de connexion réseau. Vérifiez votre Wi-Fi ou vos données mobiles.",
+    "authFailed": "Échec de l'authentification. Vérifiez votre mot de passe.",
+    "unknown": "Une erreur inattendue s'est produite."
   },
   "filter": {
-    "searchPlaceholder": "Search by name or IP…",
-    "all": "All",
-    "online": "Online",
-    "offline": "Offline"
+    "searchPlaceholder": "Rechercher par nom ou IP…",
+    "all": "Tous",
+    "online": "En ligne",
+    "offline": "Hors ligne"
   },
   "sort": {
-    "label": "Sort",
-    "name": "Name",
-    "status": "Status",
-    "lastSeen": "Last seen"
+    "label": "Trier",
+    "name": "Nom",
+    "status": "Statut",
+    "lastSeen": "Vu en dernier"
   },
   "nav": {
-    "dashboard": "Devices",
-    "discover": "Discover",
-    "settings": "Settings"
+    "dashboard": "Appareils",
+    "discover": "Découvrir",
+    "settings": "Paramètres",
+    "firmware": "Firmware"
   }
 }

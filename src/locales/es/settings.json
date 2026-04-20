@@ -1,42 +1,42 @@
 {
-  "title": "Settings",
+  "title": "Ajustes",
   "sections": {
-    "appearance": "Appearance",
-    "language": "Language",
-    "discovery": "Discovery",
-    "about": "About"
+    "appearance": "Apariencia",
+    "language": "Idioma",
+    "discovery": "Descubrimiento",
+    "about": "Acerca de"
   },
   "theme": {
-    "label": "Theme",
-    "light": "Light",
-    "dark": "Dark",
-    "system": "System"
+    "label": "Tema",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Sistema"
   },
   "temperatureUnit": {
-    "label": "Temperature Unit",
-    "celsius": "\u00b0C",
-    "fahrenheit": "\u00b0F"
+    "label": "Unidad de temperatura",
+    "celsius": "°C",
+    "fahrenheit": "°F"
   },
   "language": {
-    "label": "Language",
+    "label": "Idioma",
     "en": "English",
     "de": "Deutsch",
-    "fr": "Fran\u00e7ais",
-    "es": "Espa\u00f1ol",
-    "zh": "\u4e2d\u6587",
-    "ja": "\u65e5\u672c\u8a9e"
+    "fr": "Français",
+    "es": "Español",
+    "zh": "中文",
+    "ja": "日本語"
   },
   "polling": {
-    "label": "Polling interval",
+    "label": "Intervalo de sondeo",
     "seconds": "{{count}}s"
   },
   "discovery": {
-    "defaultCidr": "Default CIDR",
-    "defaultMethods": "Default methods"
+    "defaultCidr": "CIDR predeterminado",
+    "defaultMethods": "Métodos predeterminados"
   },
   "about": {
-    "version": "Version",
-    "tauriVersion": "Tauri version",
-    "license": "License"
+    "version": "Versión",
+    "tauriVersion": "Versión de Tauri",
+    "license": "Licencia"
   }
 }

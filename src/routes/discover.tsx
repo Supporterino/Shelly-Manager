@@ -40,6 +40,7 @@ function DiscoverPage() {
 
   const { status, found, progress, error, start, reset } = useDiscovery()
   const addDevice = useDeviceStore((s) => s.addDevice)
+  const existingDevices = useDeviceStore((s) => s.devices)
 
   function handleManualDevice(device: StoredDevice) {
     setManualDevices((prev) => {
@@ -75,9 +76,9 @@ function DiscoverPage() {
     }
   }
 
-  const allFound = [...found, ...manualDevices].filter(
-    (d, i, arr) => arr.findIndex((x) => x.id === d.id) === i
-  )
+  const allFound = [...found, ...manualDevices]
+    .filter((d, i, arr) => arr.findIndex((x) => x.id === d.id) === i)
+    .filter((d) => !(d.id in existingDevices))
 
   const stepTitles = [
     t('steps.chooseMethod'),

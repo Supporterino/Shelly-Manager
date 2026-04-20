@@ -4,7 +4,8 @@ import { useMutation } from '@tanstack/react-query'
 import { notifications } from '@mantine/notifications'
 import { useTranslation } from 'react-i18next'
 import { ConfirmModal } from '../../common/ConfirmModal'
-import { ShellyClient, verifyShellyHost } from '../../../services/shellyClient'
+import { ShellyClient } from '../../../services/shellyClient'
+import { pollUntilOffline, pollUntilOnline, pollProgress } from '../../../utils/firmware'
 import type { StoredDevice } from '../../../types/device'
 
 interface FirmwareInfo {
@@ -15,30 +16,6 @@ interface FirmwareInfo {
 interface Props {
   device: StoredDevice
   currentVersion: string
-}
-
-// Exponential backoff delays in ms — total ~68 s max wait
-const POLL_DELAYS_MS = [3000, 5000, 8000, 10000, 12000, 15000, 15000]
-
-// Cumulative elapsed time at the end of each step (ms)
-const CUMULATIVE_MS = POLL_DELAYS_MS.reduce<number[]>(
-  (acc, d) => [...acc, (acc.at(-1) ?? 0) + d],
-  [],
-)
-const TOTAL_MS = CUMULATIVE_MS.at(-1)!
-
-async function pollUntilOnline(
-  ip: string,
-  port: number,
-  onStep?: (step: number) => void,
-): Promise<boolean> {
-  for (let i = 0; i < POLL_DELAYS_MS.length; i++) {
-    await new Promise<void>((resolve) => setTimeout(resolve, POLL_DELAYS_MS[i]))
-    onStep?.(i + 1)
-    const result = await verifyShellyHost(ip, port)
-    if (result) return true
-  }
-  return false
 }
 
 export function FirmwareCard({ device, currentVersion }: Props) {
@@ -65,6 +42,14 @@ export function FirmwareCard({ device, currentVersion }: Props) {
       await new ShellyClient(device).triggerUpdate('stable')
       setConfirmOpen(false)
       setIsPolling(true)
+
+      // Phase 1: wait for device to go offline (downloading + applying firmware).
+      // Shelly.Update returns immediately while the device downloads in the
+      // background — polling online too early will always see a responsive device.
+      const wentOffline = await pollUntilOffline(device.ip, device.port)
+      if (!wentOffline) throw new Error(t('firmware.updateFailed'))
+
+      // Phase 2: wait for device to reboot and come back online.
       const online = await pollUntilOnline(device.ip, device.port, setPollStep)
       setIsPolling(false)
       setPollStep(0)
@@ -84,8 +69,7 @@ export function FirmwareCard({ device, currentVersion }: Props) {
   const newVersion = updateInfo?.stable?.version
   const busy = isPolling || updateMutation.isPending
 
-  // Progress 0–100 based on which poll step has completed
-  const progressValue = pollStep === 0 ? 0 : (CUMULATIVE_MS[pollStep - 1] / TOTAL_MS) * 100
+  const progressValue = pollProgress(pollStep)
 
   return (
     <Card withBorder radius="md" p="sm">
@@ -107,7 +91,14 @@ export function FirmwareCard({ device, currentVersion }: Props) {
               <Loader size="xs" />
               <Text size="xs" c="dimmed">{t('firmware.updating')}</Text>
             </Group>
-            {isPolling && <Progress value={progressValue} size="xs" />}
+        {isPolling && (
+          <Progress
+            value={pollStep > 0 ? progressValue : 100}
+            size="xs"
+            animated
+            striped
+          />
+        )}
           </Stack>
         )}
 

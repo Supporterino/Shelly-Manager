@@ -1,29 +1,29 @@
 {
-  "title": "Discover Devices",
+  "title": "デバイスを探索",
   "methods": {
-    "mdns": "Auto-discover (mDNS)",
-    "scan": "Scan subnet",
-    "manual": "Add manually"
+    "mdns": "自動検出 (mDNS)",
+    "scan": "サブネットをスキャン",
+    "manual": "手動で追加"
   },
   "steps": {
-    "chooseMethod": "Choose Method",
-    "searching": "Searching\u2026",
-    "review": "Review & Add"
+    "chooseMethod": "方法を選択",
+    "searching": "検索中…",
+    "review": "確認して追加"
   },
   "form": {
-    "ipAddress": "IP Address",
-    "port": "Port",
-    "deviceName": "Device Name (optional)",
-    "username": "Username",
-    "password": "Password",
-    "cidr": "IP Range (CIDR)",
-    "cidrLargeWarning": "Large subnet detected — scanning may take several minutes. Consider narrowing to /24.",
-    "cidrTooLarge": "Subnet too large — maximum supported is /19 (8192 hosts). Please use a narrower range.",
-    "add": "Add Device",
-    "verify": "Verifying\u2026"
+    "ipAddress": "IPアドレス",
+    "port": "ポート",
+    "deviceName": "デバイス名（任意）",
+    "username": "ユーザー名",
+    "password": "パスワード",
+    "cidr": "IPアドレス範囲 (CIDR)",
+    "cidrLargeWarning": "大きなサブネットが検出されました — スキャンに数分かかる場合があります。/24 への絞り込みをご検討ください。",
+    "cidrTooLarge": "サブネットが大きすぎます — 最大サポートは /19（8192ホスト）です。より狭い範囲を使用してください。",
+    "add": "デバイスを追加",
+    "verify": "確認中…"
   },
-  "found_one": "Found {{count}} device",
-  "found_other": "Found {{count}} devices",
-  "noDevicesFound": "No devices found. Try a different method.",
-  "addSelected": "Add Selected"
+  "found_one": "{{count}} 台のデバイスが見つかりました",
+  "found_other": "{{count}} 台のデバイスが見つかりました",
+  "noDevicesFound": "デバイスが見つかりません。別の方法をお試しください。",
+  "addSelected": "選択したものを追加"
 }

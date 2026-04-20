@@ -1,7 +1,7 @@
 import { Group, UnstyledButton, Stack, Text } from '@mantine/core'
 import { Link, useRouterState } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
-import { IconDevices, IconSearch, IconSettings } from '@tabler/icons-react'
+import { IconCloudDownload, IconDevices, IconSearch, IconSettings } from '@tabler/icons-react'
 
 export function BottomNav() {
   const { t } = useTranslation('common')
@@ -11,6 +11,7 @@ export function BottomNav() {
   const links = [
     { to: '/', label: t('nav.dashboard'), icon: IconDevices },
     { to: '/discover', label: t('nav.discover'), icon: IconSearch },
+    { to: '/firmware', label: t('nav.firmware'), icon: IconCloudDownload },
     { to: '/settings', label: t('nav.settings'), icon: IconSettings },
   ]
 

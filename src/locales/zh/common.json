@@ -1,42 +1,43 @@
 {
   "appName": "Shelly Manager",
   "actions": {
-    "save": "Save",
-    "cancel": "Cancel",
-    "confirm": "Confirm",
-    "delete": "Delete",
-    "retry": "Retry",
-    "close": "Close",
+    "save": "保存",
+    "cancel": "取消",
+    "confirm": "确认",
+    "delete": "删除",
+    "retry": "重试",
+    "close": "关闭",
     "refresh": "刷新",
-    "back": "\u8fd4\u56de"
+    "back": "返回"
   },
   "status": {
-    "online": "Online",
-    "offline": "Offline",
-    "connecting": "Connecting",
-    "error": "Error"
+    "online": "在线",
+    "offline": "离线",
+    "connecting": "连接中",
+    "error": "错误"
   },
   "errors": {
-    "networkUnreachable": "Device unreachable. Check your network.",
-    "noNetwork": "No network connection. Check your Wi-Fi or mobile data.",
-    "authFailed": "Authentication failed. Check your password.",
-    "unknown": "An unexpected error occurred."
+    "networkUnreachable": "设备无法访问，请检查网络。",
+    "noNetwork": "无网络连接，请检查 Wi-Fi 或移动数据。",
+    "authFailed": "认证失败，请检查密码。",
+    "unknown": "发生了意外错误。"
   },
   "filter": {
-    "searchPlaceholder": "Search by name or IP…",
-    "all": "All",
-    "online": "Online",
-    "offline": "Offline"
+    "searchPlaceholder": "按名称或 IP 搜索…",
+    "all": "全部",
+    "online": "在线",
+    "offline": "离线"
   },
   "sort": {
-    "label": "Sort",
-    "name": "Name",
-    "status": "Status",
-    "lastSeen": "Last seen"
+    "label": "排序",
+    "name": "名称",
+    "status": "状态",
+    "lastSeen": "最后在线"
   },
   "nav": {
-    "dashboard": "Devices",
-    "discover": "Discover",
-    "settings": "Settings"
+    "dashboard": "设备",
+    "discover": "发现",
+    "settings": "设置",
+    "firmware": "固件"
   }
 }

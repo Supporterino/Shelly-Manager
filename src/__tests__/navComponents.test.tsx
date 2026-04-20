@@ -41,10 +41,11 @@ import { LanguageSelect } from '../components/settings/LanguageSelect'
 describe('BottomNav', () => {
   beforeEach(() => mockRouterState.mockClear())
 
-  it('renders all three navigation labels', () => {
+  it('renders all four navigation labels', () => {
     renderWithProviders(<BottomNav />)
     expect(screen.getByText('Devices')).toBeInTheDocument()
     expect(screen.getByText('Discover')).toBeInTheDocument()
+    expect(screen.getByText('Firmware')).toBeInTheDocument()
     expect(screen.getByText('Settings')).toBeInTheDocument()
   })
 
@@ -78,7 +79,7 @@ describe('BottomNav', () => {
   it('renders nav links as anchor elements', () => {
     renderWithProviders(<BottomNav />)
     const links = screen.getAllByRole('link')
-    expect(links).toHaveLength(3)
+    expect(links).toHaveLength(4)
   })
 })
 

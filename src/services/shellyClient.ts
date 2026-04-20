@@ -226,7 +226,10 @@ export async function verifyShellyHost(
   type: string
   mac: string
   gen: number
-  fw: string
+  /** Firmware build ID, e.g. "20210720-153353/0.6.7-gc36674b" */
+  fw_id: string
+  /** Firmware version string, e.g. "0.6.7" */
+  ver: string
   auth: boolean
 } | null> {
   try {

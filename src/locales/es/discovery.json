@@ -1,29 +1,29 @@
 {
-  "title": "Discover Devices",
+  "title": "Descubrir dispositivos",
   "methods": {
-    "mdns": "Auto-discover (mDNS)",
-    "scan": "Scan subnet",
-    "manual": "Add manually"
+    "mdns": "Descubrir automáticamente (mDNS)",
+    "scan": "Escanear subred",
+    "manual": "Añadir manualmente"
   },
   "steps": {
-    "chooseMethod": "Choose Method",
-    "searching": "Searching\u2026",
-    "review": "Review & Add"
+    "chooseMethod": "Elegir método",
+    "searching": "Buscando…",
+    "review": "Revisar y añadir"
   },
   "form": {
-    "ipAddress": "IP Address",
-    "port": "Port",
-    "deviceName": "Device Name (optional)",
-    "username": "Username",
-    "password": "Password",
-    "cidr": "IP Range (CIDR)",
-    "cidrLargeWarning": "Large subnet detected — scanning may take several minutes. Consider narrowing to /24.",
-    "cidrTooLarge": "Subnet too large — maximum supported is /19 (8192 hosts). Please use a narrower range.",
-    "add": "Add Device",
-    "verify": "Verifying\u2026"
+    "ipAddress": "Dirección IP",
+    "port": "Puerto",
+    "deviceName": "Nombre del dispositivo (opcional)",
+    "username": "Usuario",
+    "password": "Contraseña",
+    "cidr": "Rango IP (CIDR)",
+    "cidrLargeWarning": "Subred grande detectada — el escaneo puede tardar varios minutos. Considera reducir a /24.",
+    "cidrTooLarge": "Subred demasiado grande — el máximo soportado es /19 (8192 hosts). Usa un rango más estrecho.",
+    "add": "Añadir dispositivo",
+    "verify": "Verificando…"
   },
-  "found_one": "Found {{count}} device",
-  "found_other": "Found {{count}} devices",
-  "noDevicesFound": "No devices found. Try a different method.",
-  "addSelected": "Add Selected"
+  "found_one": "Se encontró {{count}} dispositivo",
+  "found_other": "Se encontraron {{count}} dispositivos",
+  "noDevicesFound": "No se encontraron dispositivos. Prueba otro método.",
+  "addSelected": "Añadir seleccionados"
 }

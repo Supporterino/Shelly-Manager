@@ -1,42 +1,42 @@
 {
-  "title": "Settings",
+  "title": "設定",
   "sections": {
-    "appearance": "Appearance",
-    "language": "Language",
-    "discovery": "Discovery",
-    "about": "About"
+    "appearance": "外観",
+    "language": "言語",
+    "discovery": "探索",
+    "about": "情報"
   },
   "theme": {
-    "label": "Theme",
-    "light": "Light",
-    "dark": "Dark",
-    "system": "System"
+    "label": "テーマ",
+    "light": "ライト",
+    "dark": "ダーク",
+    "system": "システム"
   },
   "temperatureUnit": {
-    "label": "Temperature Unit",
-    "celsius": "\u00b0C",
-    "fahrenheit": "\u00b0F"
+    "label": "温度単位",
+    "celsius": "°C",
+    "fahrenheit": "°F"
   },
   "language": {
-    "label": "Language",
+    "label": "言語",
     "en": "English",
     "de": "Deutsch",
-    "fr": "Fran\u00e7ais",
-    "es": "Espa\u00f1ol",
-    "zh": "\u4e2d\u6587",
-    "ja": "\u65e5\u672c\u8a9e"
+    "fr": "Français",
+    "es": "Español",
+    "zh": "中文",
+    "ja": "日本語"
   },
   "polling": {
-    "label": "Polling interval",
+    "label": "ポーリング間隔",
     "seconds": "{{count}}s"
   },
   "discovery": {
-    "defaultCidr": "Default CIDR",
-    "defaultMethods": "Default methods"
+    "defaultCidr": "デフォルトCIDR",
+    "defaultMethods": "デフォルト方法"
   },
   "about": {
-    "version": "Version",
-    "tauriVersion": "Tauri version",
-    "license": "License"
+    "version": "バージョン",
+    "tauriVersion": "Tauriバージョン",
+    "license": "ライセンス"
   }
 }

@@ -37,6 +37,7 @@
   "nav": {
     "dashboard": "Devices",
     "discover": "Discover",
-    "settings": "Settings"
+    "settings": "Settings",
+    "firmware": "Firmware"
   }
 }

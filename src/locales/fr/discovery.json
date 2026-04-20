@@ -1,29 +1,29 @@
 {
-  "title": "Discover Devices",
+  "title": "Découvrir des appareils",
   "methods": {
-    "mdns": "Auto-discover (mDNS)",
-    "scan": "Scan subnet",
-    "manual": "Add manually"
+    "mdns": "Découverte automatique (mDNS)",
+    "scan": "Scanner le sous-réseau",
+    "manual": "Ajouter manuellement"
   },
   "steps": {
-    "chooseMethod": "Choose Method",
-    "searching": "Searching\u2026",
-    "review": "Review & Add"
+    "chooseMethod": "Choisir la méthode",
+    "searching": "Recherche…",
+    "review": "Vérifier et ajouter"
   },
   "form": {
-    "ipAddress": "IP Address",
+    "ipAddress": "Adresse IP",
     "port": "Port",
-    "deviceName": "Device Name (optional)",
-    "username": "Username",
-    "password": "Password",
-    "cidr": "IP Range (CIDR)",
-    "cidrLargeWarning": "Large subnet detected — scanning may take several minutes. Consider narrowing to /24.",
-    "cidrTooLarge": "Subnet too large — maximum supported is /19 (8192 hosts). Please use a narrower range.",
-    "add": "Add Device",
-    "verify": "Verifying\u2026"
+    "deviceName": "Nom de l'appareil (optionnel)",
+    "username": "Nom d'utilisateur",
+    "password": "Mot de passe",
+    "cidr": "Plage IP (CIDR)",
+    "cidrLargeWarning": "Grand sous-réseau détecté — le scan peut prendre plusieurs minutes. Envisagez de réduire à /24.",
+    "cidrTooLarge": "Sous-réseau trop grand — le maximum supporté est /19 (8192 hôtes). Veuillez utiliser une plage plus petite.",
+    "add": "Ajouter l'appareil",
+    "verify": "Vérification…"
   },
-  "found_one": "Found {{count}} device",
-  "found_other": "Found {{count}} devices",
-  "noDevicesFound": "No devices found. Try a different method.",
-  "addSelected": "Add Selected"
+  "found_one": "{{count}} appareil trouvé",
+  "found_other": "{{count}} appareils trouvés",
+  "noDevicesFound": "Aucun appareil trouvé. Essayez une autre méthode.",
+  "addSelected": "Ajouter la sélection"
 }

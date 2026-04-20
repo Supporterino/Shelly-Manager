@@ -1,42 +1,42 @@
 {
-  "title": "Settings",
+  "title": "设置",
   "sections": {
-    "appearance": "Appearance",
-    "language": "Language",
-    "discovery": "Discovery",
-    "about": "About"
+    "appearance": "外观",
+    "language": "语言",
+    "discovery": "发现",
+    "about": "关于"
   },
   "theme": {
-    "label": "Theme",
-    "light": "Light",
-    "dark": "Dark",
-    "system": "System"
+    "label": "主题",
+    "light": "浅色",
+    "dark": "深色",
+    "system": "跟随系统"
   },
   "temperatureUnit": {
-    "label": "Temperature Unit",
-    "celsius": "\u00b0C",
-    "fahrenheit": "\u00b0F"
+    "label": "温度单位",
+    "celsius": "°C",
+    "fahrenheit": "°F"
   },
   "language": {
-    "label": "Language",
+    "label": "语言",
     "en": "English",
     "de": "Deutsch",
-    "fr": "Fran\u00e7ais",
-    "es": "Espa\u00f1ol",
-    "zh": "\u4e2d\u6587",
-    "ja": "\u65e5\u672c\u8a9e"
+    "fr": "Français",
+    "es": "Español",
+    "zh": "中文",
+    "ja": "日本語"
   },
   "polling": {
-    "label": "Polling interval",
+    "label": "轮询间隔",
     "seconds": "{{count}}s"
   },
   "discovery": {
-    "defaultCidr": "Default CIDR",
-    "defaultMethods": "Default methods"
+    "defaultCidr": "默认 CIDR",
+    "defaultMethods": "默认方式"
   },
   "about": {
-    "version": "Version",
-    "tauriVersion": "Tauri version",
-    "license": "License"
+    "version": "版本",
+    "tauriVersion": "Tauri 版本",
+    "license": "许可证"
   }
 }

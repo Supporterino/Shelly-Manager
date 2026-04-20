@@ -1,42 +1,43 @@
 {
   "appName": "Shelly Manager",
   "actions": {
-    "save": "Save",
-    "cancel": "Cancel",
-    "confirm": "Confirm",
-    "delete": "Delete",
-    "retry": "Retry",
-    "close": "Close",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "confirm": "確認",
+    "delete": "削除",
+    "retry": "再試行",
+    "close": "閉じる",
     "refresh": "更新",
-    "back": "\u623b\u308b"
+    "back": "戻る"
   },
   "status": {
-    "online": "Online",
-    "offline": "Offline",
-    "connecting": "Connecting",
-    "error": "Error"
+    "online": "オンライン",
+    "offline": "オフライン",
+    "connecting": "接続中",
+    "error": "エラー"
   },
   "errors": {
-    "networkUnreachable": "Device unreachable. Check your network.",
-    "noNetwork": "No network connection. Check your Wi-Fi or mobile data.",
-    "authFailed": "Authentication failed. Check your password.",
-    "unknown": "An unexpected error occurred."
+    "networkUnreachable": "デバイスに接続できません。ネットワークを確認してください。",
+    "noNetwork": "ネットワーク接続がありません。Wi-Fiまたはモバイルデータを確認してください。",
+    "authFailed": "認証に失敗しました。パスワードを確認してください。",
+    "unknown": "予期しないエラーが発生しました。"
   },
   "filter": {
-    "searchPlaceholder": "Search by name or IP…",
-    "all": "All",
-    "online": "Online",
-    "offline": "Offline"
+    "searchPlaceholder": "名前またはIPで検索…",
+    "all": "すべて",
+    "online": "オンライン",
+    "offline": "オフライン"
   },
   "sort": {
-    "label": "Sort",
-    "name": "Name",
-    "status": "Status",
-    "lastSeen": "Last seen"
+    "label": "並び替え",
+    "name": "名前",
+    "status": "状態",
+    "lastSeen": "最終確認"
   },
   "nav": {
-    "dashboard": "Devices",
-    "discover": "Discover",
-    "settings": "Settings"
+    "dashboard": "デバイス",
+    "discover": "探索",
+    "settings": "設定",
+    "firmware": "ファームウェア"
   }
 }

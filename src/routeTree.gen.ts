@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as FirmwareRouteImport } from './routes/firmware'
 import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DevicesDeviceIdRouteImport } from './routes/devices/$deviceId'
@@ -18,6 +19,11 @@ import { Route as DevicesDeviceIdSettingsRouteImport } from './routes/devices/$d
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FirmwareRoute = FirmwareRouteImport.update({
+  id: '/firmware',
+  path: '/firmware',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DiscoverRoute = DiscoverRouteImport.update({
@@ -44,6 +50,7 @@ const DevicesDeviceIdSettingsRoute = DevicesDeviceIdSettingsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/discover': typeof DiscoverRoute
+  '/firmware': typeof FirmwareRoute
   '/settings': typeof SettingsRoute
   '/devices/$deviceId': typeof DevicesDeviceIdRouteWithChildren
   '/devices/$deviceId/settings': typeof DevicesDeviceIdSettingsRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/discover': typeof DiscoverRoute
+  '/firmware': typeof FirmwareRoute
   '/settings': typeof SettingsRoute
   '/devices/$deviceId': typeof DevicesDeviceIdRouteWithChildren
   '/devices/$deviceId/settings': typeof DevicesDeviceIdSettingsRoute
@@ -59,6 +67,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/discover': typeof DiscoverRoute
+  '/firmware': typeof FirmwareRoute
   '/settings': typeof SettingsRoute
   '/devices/$deviceId': typeof DevicesDeviceIdRouteWithChildren
   '/devices/$deviceId/settings': typeof DevicesDeviceIdSettingsRoute
@@ -68,6 +77,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/discover'
+    | '/firmware'
     | '/settings'
     | '/devices/$deviceId'
     | '/devices/$deviceId/settings'
@@ -75,6 +85,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/discover'
+    | '/firmware'
     | '/settings'
     | '/devices/$deviceId'
     | '/devices/$deviceId/settings'
@@ -82,6 +93,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/discover'
+    | '/firmware'
     | '/settings'
     | '/devices/$deviceId'
     | '/devices/$deviceId/settings'
@@ -90,6 +102,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DiscoverRoute: typeof DiscoverRoute
+  FirmwareRoute: typeof FirmwareRoute
   SettingsRoute: typeof SettingsRoute
   DevicesDeviceIdRoute: typeof DevicesDeviceIdRouteWithChildren
 }
@@ -101,6 +114,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/firmware': {
+      id: '/firmware'
+      path: '/firmware'
+      fullPath: '/firmware'
+      preLoaderRoute: typeof FirmwareRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/discover': {
@@ -149,6 +169,7 @@ const DevicesDeviceIdRouteWithChildren = DevicesDeviceIdRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DiscoverRoute: DiscoverRoute,
+  FirmwareRoute: FirmwareRoute,
   SettingsRoute: SettingsRoute,
   DevicesDeviceIdRoute: DevicesDeviceIdRouteWithChildren,
 }
