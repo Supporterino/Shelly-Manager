@@ -22,11 +22,16 @@
     "color": "Colour",
     "white": "White",
     "colorBrightness": "Colour Brightness",
-    "open": "Open",
-    "close": "Close",
-    "stop": "Stop",
-    "goToPosition": "Go to Position",
-    "position": "Position",
+    "open": "開く",
+    "close": "閉じる",
+    "stop": "停止",
+    "goToPosition": "位置に移動",
+    "position": "位置",
+    "autoOffIn": "{{seconds}}秒後にオフ",
+    "direction": {
+      "open": "前回：開",
+      "close": "前回：閉"
+    },
     "state": {
       "open": "Open",
       "closed": "Closed",
@@ -49,8 +54,10 @@
     "current": "Current",
     "powerFactor": "Power Factor",
     "frequency": "Frequency",
-    "totalEnergy": "Total Energy",
-    "returnedEnergy": "Returned Energy",
+    "totalEnergy": "総消費電力量",
+    "returnedEnergy": "回生エネルギー",
+    "energyStats": "エネルギー統計",
+    "deviceTemp": "デバイス温度",
     "phaseA": "Phase A",
     "phaseB": "Phase B",
     "total": "Total"
@@ -80,13 +87,21 @@
     "voltage": "Voltage"
   },
   "info": {
-    "model": "Model",
-    "firmware": "Firmware",
-    "ipAddress": "IP Address",
-    "uptime": "Uptime",
-    "lastSeen": "Last seen",
-    "generation": "Generation",
-    "channelName": "Channel Name"
+    "model": "モデル",
+    "appName": "アプリケーション",
+    "firmware": "ファームウェア",
+    "firmwareVersion": "ファームウェアバージョン",
+    "ipAddress": "IPアドレス",
+    "macAddress": "MACアドレス",
+    "uptime": "稼働時間",
+    "lastSeen": "最終確認",
+    "generation": "世代",
+    "channelName": "チャンネル名",
+    "authEnabled": "認証",
+    "authOn": "パスワード保護あり",
+    "authOff": "認証なし",
+    "restartRequired": "再起動が必要",
+    "ramFree": "空きメモリ"
   },
   "firmware": {
     "checkForUpdate": "Check for Update",
@@ -115,5 +130,12 @@
     "factoryResetConfirm": "This will erase all settings on the device. Continue?",
     "rebooting": "Rebooting\u2026",
     "rebootSuccess": "Device is restarting."
+  },
+  "cover": {
+    "setup": "カバー設定",
+    "calibrate": "キャリブレーション",
+    "calibrateDescription": "カバーの全行程を確認するためにキャリブレーションを実行します。",
+    "calibrateConfirm": "カバーが全開・全閉して行程を確認します。続けますか？",
+    "calibrateSuccess": "キャリブレーションを開始しました。"
   }
 }

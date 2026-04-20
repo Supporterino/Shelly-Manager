@@ -1,9 +1,11 @@
-import { Badge, Button, Group, Slider, Stack, Text } from '@mantine/core'
+import { Accordion, Badge, Button, Group, Slider, Stack, Text } from '@mantine/core'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCoverControl } from '../../../hooks/useDeviceControl'
+import { formatPower, formatEnergy, formatVoltage, formatCurrent } from '../../../utils/formatters'
 import type { CoverStatus } from '../../../types/shelly'
 import type { StoredDevice, ShellyComponentSummary } from '../../../types/device'
+import { ErrorBadges } from './ErrorBadges'
 
 const stateColor: Record<string, string> = {
   open: 'green',
@@ -21,8 +23,18 @@ interface Props {
   device: StoredDevice
 }
 
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <Group justify="space-between">
+      <Text size="xs" c="dimmed">{label}</Text>
+      <Text size="sm" fw={500}>{value}</Text>
+    </Group>
+  )
+}
+
 export function CoverControl({ deviceId, componentId, status, device }: Props) {
-  const { t } = useTranslation('devices')
+  const { t, i18n } = useTranslation('devices')
+  const locale = i18n.language
   const cover = status as CoverStatus | undefined
   const comp: ShellyComponentSummary | undefined = device.components.find(
     (c) => c.type === 'cover' && c.id === componentId
@@ -34,18 +46,34 @@ export function CoverControl({ deviceId, componentId, status, device }: Props) {
   const isMoving =
     cover?.state === 'opening' || cover?.state === 'closing'
 
+  const hasEnergyStats =
+    cover?.apower != null ||
+    cover?.voltage != null ||
+    cover?.current != null ||
+    cover?.aenergy != null ||
+    cover?.temperature != null
+
   return (
     <Stack gap="xs">
       <Group justify="space-between" align="center">
         <Text fw={500} size="sm">{channelLabel}</Text>
-        {cover?.state && (
-          <Badge color={stateColor[cover.state] ?? 'gray'} variant="light">
-            {t(`controls.state.${cover.state}`)}
-          </Badge>
-        )}
+        <Group gap="xs" align="center">
+          {cover?.last_direction != null && (
+            <Text size="xs" c="dimmed">
+              {t(`controls.direction.${cover.last_direction}`)}
+            </Text>
+          )}
+          {cover?.state && (
+            <Badge color={stateColor[cover.state] ?? 'gray'} variant="light">
+              {t(`controls.state.${cover.state}`)}
+            </Badge>
+          )}
+        </Group>
       </Group>
 
-      <Group gap="xs">
+      <ErrorBadges errors={cover?.errors} />
+
+      <Group gap="xs" grow>
         <Button
           size="xs"
           variant="light"
@@ -100,6 +128,47 @@ export function CoverControl({ deviceId, componentId, status, device }: Props) {
             {t('controls.goToPosition')}
           </Button>
         </Stack>
+      )}
+
+      {hasEnergyStats && (
+        <Accordion variant="contained" chevronPosition="right">
+          <Accordion.Item value="energy">
+            <Accordion.Control>
+              <Text size="xs">{t('power.energyStats')}</Text>
+            </Accordion.Control>
+            <Accordion.Panel>
+              <Stack gap={4}>
+                {cover?.apower != null && (
+                  <Row label={t('power.activePower')} value={formatPower(cover.apower, locale)} />
+                )}
+                {cover?.voltage != null && (
+                  <Row label={t('power.voltage')} value={formatVoltage(cover.voltage, locale)} />
+                )}
+                {cover?.current != null && (
+                  <Row label={t('power.current')} value={formatCurrent(cover.current, locale)} />
+                )}
+                {cover?.pf != null && (
+                  <Row label={t('power.powerFactor')} value={cover.pf.toFixed(2)} />
+                )}
+                {cover?.freq != null && (
+                  <Row label={t('power.frequency')} value={`${cover.freq.toFixed(1)} Hz`} />
+                )}
+                {cover?.aenergy != null && (
+                  <Row
+                    label={t('power.totalEnergy')}
+                    value={formatEnergy(cover.aenergy.total / 1000, locale)}
+                  />
+                )}
+                {cover?.temperature != null && (
+                  <Row
+                    label={t('power.deviceTemp')}
+                    value={`${cover.temperature.tC.toFixed(1)} °C`}
+                  />
+                )}
+              </Stack>
+            </Accordion.Panel>
+          </Accordion.Item>
+        </Accordion>
       )}
     </Stack>
   )

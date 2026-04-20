@@ -36,6 +36,12 @@ export function PM1Display({ componentId: _c, status, device: _d }: Props) {
         label={t('power.totalEnergy')}
         value={pm1 != null ? formatEnergy(pm1.aenergy.total / 1000, locale) : '—'}
       />
+      {pm1?.ret_aenergy != null && (
+        <Row
+          label={t('power.returnedEnergy')}
+          value={formatEnergy(pm1.ret_aenergy.total / 1000, locale)}
+        />
+      )}
     </Stack>
   )
 }

@@ -22,11 +22,16 @@
     "color": "Colour",
     "white": "White",
     "colorBrightness": "Colour Brightness",
-    "open": "Open",
-    "close": "Close",
-    "stop": "Stop",
-    "goToPosition": "Go to Position",
-    "position": "Position",
+    "open": "Abrir",
+    "close": "Cerrar",
+    "stop": "Detener",
+    "goToPosition": "Ir a posición",
+    "position": "Posición",
+    "autoOffIn": "Apagado en {{seconds}}s",
+    "direction": {
+      "open": "Último: Abierto",
+      "close": "Último: Cerrado"
+    },
     "state": {
       "open": "Open",
       "closed": "Closed",
@@ -49,8 +54,10 @@
     "current": "Current",
     "powerFactor": "Power Factor",
     "frequency": "Frequency",
-    "totalEnergy": "Total Energy",
-    "returnedEnergy": "Returned Energy",
+    "totalEnergy": "Energía total",
+    "returnedEnergy": "Energía devuelta",
+    "energyStats": "Estadísticas de energía",
+    "deviceTemp": "Temperatura del dispositivo",
     "phaseA": "Phase A",
     "phaseB": "Phase B",
     "total": "Total"
@@ -80,13 +87,21 @@
     "voltage": "Voltage"
   },
   "info": {
-    "model": "Model",
+    "model": "Modelo",
+    "appName": "Aplicación",
     "firmware": "Firmware",
-    "ipAddress": "IP Address",
-    "uptime": "Uptime",
-    "lastSeen": "Last seen",
-    "generation": "Generation",
-    "channelName": "Channel Name"
+    "firmwareVersion": "Versión de firmware",
+    "ipAddress": "Dirección IP",
+    "macAddress": "Dirección MAC",
+    "uptime": "Tiempo activo",
+    "lastSeen": "Visto por última vez",
+    "generation": "Generación",
+    "channelName": "Nombre del canal",
+    "authEnabled": "Autenticación",
+    "authOn": "Protegido con contraseña",
+    "authOff": "Sin autenticación",
+    "restartRequired": "Reinicio requerido",
+    "ramFree": "Memoria libre"
   },
   "firmware": {
     "checkForUpdate": "Check for Update",
@@ -115,5 +130,12 @@
     "factoryResetConfirm": "This will erase all settings on the device. Continue?",
     "rebooting": "Rebooting\u2026",
     "rebootSuccess": "Device is restarting."
+  },
+  "cover": {
+    "setup": "Configuración del persiana",
+    "calibrate": "Calibrar",
+    "calibrateDescription": "Ejecutar calibración para determinar el rango completo de movimiento.",
+    "calibrateConfirm": "La persiana se abrirá y cerrará completamente. ¿Continuar?",
+    "calibrateSuccess": "Calibración iniciada."
   }
 }

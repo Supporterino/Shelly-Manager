@@ -27,10 +27,20 @@ export function EMDisplay({ componentId: _c, status, device: _d }: Props) {
 
   return (
     <Stack gap="xs">
-      <Group justify="space-between">
-        <Text size="sm" fw={600}>{t('power.total')}</Text>
-        <Text size="sm">{em != null ? formatPower(em.total_act_power, locale) : '—'}</Text>
-      </Group>
+      <Stack gap={4}>
+        <Group justify="space-between">
+          <Text size="sm" fw={600}>{t('power.total')}</Text>
+          <Text size="sm">{em != null ? formatPower(em.total_act_power, locale) : '—'}</Text>
+        </Group>
+        <Group justify="space-between">
+          <Text size="xs" c="dimmed">{t('power.apparentPower')}</Text>
+          <Text size="sm">{em != null ? `${em.total_aprt_power.toFixed(1)} VA` : '—'}</Text>
+        </Group>
+        <Group justify="space-between">
+          <Text size="xs" c="dimmed">{t('power.current')}</Text>
+          <Text size="sm">{em != null ? formatCurrent(em.total_current, locale) : '—'}</Text>
+        </Group>
+      </Stack>
 
       <Accordion variant="contained">
         <Accordion.Item value="phaseA">

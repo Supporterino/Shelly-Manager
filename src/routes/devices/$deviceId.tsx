@@ -3,6 +3,7 @@ import {
   ActionIcon,
   Divider,
   Group,
+  ScrollArea,
   Skeleton,
   Stack,
   Text,
@@ -14,6 +15,7 @@ import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
 import { useDeviceStore } from '../../store/deviceStore'
 import { useDeviceStatus } from '../../hooks/useDeviceStatus'
+import { useDeviceInfo } from '../../hooks/useDeviceInfo'
 import { useWsStatus } from '../../hooks/useWsStatus'
 import { wsManager } from '../../services/wsManager'
 import { DeviceStatusBadge } from '../../components/devices/DeviceStatusBadge'
@@ -36,6 +38,11 @@ function DeviceDetailPage() {
   const updateDevice = useDeviceStore((s) => s.updateDevice)
 
   const { data: polledStatus, isLoading, error, refetch } = useDeviceStatus(
+    device ?? { id: deviceId, ip: '', port: 80, name: '', model: '', app: '',
+               generation: 'gen2', type: 'unknown', components: [], addedAt: 0,
+               lastSeenAt: 0 }
+  )
+  const { data: deviceInfo, isLoading: deviceInfoLoading } = useDeviceInfo(
     device ?? { id: deviceId, ip: '', port: 80, name: '', model: '', app: '',
                generation: 'gen2', type: 'unknown', components: [], addedAt: 0,
                lastSeenAt: 0 }
@@ -90,70 +97,82 @@ function DeviceDetailPage() {
     ? (status['sys'] as Record<string, unknown>)?.uptime as number | undefined
     : undefined
 
+  const sysStatus = status?.['sys'] != null
+    ? (status['sys'] as Record<string, unknown>)
+    : undefined
+
   return (
-    <Stack gap="md" p="md">
-      {/* Header */}
-      <Group justify="space-between" align="center" wrap="nowrap">
-        <Group gap="xs" align="center" wrap="nowrap" style={{ flex: 1, minWidth: 0 }}>
-          <Link to="/">
-            <ActionIcon variant="subtle" size="lg" aria-label={tc('actions.back')}>
-              <IconArrowLeft size={18} />
-            </ActionIcon>
-          </Link>
-          <Stack gap={2} style={{ minWidth: 0 }}>
-            <Title order={3} lineClamp={1}>{device.name}</Title>
-            <Group gap="xs" align="center">
-              <DeviceStatusBadge status={connectionStatus} />
-              <Text size="xs" c="dimmed" truncate="end">{device.ip}:{device.port}</Text>
-            </Group>
-          </Stack>
+    <ScrollArea h="100%">
+      <Stack gap="md" p="md">
+        {/* Header */}
+        <Group justify="space-between" align="center" wrap="nowrap">
+          <Group gap="xs" align="center" wrap="nowrap" style={{ flex: 1, minWidth: 0 }}>
+            <Link to="/">
+              <ActionIcon variant="subtle" size="lg" aria-label={tc('actions.back')}>
+                <IconArrowLeft size={18} />
+              </ActionIcon>
+            </Link>
+            <Stack gap={2} style={{ minWidth: 0 }}>
+              <Title order={3} lineClamp={1}>{device.name}</Title>
+              <Group gap="xs" align="center">
+                <DeviceStatusBadge status={connectionStatus} />
+                <Text size="xs" c="dimmed" truncate="end">{device.ip}:{device.port}</Text>
+              </Group>
+            </Stack>
+          </Group>
+          <Group gap="xs">
+            <Tooltip label={tc('actions.refresh')}>
+              <ActionIcon
+                variant="light"
+                size="lg"
+                aria-label={tc('actions.refresh')}
+                loading={isLoading}
+                onClick={() => void refetch()}
+              >
+                <IconRefresh size={18} />
+              </ActionIcon>
+            </Tooltip>
+            <Link to="/devices/$deviceId/settings" params={{ deviceId }}>
+              <ActionIcon
+                variant="light"
+                size="lg"
+                aria-label={t('info.model')}
+              >
+                <IconSettings size={18} />
+              </ActionIcon>
+            </Link>
+          </Group>
         </Group>
-        <Group gap="xs">
-          <Tooltip label={tc('actions.refresh')}>
-            <ActionIcon
-              variant="light"
-              size="lg"
-              aria-label={tc('actions.refresh')}
-              loading={isLoading}
-              onClick={() => void refetch()}
-            >
-              <IconRefresh size={18} />
-            </ActionIcon>
-          </Tooltip>
-          <Link to="/devices/$deviceId/settings" params={{ deviceId }}>
-            <ActionIcon
-              variant="light"
-              size="lg"
-              aria-label={t('info.model')}
-            >
-              <IconSettings size={18} />
-            </ActionIcon>
-          </Link>
-        </Group>
-      </Group>
 
-      <Divider />
+        <Divider />
 
-      {/* Device info */}
-      <DeviceInfoPanel device={device} uptime={uptime} />
-
-      <Divider />
-
-      {/* Component controls */}
-      {isLoading && !status ? (
-        <Stack gap="sm">
-          <Skeleton height={60} radius="md" />
-          <Skeleton height={60} radius="md" />
-        </Stack>
-      ) : error ? (
-        <ErrorAlert
-          message={(error as Error).message}
-          errorKind={classifyNetworkError(error)}
-          onRetry={() => void refetch()}
+        {/* Device info */}
+        <DeviceInfoPanel
+          device={device}
+          uptime={uptime}
+          deviceInfo={deviceInfo}
+          deviceInfoLoading={deviceInfoLoading}
+          sysStatus={sysStatus}
         />
-      ) : (
-        <ComponentList device={device} status={status} />
-      )}
-    </Stack>
+
+        <Divider />
+
+        {/* Component controls */}
+        {isLoading && !status ? (
+          <Stack gap="sm">
+            <Skeleton height={60} radius="md" />
+            <Skeleton height={60} radius="md" />
+          </Stack>
+        ) : error ? (
+          <ErrorAlert
+            message={(error as Error).message}
+            errorKind={classifyNetworkError(error)}
+            onRetry={() => void refetch()}
+          />
+        ) : (
+          <ComponentList device={device} status={status} />
+        )}
+      </Stack>
+    </ScrollArea>
   )
 }

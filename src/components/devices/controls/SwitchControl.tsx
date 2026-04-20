@@ -1,9 +1,11 @@
-import { Accordion, Group, Stack, Switch, Text } from '@mantine/core'
+import { Group, Stack, Switch, Text } from '@mantine/core'
 import { useTranslation } from 'react-i18next'
 import { useSwitchControl } from '../../../hooks/useDeviceControl'
-import { formatPower, formatEnergy } from '../../../utils/formatters'
+import { formatPower } from '../../../utils/formatters'
 import type { SwitchStatus } from '../../../types/shelly'
 import type { StoredDevice, ShellyComponentSummary } from '../../../types/device'
+import { ErrorBadges } from './ErrorBadges'
+import { SwitchEnergyPanel } from './SwitchEnergyPanel'
 
 interface Props {
   deviceId: string
@@ -39,20 +41,8 @@ export function SwitchControl({ deviceId, componentId, status, device }: Props) 
         </Group>
       </Group>
 
-      {sw?.aenergy != null && (
-        <Accordion variant="contained" chevronPosition="right">
-          <Accordion.Item value="energy">
-            <Accordion.Control>
-              <Text size="xs">{t('power.totalEnergy')}</Text>
-            </Accordion.Control>
-            <Accordion.Panel>
-              <Text size="sm">
-                {formatEnergy(sw.aenergy.total / 1000, i18n.language)}
-              </Text>
-            </Accordion.Panel>
-          </Accordion.Item>
-        </Accordion>
-      )}
+      <ErrorBadges errors={sw?.errors} />
+      <SwitchEnergyPanel sw={sw} />
     </Stack>
   )
 }

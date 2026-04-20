@@ -27,6 +27,11 @@
     "stop": "Stop",
     "goToPosition": "Position anfahren",
     "position": "Position",
+    "autoOffIn": "Aus in {{seconds}}s",
+    "direction": {
+      "open": "Zuletzt: Offen",
+      "close": "Zuletzt: Geschlossen"
+    },
     "state": {
       "open": "Offen",
       "closed": "Geschlossen",
@@ -51,6 +56,8 @@
     "frequency": "Frequenz",
     "totalEnergy": "Gesamtenergie",
     "returnedEnergy": "R\u00fcckgesp. Energie",
+    "energyStats": "Energiewerte",
+    "deviceTemp": "Ger\u00e4tetemperatur",
     "phaseA": "Phase A",
     "phaseB": "Phase B",
     "total": "Gesamt"
@@ -81,12 +88,20 @@
   },
   "info": {
     "model": "Modell",
+    "appName": "Anwendung",
     "firmware": "Firmware",
+    "firmwareVersion": "Firmware-Version",
     "ipAddress": "IP-Adresse",
+    "macAddress": "MAC-Adresse",
     "uptime": "Betriebszeit",
     "lastSeen": "Zuletzt gesehen",
     "generation": "Generation",
-    "channelName": "Kanalname"
+    "channelName": "Kanalname",
+    "authEnabled": "Authentifizierung",
+    "authOn": "Passwortgeschützt",
+    "authOff": "Keine Authentifizierung",
+    "restartRequired": "Neustart erforderlich",
+    "ramFree": "Freier Arbeitsspeicher"
   },
   "firmware": {
     "checkForUpdate": "Nach Update suchen",
@@ -115,5 +130,12 @@
     "factoryResetConfirm": "Alle Einstellungen werden gel\u00f6scht. Fortfahren?",
     "rebooting": "Neustart\u2026",
     "rebootSuccess": "Ger\u00e4t wird neu gestartet."
+  },
+  "cover": {
+    "setup": "Jalousie-Setup",
+    "calibrate": "Kalibrieren",
+    "calibrateDescription": "Kalibrierung starten, um den vollen Fahrbereich zu ermitteln.",
+    "calibrateConfirm": "Die Jalousie f\u00e4hrt vollst\u00e4ndig auf und zu. Fortfahren?",
+    "calibrateSuccess": "Kalibrierung gestartet."
   }
 }

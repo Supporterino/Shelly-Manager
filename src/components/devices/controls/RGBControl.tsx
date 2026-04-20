@@ -5,6 +5,8 @@ import { useRGBControl } from '../../../hooks/useDeviceControl'
 import { formatPower } from '../../../utils/formatters'
 import type { RGBStatus } from '../../../types/shelly'
 import type { StoredDevice, ShellyComponentSummary } from '../../../types/device'
+import { ErrorBadges } from './ErrorBadges'
+import { LightEnergyPanel } from './LightEnergyPanel'
 
 function rgbToHex([r, g, b]: [number, number, number]): string {
   return '#' + [r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('')
@@ -90,6 +92,9 @@ export function RGBControl({ deviceId, componentId, status, device }: Props) {
           '#00ffff', '#0000ff', '#8000ff', '#ff00ff', '#ffffff',
         ]}
       />
+
+      <ErrorBadges errors={rgb?.errors} />
+      <LightEnergyPanel status={rgb} />
     </Stack>
   )
 }

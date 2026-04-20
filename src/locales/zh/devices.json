@@ -22,11 +22,16 @@
     "color": "Colour",
     "white": "White",
     "colorBrightness": "Colour Brightness",
-    "open": "Open",
-    "close": "Close",
-    "stop": "Stop",
-    "goToPosition": "Go to Position",
-    "position": "Position",
+    "open": "打开",
+    "close": "关闭",
+    "stop": "停止",
+    "goToPosition": "移动到位置",
+    "position": "位置",
+    "autoOffIn": "{{seconds}}秒后关闭",
+    "direction": {
+      "open": "上次：打开",
+      "close": "上次：关闭"
+    },
     "state": {
       "open": "Open",
       "closed": "Closed",
@@ -49,8 +54,10 @@
     "current": "Current",
     "powerFactor": "Power Factor",
     "frequency": "Frequency",
-    "totalEnergy": "Total Energy",
-    "returnedEnergy": "Returned Energy",
+    "totalEnergy": "总能耗",
+    "returnedEnergy": "回馈电能",
+    "energyStats": "能耗统计",
+    "deviceTemp": "设备温度",
     "phaseA": "Phase A",
     "phaseB": "Phase B",
     "total": "Total"
@@ -80,13 +87,21 @@
     "voltage": "Voltage"
   },
   "info": {
-    "model": "Model",
-    "firmware": "Firmware",
-    "ipAddress": "IP Address",
-    "uptime": "Uptime",
-    "lastSeen": "Last seen",
-    "generation": "Generation",
-    "channelName": "Channel Name"
+    "model": "型号",
+    "appName": "应用程序",
+    "firmware": "固件",
+    "firmwareVersion": "固件版本",
+    "ipAddress": "IP 地址",
+    "macAddress": "MAC 地址",
+    "uptime": "运行时间",
+    "lastSeen": "最后在线",
+    "generation": "代数",
+    "channelName": "频道名称",
+    "authEnabled": "身份验证",
+    "authOn": "已启用密码保护",
+    "authOff": "无身份验证",
+    "restartRequired": "需要重启",
+    "ramFree": "可用内存"
   },
   "firmware": {
     "checkForUpdate": "Check for Update",
@@ -115,5 +130,12 @@
     "factoryResetConfirm": "This will erase all settings on the device. Continue?",
     "rebooting": "Rebooting\u2026",
     "rebootSuccess": "Device is restarting."
+  },
+  "cover": {
+    "setup": "遮阳帘设置",
+    "calibrate": "校准",
+    "calibrateDescription": "运行校准以确定遮阳帘的完整行程范围。",
+    "calibrateConfirm": "遮阳帘将完全打开和关闭以确定行程范围。继续？",
+    "calibrateSuccess": "校准已启动。"
   }
 }

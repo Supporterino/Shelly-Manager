@@ -103,3 +103,16 @@ export function useCoverControl(deviceId: string, coverId: number) {
 
   return { open, close, stop, goTo }
 }
+
+// ── Cover Calibrate ──────────────────────────────────────────────────────────
+
+export function useCoverCalibrate(deviceId: string, coverId: number) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: () => getClient(deviceId).coverCalibrate(coverId),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['device', deviceId, 'status'] }),
+    onError: (err: Error) =>
+      notifications.show({ color: 'red', title: 'Error', message: err.message }),
+  })
+}

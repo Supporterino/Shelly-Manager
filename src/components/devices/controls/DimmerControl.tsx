@@ -4,6 +4,8 @@ import { useDimmerControl } from '../../../hooks/useDeviceControl'
 import { formatPower } from '../../../utils/formatters'
 import type { LightStatus } from '../../../types/shelly'
 import type { StoredDevice, ShellyComponentSummary } from '../../../types/device'
+import { ErrorBadges } from './ErrorBadges'
+import { LightEnergyPanel } from './LightEnergyPanel'
 
 interface Props {
   deviceId: string
@@ -50,6 +52,8 @@ export function DimmerControl({ deviceId, componentId, status, device }: Props) 
           aria-label={t('controls.brightness')}
         />
       </Group>
+      <ErrorBadges errors={light?.errors} />
+      <LightEnergyPanel status={light} showTemp />
     </Stack>
   )
 }

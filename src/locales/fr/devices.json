@@ -22,11 +22,16 @@
     "color": "Colour",
     "white": "White",
     "colorBrightness": "Colour Brightness",
-    "open": "Open",
-    "close": "Close",
-    "stop": "Stop",
-    "goToPosition": "Go to Position",
+    "open": "Ouvrir",
+    "close": "Fermer",
+    "stop": "Arrêter",
+    "goToPosition": "Aller à la position",
     "position": "Position",
+    "autoOffIn": "Extinction dans {{seconds}}s",
+    "direction": {
+      "open": "Dernier : Ouvert",
+      "close": "Dernier : Fermé"
+    },
     "state": {
       "open": "Open",
       "closed": "Closed",
@@ -49,8 +54,10 @@
     "current": "Current",
     "powerFactor": "Power Factor",
     "frequency": "Frequency",
-    "totalEnergy": "Total Energy",
-    "returnedEnergy": "Returned Energy",
+    "totalEnergy": "Énergie totale",
+    "returnedEnergy": "Énergie retournée",
+    "energyStats": "Statistiques d'énergie",
+    "deviceTemp": "Température de l'appareil",
     "phaseA": "Phase A",
     "phaseB": "Phase B",
     "total": "Total"
@@ -80,13 +87,21 @@
     "voltage": "Voltage"
   },
   "info": {
-    "model": "Model",
+    "model": "Modèle",
+    "appName": "Application",
     "firmware": "Firmware",
-    "ipAddress": "IP Address",
-    "uptime": "Uptime",
-    "lastSeen": "Last seen",
-    "generation": "Generation",
-    "channelName": "Channel Name"
+    "firmwareVersion": "Version du firmware",
+    "ipAddress": "Adresse IP",
+    "macAddress": "Adresse MAC",
+    "uptime": "Disponibilité",
+    "lastSeen": "Vu en dernier",
+    "generation": "Génération",
+    "channelName": "Nom du canal",
+    "authEnabled": "Authentification",
+    "authOn": "Protégé par mot de passe",
+    "authOff": "Sans authentification",
+    "restartRequired": "Redémarrage requis",
+    "ramFree": "Mémoire libre"
   },
   "firmware": {
     "checkForUpdate": "Check for Update",
@@ -115,5 +130,12 @@
     "factoryResetConfirm": "This will erase all settings on the device. Continue?",
     "rebooting": "Rebooting\u2026",
     "rebootSuccess": "Device is restarting."
+  },
+  "cover": {
+    "setup": "Configuration du volet",
+    "calibrate": "Calibrer",
+    "calibrateDescription": "Lancer le calibrage pour déterminer la plage de mouvement complète du volet.",
+    "calibrateConfirm": "Le volet va s'ouvrir et se fermer complètement. Continuer ?",
+    "calibrateSuccess": "Calibrage démarré."
   }
 }

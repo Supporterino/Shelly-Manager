@@ -27,6 +27,11 @@
     "stop": "Stop",
     "goToPosition": "Go to Position",
     "position": "Position",
+    "autoOffIn": "Auto-off in {{seconds}}s",
+    "direction": {
+      "open": "Last: Open",
+      "close": "Last: Close"
+    },
     "state": {
       "open": "Open",
       "closed": "Closed",
@@ -51,6 +56,8 @@
     "frequency": "Frequency",
     "totalEnergy": "Total Energy",
     "returnedEnergy": "Returned Energy",
+    "energyStats": "Energy Stats",
+    "deviceTemp": "Device Temperature",
     "phaseA": "Phase A",
     "phaseB": "Phase B",
     "total": "Total"
@@ -81,12 +88,20 @@
   },
   "info": {
     "model": "Model",
+    "appName": "Application",
     "firmware": "Firmware",
+    "firmwareVersion": "Firmware Version",
     "ipAddress": "IP Address",
+    "macAddress": "MAC Address",
     "uptime": "Uptime",
     "lastSeen": "Last seen",
     "generation": "Generation",
-    "channelName": "Channel Name"
+    "channelName": "Channel Name",
+    "authEnabled": "Authentication",
+    "authOn": "Password protected",
+    "authOff": "No authentication",
+    "restartRequired": "Restart required",
+    "ramFree": "Free Memory"
   },
   "firmware": {
     "checkForUpdate": "Check for Update",
@@ -115,5 +130,12 @@
     "factoryResetConfirm": "This will erase all settings on the device. Continue?",
     "rebooting": "Rebooting\u2026",
     "rebootSuccess": "Device is restarting."
+  },
+  "cover": {
+    "setup": "Cover Setup",
+    "calibrate": "Calibrate",
+    "calibrateDescription": "Run calibration to determine the cover\u2019s full range of motion.",
+    "calibrateConfirm": "The cover will open and close completely to determine its range. Continue?",
+    "calibrateSuccess": "Calibration started."
   }
 }

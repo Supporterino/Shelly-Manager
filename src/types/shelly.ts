@@ -8,8 +8,10 @@ export interface ShellyGetDeviceInfoResult {
   fw_id: string
   ver: string      // firmware version string
   app: string      // "Switch" | "Cover" | "RGB" | "RGBW" | "Dimmer" | …
+  profile?: string // only on multi-profile devices (e.g. "switch" | "cover")
   auth_en: boolean
   auth_domain: string | null
+  discoverable?: boolean // absent means true; false = hidden from discovery
 }
 
 // ── Shared sub-types ───────────────────────────────────────────────────────
@@ -135,6 +137,7 @@ export interface CoverStatus {
   move_timeout?: number
   move_started_at?: number
   pos_control: boolean
+  last_direction?: 'open' | 'close'
   temperature?: Temperature
   errors?: string[]
 }
@@ -253,6 +256,7 @@ export interface PM1Status {
   pf: number
   freq: number
   aenergy: AEnergy
+  ret_aenergy?: AEnergy
   errors?: string[]
 }
 

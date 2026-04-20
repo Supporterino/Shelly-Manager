@@ -4,6 +4,8 @@ import { useCCTControl } from '../../../hooks/useDeviceControl'
 import { formatPower } from '../../../utils/formatters'
 import type { LightStatus } from '../../../types/shelly'
 import type { StoredDevice, ShellyComponentSummary } from '../../../types/device'
+import { ErrorBadges } from './ErrorBadges'
+import { LightEnergyPanel } from './LightEnergyPanel'
 
 const MIN_TEMP = 2700
 const MAX_TEMP = 6500
@@ -82,6 +84,9 @@ export function CCTControl({ deviceId, componentId, status, device }: Props) {
         <Text size="xs" c="dimmed">{t('controls.warm')}</Text>
         <Text size="xs" c="dimmed">{t('controls.cool')}</Text>
       </Group>
+
+      <ErrorBadges errors={light?.errors} />
+      <LightEnergyPanel status={light} showTemp />
     </Stack>
   )
 }

@@ -24,10 +24,64 @@ import { ScheduleSection } from '../../components/devices/ScheduleSection'
 import { ConfirmModal } from '../../components/common/ConfirmModal'
 import { ErrorAlert } from '../../components/common/ErrorAlert'
 import { useDeviceStatus } from '../../hooks/useDeviceStatus'
+import { useCoverCalibrate } from '../../hooks/useDeviceControl'
 
 export const Route = createFileRoute('/devices/$deviceId/settings')({
   component: DeviceSettingsPage,
 })
+
+// ── Cover calibrate sub-section ──────────────────────────────────────────────
+
+function CoverCalibrateRow({
+  deviceId,
+  coverId,
+}: {
+  deviceId: string
+  coverId: number
+}) {
+  const { t } = useTranslation('devices')
+  const [confirm, setConfirm] = useState(false)
+  const mutation = useCoverCalibrate(deviceId, coverId)
+
+  const handleConfirm = () => {
+    mutation.mutate(undefined, {
+      onSuccess: () => {
+        notifications.show({ color: 'green', message: t('cover.calibrateSuccess') })
+        setConfirm(false)
+      },
+      onSettled: () => setConfirm(false),
+    })
+  }
+
+  return (
+    <>
+      <Group justify="space-between" align="center">
+        <Stack gap={2}>
+          <Text size="sm" fw={500}>{t('cover.calibrate')}</Text>
+          <Text size="xs" c="dimmed">{t('cover.calibrateDescription')}</Text>
+        </Stack>
+        <Button
+          size="xs"
+          variant="light"
+          color="violet"
+          loading={mutation.isPending}
+          onClick={() => setConfirm(true)}
+        >
+          {t('cover.calibrate')}
+        </Button>
+      </Group>
+      <ConfirmModal
+        opened={confirm}
+        onClose={() => setConfirm(false)}
+        onConfirm={handleConfirm}
+        title={t('cover.calibrate')}
+        message={t('cover.calibrateConfirm')}
+        confirmColor="violet"
+        loading={mutation.isPending}
+      />
+    </>
+  )
+}
 
 function DeviceSettingsPage() {
   const { deviceId } = Route.useParams()
@@ -147,6 +201,21 @@ function DeviceSettingsPage() {
         <ScheduleSection device={device} />
 
         <Divider />
+
+        {/* Cover setup */}
+        {device.components.filter((c) => c.type === 'cover').length > 0 && (
+          <>
+            <Stack gap="xs">
+              <Text fw={600}>{t('cover.setup')}</Text>
+              {device.components
+                .filter((c) => c.type === 'cover')
+                .map((c) => (
+                  <CoverCalibrateRow key={c.id} deviceId={deviceId} coverId={c.id} />
+                ))}
+            </Stack>
+            <Divider />
+          </>
+        )}
 
         {/* Auth */}
         <Stack gap="xs">

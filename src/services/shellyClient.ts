@@ -188,6 +188,10 @@ export class ShellyClient {
     await this.call('Cover.GoToPosition', params as unknown as Record<string, unknown>)
   }
 
+  async coverCalibrate(id: number): Promise<void> {
+    await this.call('Cover.Calibrate', { id })
+  }
+
   // ── Smoke ────────────────────────────────────────────────────────────────
 
   async smokeMute(id: number): Promise<void> {
