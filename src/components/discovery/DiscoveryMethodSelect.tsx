@@ -1,4 +1,5 @@
-import { Stack, Checkbox, TextInput, Divider, Text } from '@mantine/core'
+import { Alert, Stack, Checkbox, TextInput, Divider, Text } from '@mantine/core'
+import { IconAlertCircle, IconAlertTriangle } from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
 import type { DiscoveryMethod } from '../../types/discovery'
 import { ManualAddForm } from './ManualAddForm'
@@ -10,6 +11,14 @@ interface DiscoveryMethodSelectProps {
   cidr: string
   onCidrChange: (cidr: string) => void
   onManualDevice: (device: StoredDevice) => void
+}
+
+/** Parse the prefix length from a CIDR string, or return null if invalid. */
+function parsePrefixLen(cidr: string): number | null {
+  const parts = cidr.split('/')
+  if (parts.length !== 2) return null
+  const prefix = parseInt(parts[1], 10)
+  return isNaN(prefix) || prefix < 0 || prefix > 32 ? null : prefix
 }
 
 export function DiscoveryMethodSelect({
@@ -32,6 +41,12 @@ export function DiscoveryMethodSelect({
   const showScan = methods.includes('scan')
   const showManual = methods.includes('manual')
 
+  const prefixLen = cidr ? parsePrefixLen(cidr) : null
+  // prefix < 19 → > 8192 hosts → hard cap (matches Rust)
+  const cidrTooLarge = prefixLen !== null && prefixLen < 19
+  // prefix < 21 → > 2048 hosts → warn (slow scan)
+  const cidrLarge = prefixLen !== null && prefixLen >= 19 && prefixLen < 21
+
   return (
     <Stack gap="md">
       <Checkbox
@@ -47,13 +62,34 @@ export function DiscoveryMethodSelect({
           onChange={() => toggle('scan')}
         />
         {showScan && (
-          <TextInput
-            ml="xl"
-            placeholder="192.168.1.0/24"
-            label={t('form.cidr')}
-            value={cidr}
-            onChange={(e) => onCidrChange(e.currentTarget.value)}
-          />
+          <>
+            <TextInput
+              ml="xl"
+              placeholder="192.168.1.0/24"
+              label={t('form.cidr')}
+              value={cidr}
+              onChange={(e) => onCidrChange(e.currentTarget.value)}
+              error={cidrTooLarge ? t('form.cidrTooLarge') : undefined}
+            />
+            {cidrLarge && (
+              <Alert
+                color="orange"
+                icon={<IconAlertTriangle size={16} />}
+                ml="xl"
+              >
+                {t('form.cidrLargeWarning')}
+              </Alert>
+            )}
+            {cidrTooLarge && (
+              <Alert
+                color="red"
+                icon={<IconAlertCircle size={16} />}
+                ml="xl"
+              >
+                {t('form.cidrTooLarge')}
+              </Alert>
+            )}
+          </>
         )}
       </Stack>
 

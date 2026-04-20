@@ -6,6 +6,18 @@
       "command": ["npx", "-y", "@mantine/mcp-server"],
       "enabled": true
     }
+  },
+  "provider": {
+    "lmstudio": {
+      "models": {
+        "openai/gpt-oss-20b": {
+          "name": "GPT OSS 20B"
+        },
+        "google/gemma-4-26b-a4b": {
+          "name": "Gemma4 26B A4B"
+        }
+      }
+    }
   }
 }
 

@@ -17,6 +17,8 @@
     "username": "Username",
     "password": "Password",
     "cidr": "IP Range (CIDR)",
+    "cidrLargeWarning": "Large subnet detected — scanning may take several minutes. Consider narrowing to /24.",
+    "cidrTooLarge": "Subnet too large — maximum supported is /19 (8192 hosts). Please use a narrower range.",
     "add": "Add Device",
     "verify": "Verifying\u2026"
   },

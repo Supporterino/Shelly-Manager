@@ -5,7 +5,9 @@ import {
   Group,
   Text,
   Badge,
-  Button,
+  ActionIcon,
+  Indicator,
+  Tooltip,
   ThemeIcon,
 } from '@mantine/core'
 import {
@@ -15,6 +17,7 @@ import {
   IconFlame,
   IconDroplet,
   IconShield,
+  IconCheck,
 } from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
 import type { StoredDevice, DeviceType } from '../../types/device'
@@ -100,14 +103,22 @@ export function FoundDevicesList({ devices, onAdd }: FoundDevicesListProps) {
         )
       })}
 
-      <Button
-        color="blue"
-        onClick={handleAdd}
-        disabled={selected.size === 0}
-        mt="xs"
-      >
-        {t('addSelected')} ({selected.size})
-      </Button>
+      <Group justify="flex-end" mt="xs">
+        <Tooltip label={`${t('addSelected')} (${selected.size})`}>
+          <Indicator label={String(selected.size)} size={16} disabled={selected.size === 0} color="blue">
+            <ActionIcon
+              variant="filled"
+              size="lg"
+              color="blue"
+              disabled={selected.size === 0}
+              onClick={handleAdd}
+              aria-label={t('addSelected')}
+            >
+              <IconCheck size={18} />
+            </ActionIcon>
+          </Indicator>
+        </Tooltip>
+      </Group>
     </Stack>
   )
 }

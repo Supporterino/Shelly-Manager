@@ -1,18 +1,21 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import {
+  ActionIcon,
   Button,
   Center,
-  Chip,
   Group,
+  SegmentedControl,
   Select,
   Stack,
   Text,
   TextInput,
   Title,
+  Tooltip,
 } from '@mantine/core'
-import { IconPlus, IconSearch } from '@tabler/icons-react'
+import { IconPlus, IconRefresh, IconSearch } from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
 import { useMemo, useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 import { useDeviceStore } from '../store/deviceStore'
 import { useAppStore } from '../store/appStore'
 import { useWsStatusStore } from '../store/wsStatusStore'
@@ -34,9 +37,14 @@ function DashboardPage() {
   const locale = useAppStore((s) => s.preferences.locale || 'en')
   const wsConnected = useWsStatusStore((s) => s.connected)
 
+  const queryClient = useQueryClient()
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
   const [sortKey, setSortKey] = useState<SortKey>('name')
+
+  async function handleRefresh() {
+    await queryClient.invalidateQueries({ queryKey: ['device'] })
+  }
 
   const filtered = useMemo(() => {
     let result = devices as StoredDevice[]
@@ -91,9 +99,29 @@ function DashboardPage() {
       {/* Header */}
       <Group justify="space-between" align="center">
         <Title order={2}>{t('appName')}</Title>
-        <Button component={Link} to="/discover" leftSection={<IconPlus size={16} />} variant="light">
-          {td('addSelected')}
-        </Button>
+        <Group gap="xs">
+          <Tooltip label={t('actions.refresh')}>
+            <ActionIcon
+              variant="light"
+              size="lg"
+              aria-label={t('actions.refresh')}
+              onClick={() => void handleRefresh()}
+            >
+              <IconRefresh size={18} />
+            </ActionIcon>
+          </Tooltip>
+          <Tooltip label={td('addSelected')}>
+            <ActionIcon
+              component={Link}
+              to="/discover"
+              variant="light"
+              size="lg"
+              aria-label={td('addSelected')}
+            >
+              <IconPlus size={18} />
+            </ActionIcon>
+          </Tooltip>
+        </Group>
       </Group>
 
       {/* Filter / sort toolbar */}
@@ -106,29 +134,30 @@ function DashboardPage() {
           size="sm"
           style={{ flex: 1, minWidth: 180 }}
         />
-        <Chip.Group
-          value={statusFilter}
-          onChange={(v) => setStatusFilter((v as StatusFilter) || 'all')}
-        >
-          <Group gap="xs">
-            <Chip value="all" size="sm">{t('filter.all')}</Chip>
-            <Chip value="online" size="sm">{t('filter.online')}</Chip>
-            <Chip value="offline" size="sm">{t('filter.offline')}</Chip>
-          </Group>
-        </Chip.Group>
-        <Select
-          data={[
-            { value: 'name', label: t('sort.name') },
-            { value: 'status', label: t('sort.status') },
-            { value: 'lastSeen', label: t('sort.lastSeen') },
-          ]}
-          value={sortKey}
-          onChange={(v) => setSortKey((v as SortKey) ?? 'name')}
-          allowDeselect={false}
-          size="sm"
-          w={130}
-          label={t('sort.label')}
-        />
+        <Group gap="sm" wrap="nowrap" style={{ flex: 1 }} justify="space-between">
+          <SegmentedControl
+            value={statusFilter}
+            onChange={(v) => setStatusFilter(v as StatusFilter)}
+            size="sm"
+            data={[
+              { value: 'all', label: t('filter.all') },
+              { value: 'online', label: t('filter.online') },
+              { value: 'offline', label: t('filter.offline') },
+            ]}
+          />
+          <Select
+            data={[
+              { value: 'name', label: t('sort.name') },
+              { value: 'status', label: t('sort.status') },
+              { value: 'lastSeen', label: t('sort.lastSeen') },
+            ]}
+            value={sortKey}
+            onChange={(v) => setSortKey((v as SortKey) ?? 'name')}
+            allowDeselect={false}
+            size="sm"
+            w={130}
+          />
+        </Group>
       </Group>
 
       <DeviceGrid devices={filtered} locale={locale} />

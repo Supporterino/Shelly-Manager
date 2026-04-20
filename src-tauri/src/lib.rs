@@ -97,7 +97,11 @@ async fn discover_mdns(timeout_secs: u64) -> Result<Vec<DiscoveredHost>, String>
 }
 
 /// Scan a CIDR subnet for hosts listening on the given port.
-/// Uses concurrent TCP connect with a bounded semaphore.
+///
+/// IPs are processed in chunks of 256 to keep the number of in-flight Tokio
+/// tasks and open file descriptors bounded, regardless of CIDR size. A hard
+/// cap of 8 192 hosts (prefix ≥ /19) is enforced; callers should validate
+/// the CIDR in the UI before invoking this command.
 #[tauri::command]
 async fn scan_subnet(
     cidr: String,
@@ -106,34 +110,48 @@ async fn scan_subnet(
 ) -> Result<Vec<DiscoveredHost>, String> {
     let ips = expand_cidr(&cidr).map_err(|e| e.to_string())?;
 
-    let timeout = Duration::from_millis(timeout_ms.max(100));
-    let mut join_set: JoinSet<Option<DiscoveredHost>> = JoinSet::new();
-    let semaphore = Arc::new(tokio::sync::Semaphore::new(50));
-
-    for ip in ips {
-        let sem = semaphore.clone();
-        let ip_str = ip.clone();
-        join_set.spawn(async move {
-            let _permit = sem.acquire().await.ok()?;
-            let addr: SocketAddr = format!("{}:{}", ip_str, port)
-                .parse()
-                .ok()?;
-            match tokio::time::timeout(timeout, tokio::net::TcpStream::connect(addr)).await {
-                Ok(Ok(_)) => Some(DiscoveredHost {
-                    ip: ip_str,
-                    port,
-                    hostname: None,
-                    source: "scan".to_string(),
-                }),
-                _ => None,
-            }
-        });
+    // Hard cap — a /16 would take >10 minutes; refuse early with a clear message.
+    if ips.len() > 8192 {
+        return Err(
+            "CIDR too large — maximum supported range is /19 (8192 hosts). \
+             Use a narrower subnet."
+                .to_string(),
+        );
     }
 
-    let mut results = Vec::new();
-    while let Some(result) = join_set.join_next().await {
-        if let Ok(Some(host)) = result {
-            results.push(host);
+    let timeout = Duration::from_millis(timeout_ms.max(100));
+    // Raised from 50 → 100 for better throughput on typical /24 subnets.
+    let semaphore = Arc::new(tokio::sync::Semaphore::new(100));
+    let mut results: Vec<DiscoveredHost> = Vec::new();
+
+    // Process in chunks of 256 IPs to bound memory and file-descriptor usage.
+    for chunk in ips.chunks(256) {
+        let mut join_set: JoinSet<Option<DiscoveredHost>> = JoinSet::new();
+
+        for ip in chunk {
+            let sem = semaphore.clone();
+            let ip_str = ip.clone();
+            join_set.spawn(async move {
+                let _permit = sem.acquire().await.ok()?;
+                let addr: SocketAddr = format!("{}:{}", ip_str, port)
+                    .parse()
+                    .ok()?;
+                match tokio::time::timeout(timeout, tokio::net::TcpStream::connect(addr)).await {
+                    Ok(Ok(_)) => Some(DiscoveredHost {
+                        ip: ip_str,
+                        port,
+                        hostname: None,
+                        source: "scan".to_string(),
+                    }),
+                    _ => None,
+                }
+            });
+        }
+
+        while let Some(result) = join_set.join_next().await {
+            if let Ok(Some(host)) = result {
+                results.push(host);
+            }
         }
     }
 

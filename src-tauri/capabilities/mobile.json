@@ -4,6 +4,7 @@
   "platforms": ["iOS", "android"],
   "windows": ["main"],
   "permissions": [
+    "core:app:default",
     { "identifier": "http:default", "allow": [{ "url": "http://*/*" }] },
     "websocket:default",
     "store:default"

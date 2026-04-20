@@ -6,7 +6,8 @@
     "confirm": "Confirm",
     "delete": "Delete",
     "retry": "Retry",
-    "close": "Close"
+    "close": "Close",
+    "refresh": "Actualiser"
   },
   "status": {
     "online": "Online",

@@ -37,15 +37,17 @@ export function DeviceCard({ device, locale }: Props) {
     >
       <Card withBorder radius="md" p="md" h="100%">
         <Stack gap="xs">
-          <Group justify="space-between" align="flex-start">
-            <Group gap="xs" align="center">
+          <Group justify="space-between" align="flex-start" wrap="nowrap">
+            <Group gap="xs" align="center" style={{ minWidth: 0 }}>
               <DeviceTypeIcon type={device.type} size={22} />
-              <Stack gap={0}>
+              <Stack gap={0} style={{ minWidth: 0 }}>
                 <Text fw={600} size="sm" lineClamp={1}>{device.name}</Text>
                 <Text size="xs" c="dimmed">{device.model}</Text>
               </Stack>
             </Group>
-            <DeviceStatusBadge status={connectionStatus} />
+            <Box style={{ flexShrink: 0 }}>
+              <DeviceStatusBadge status={connectionStatus} />
+            </Box>
           </Group>
 
           <Text size="xs" c="dimmed">{t('info.ipAddress')}: {device.ip}</Text>

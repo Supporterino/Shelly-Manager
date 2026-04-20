@@ -1,2471 +1,368 @@
-# Shelly Manager — Comprehensive Build Plan
+# Shelly Manager — Bug Fix Plan
 
-> A local-network Shelly device manager built with **Tauri v2** (Bun), **TanStack Router** (file-based), **Mantine v9**, **Tabler icons**, and **react-i18next** for full multi-language support.
-> Targets: **iOS · Android · macOS · Windows · Linux**
-> Shelly support: **Gen 2, Gen 3, Gen 4** (JSON-RPC 2.0)
+> This document tracks all known bugs, their root causes, and the exact fix plan for each.
+> Bugs are independent and can be worked in any order.
 
 ---
 
 ## Table of Contents
 
-1. [Architecture Overview](#1-architecture-overview)
-2. [Project Structure](#2-project-structure)
-3. [Phase 0 – Scaffolding & Toolchain](#phase-0--scaffolding--toolchain)
-4. [Phase 1 – Core Infrastructure](#phase-1--core-infrastructure)
-5. [Phase 2 – Device Discovery](#phase-2--device-discovery)
-6. [Phase 3 – Device Detail & Control](#phase-3--device-detail--control)
-7. [Phase 4 – Real-Time Updates](#phase-4--real-time-updates)
-8. [Phase 5 – Advanced Features](#phase-5--advanced-features)
-9. [Phase 6 – Mobile Polish & Platform Specifics](#phase-6--mobile-polish--platform-specifics)
-10. [Phase 7 – Testing](#phase-7--testing)
-11. [Phase 8 – Release Builds](#phase-8--release-builds)
-12. [Key Technical Decisions](#key-technical-decisions)
-13. [Dependency Reference](#dependency-reference)
-14. [i18n Language Reference](#i18n-language-reference)
+1. [Bug 1 — Online pill wraps to second row](#bug-1--online-pill-wraps-to-second-row)
+2. [Bug 2 — Sort select visually larger than siblings](#bug-2--sort-select-visually-larger-than-siblings)
+3. [Bug 3 — "Add Selected" is a huge button](#bug-3--add-selected-is-a-huge-button)
+4. [Bug 4 — Settings page arbitrary width cap and left-aligned](#bug-4--settings-page-arbitrary-width-cap-and-left-aligned)
+5. [Bug 5 — Correct color scheme only applied when opening settings](#bug-5--correct-color-scheme-only-applied-when-opening-settings)
+6. [Bug 6 — Language toggle does nothing](#bug-6--language-toggle-does-nothing)
+7. [Bug 7 — Version field is empty](#bug-7--version-field-is-empty)
+8. [Bug 8 — mDNS does not work on iOS](#bug-8--mdns-does-not-work-on-ios)
+9. [Bug 9 — Subnet scan returns no devices for large CIDRs](#bug-9--subnet-scan-returns-no-devices-for-large-cidrs)
+10. [Bug 10 — Stepper stacks steps vertically on mobile](#bug-10--stepper-stacks-steps-vertically-on-mobile)
 
 ---
 
-## 1. Architecture Overview
+## Bug 1 — Online pill wraps to second row
 
-```
-┌─────────────────────────────────────────────────────┐
-│  React Frontend (Vite + TanStack Router)            │
-│                                                     │
-│  Routes (file-based)                                │
-│  ├── / (Dashboard – device grid)                    │
-│  ├── /devices/$id (Device detail)                   │
-│  ├── /devices/$id/settings (Device settings)        │
-│  ├── /discover (Discovery wizard)                   │
-│  └── /settings (App settings)                       │
-│                                                     │
-│  State                                              │
-│  ├── Zustand stores (deviceStore, appStore)         │
-│  └── TanStack Query (device polling / mutations)    │
-│                                                     │
-│  Services (src/services/)                           │
-│  ├── shellyClient.ts  – Gen2+ RPC abstraction       │
-│  ├── deviceStore.ts   – Zustand persisted store     │
-│  └── wsManager.ts     – WebSocket pool              │
-└─────────────────────────────────────────────────────┘
-            │  invoke / plugin calls
-┌─────────────────────────────────────────────────────┐
-│  Tauri Backend (Rust – src-tauri/)                  │
-│                                                     │
-│  Custom commands                                    │
-│  ├── discover_mdns(service_type) → Vec<ShellyHost>  │
-│  ├── scan_subnet(cidr, port) → Vec<ShellyHost>      │
-│  └── (future) send_wol(mac)                         │
-│                                                     │
-│  Plugins                                            │
-│  ├── tauri-plugin-http    (HTTP to devices)         │
-│  ├── tauri-plugin-websocket (WS to Gen2+)           │
-│  └── tauri-plugin-store   (device persistence)      │
-└─────────────────────────────────────────────────────┘
-            │  HTTP / WebSocket
-┌─────────────────────────────────────────────────────┐
-│  Shelly Devices (Local Network)                     │
-│  Gen 2 / Gen 3 / Gen 4  →  JSON-RPC 2.0            │
-│  Endpoint: POST http://<ip>/rpc                     │
-│  WebSocket: ws://<ip>/rpc                           │
-└─────────────────────────────────────────────────────┘
-```
+**Status:** Open  
+**File:** `src/components/devices/DeviceCard.tsx`
 
-### State Management Strategy
+### Root cause
 
-| Concern | Tool |
-|---|---|
-| Persisted device registry | Zustand + `tauri-plugin-store` |
-| Server state (device status, config) | TanStack Query (polling + mutations) |
-| WebSocket live state | Zustand slice, updated by wsManager |
-| UI ephemeral state | Local `useState` in components |
-| App preferences (theme, language) | Zustand + `tauri-plugin-store` |
-| Translations | react-i18next (i18next v26) — JSON per locale/namespace, lazy-loaded via Vite dynamic `import()` |
+The top `Group` (`justify="space-between"`) has no `wrap="nowrap"` constraint. When the device name is long, the flex container wraps and `DeviceStatusBadge` drops to a second line.
 
----
+### Fix
 
-## 2. Project Structure
+- Add `wrap="nowrap"` to the outer `Group` so the badge always stays on the same row.
+- Add `style={{ flexShrink: 0 }}` to the `DeviceStatusBadge` element so it is never compressed.
+- Add `style={{ minWidth: 0 }}` to the inner `Group` (icon + name/model stack) so `lineClamp={1}` can actually truncate the name text rather than forcing the badge out.
 
-```
-shelly-manager/
-├── PLAN.md
-├── AGENTS.md
-├── package.json
-├── bun.lockb
-├── vite.config.ts
-├── tsconfig.json
-├── index.html
-│
-├── src/
-│   ├── main.tsx                    # Bootstrap: router + providers
-│   ├── routeTree.gen.ts            # AUTO-GENERATED by TanStack Router plugin
-│   │
-│   ├── routes/
-│   │   ├── __root.tsx              # Root layout (AppShell, providers)
-│   │   ├── index.tsx               # / – Dashboard (device grid)
-│   │   ├── discover.tsx            # /discover – Discovery wizard
-│   │   ├── settings.tsx            # /settings – App settings
-│   │   └── devices/
-│   │       ├── $deviceId.tsx       # /devices/:id – Device detail
-│   │       └── $deviceId.settings.tsx  # /devices/:id/settings
-│   │
-│   ├── components/
-│   │   ├── layout/
-│   │   │   ├── AppShellLayout.tsx  # Responsive shell (bottom nav mobile, sidebar desktop)
-│   │   │   ├── BottomNav.tsx       # Mobile tab bar
-│   │   │   └── SidebarNav.tsx      # Desktop sidebar
-│   │   │
-│   │   ├── devices/
-│   │   │   ├── DeviceCard.tsx           # Grid card for dashboard
-│   │   │   ├── DeviceCardInlineControl.tsx  # Inline control switcher (by channel count)
-│   │   │   ├── DeviceGrid.tsx           # Responsive grid of DeviceCard
-│   │   │   ├── DeviceStatusBadge.tsx    # Online/offline/connecting badge
-│   │   │   ├── DeviceTypeIcon.tsx       # Tabler icon by DeviceType
-│   │   │   ├── ComponentList.tsx        # Dispatch: component type → control component
-│   │   │   │
-│   │   │   ├── controls/
-│   │   │   │   ├── SwitchControl.tsx    # switch:N — relay toggle + optional power row
-│   │   │   │   ├── DimmerControl.tsx    # light:N — brightness slider
-│   │   │   │   ├── CCTControl.tsx       # light:N (CCT) — brightness + colour temperature
-│   │   │   │   ├── RGBControl.tsx       # rgb:N — colour picker + brightness
-│   │   │   │   ├── RGBWControl.tsx      # rgbw:N — colour picker + white channel + brightness
-│   │   │   │   ├── CoverControl.tsx     # cover:N — open/stop/close + position slider
-│   │   │   │   └── InputDisplay.tsx     # input:N — state badge (read-only)
-│   │   │   │
-│   │   │   ├── sensors/
-│   │   │   │   ├── SensorCard.tsx       # Shared wrapper (icon + label + value)
-│   │   │   │   ├── TemperatureSensor.tsx  # temperature:N
-│   │   │   │   ├── HumiditySensor.tsx     # humidity:N
-│   │   │   │   ├── FloodSensor.tsx        # flood:N — alert banner when wet
-│   │   │   │   ├── SmokeSensor.tsx        # smoke:N — alarm alert + mute button
-│   │   │   │   ├── IlluminanceSensor.tsx  # illuminance:N
-│   │   │   │   ├── MotionSensor.tsx       # motion:N — pulsing badge
-│   │   │   │   ├── BatteryIndicator.tsx   # devicepower:N — progress bar
-│   │   │   │   └── VoltmeterDisplay.tsx   # voltmeter:N
-│   │   │   │
-│   │   │   ├── energy/
-│   │   │   │   ├── EMDisplay.tsx        # em:N — dual-clamp (phase A + B)
-│   │   │   │   ├── EM1Display.tsx       # em1:N — single-clamp
-│   │   │   │   └── PM1Display.tsx       # pm1:N — power meter + total energy
-│   │   │   │
-│   │   │   └── info/
-│   │   │       ├── DeviceInfoPanel.tsx  # Name, model, IP, firmware, uptime
-│   │   │       └── FirmwareCard.tsx     # FW version + check/update button
-│   │   │
-│   │   ├── discovery/
-│   │   │   ├── DiscoveryProgress.tsx
-│   │   │   ├── FoundDevicesList.tsx
-│   │   │   └── ManualAddForm.tsx
-│   │   │
-│   │   └── common/
-│   │       ├── LoadingOverlay.tsx
-│   │       ├── ErrorAlert.tsx
-│   │       ├── ConfirmModal.tsx
-│   │       └── PullToRefresh.tsx   # Mobile gesture
-│   │
-│   ├── services/
-│   │   ├── shellyClient.ts         # Gen2+ RPC client (HTTP + Digest auth)
-│   │   ├── wsManager.ts            # WebSocket pool manager
-│   │   ├── discovery.ts            # mDNS/scan/manual orchestration
-│   │   └── devicePersistence.ts   # tauri-plugin-store wrapper
-│   │
-│   ├── store/
-│   │   ├── deviceStore.ts          # Zustand: device registry
-│   │   ├── wsStatusStore.ts        # Zustand: live WS-pushed statuses
-│   │   └── appStore.ts             # Zustand: preferences
-│   │
-│   ├── hooks/
-│   │   ├── useDeviceStatus.ts      # TanStack Query hook for polling
-│   │   ├── useDeviceControl.ts     # Mutation hooks (Switch.Set, etc.)
-│   │   ├── useDiscovery.ts         # Discovery orchestration hook
-│   │   └── useWsStatus.ts          # Read from wsStatusStore
-│   │
-│   ├── types/
-│   │   ├── shelly.ts               # Shelly RPC types (GetDeviceInfo, components...)
-│   │   ├── device.ts               # Internal Device model
-│   │   └── discovery.ts            # Discovery result types
-│   │
-│   ├── utils/
-│   │   ├── rpc.ts                  # JSON-RPC frame helpers
-│   │   ├── auth.ts                 # SHA-256 Digest auth (Gen2+)
-│   │   ├── formatters.ts           # W, kWh, °C formatters
-│   │   └── deviceTypeMap.ts        # model string → DeviceType enum
-│   │
-│   └── locales/                    # Translation JSON files (one dir per locale)
-│       ├── en/
-│       │   ├── common.json         # Shared: app name, actions, errors
-│       │   ├── devices.json        # Device card labels, control labels
-│       │   ├── discovery.json      # Discovery wizard copy
-│       │   └── settings.json       # Settings page labels
-│       ├── de/
-│       │   └── ...                 # German translations (same structure)
-│       └── ...                     # Additional locales added here
-│
-└── src-tauri/
-    ├── Cargo.toml
-    ├── Cargo.lock
-    ├── tauri.conf.json
-    ├── build.rs
-    ├── capabilities/
-    │   ├── default.json            # Desktop permissions
-    │   └── mobile.json             # Mobile-scoped permissions
-    └── src/
-        ├── main.rs                 # Desktop entry (calls lib::run())
-        └── lib.rs                  # All commands + plugin registration
+```diff
+- <Group justify="space-between" align="flex-start">
+-   <Group gap="xs" align="center">
++ <Group justify="space-between" align="flex-start" wrap="nowrap">
++   <Group gap="xs" align="center" style={{ minWidth: 0 }}>
+      ...
+    </Group>
+-   <DeviceStatusBadge status={connectionStatus} />
++   <DeviceStatusBadge status={connectionStatus} style={{ flexShrink: 0 }} />
+  </Group>
 ```
 
 ---
 
-## Phase 0 – Scaffolding & Toolchain
+## Bug 2 — Sort select visually larger than siblings
 
-### 0.1 Create Tauri v2 project
+**Status:** Open  
+**File:** `src/routes/index.tsx`
 
-```bash
-bun create tauri-app shelly-manager
-# Select: React + TypeScript, Bun as package manager
-cd shelly-manager
+### Root cause
+
+The `<Select>` in the filter toolbar has a `label={t('sort.label')}` prop. This renders a text label above the input field, making the whole control taller than the adjacent `Chip.Group` and `TextInput` which have no labels.
+
+### Fix
+
+Remove the `label` prop from the `Select`. The intent ("Sort by") is self-evident from the options. Optionally surface it as a `Tooltip` if needed for accessibility.
+
+```diff
+  <Select
+    data={[...]}
+    value={sortKey}
+    onChange={(v) => setSortKey((v as SortKey) ?? 'name')}
+    allowDeselect={false}
+    size="sm"
+    w={130}
+-   label={t('sort.label')}
+  />
 ```
-
-### 0.2 Install frontend dependencies
-
-```bash
-# Routing
-bun add @tanstack/react-router@^1.168.22
-bun add -D @tanstack/router-plugin@^1.167.22
-
-# State
-bun add @tanstack/react-query@^5.99.0
-bun add zustand@^5.0.12
-
-# UI
-bun add @mantine/core@^9.0.2 @mantine/hooks@^9.0.2 @mantine/notifications@^9.0.2
-bun add @tabler/icons-react@^3.41.1
-
-# PostCSS (required by Mantine)
-bun add -D postcss@^8.5.10 postcss-preset-mantine@^1.18.0 postcss-simple-vars@^7.0.1
-```
-
-> **Note — Mantine v9 requires React 19.** Tauri v2's default React template ships with React 18.
-> After scaffolding, upgrade React before installing Mantine:
-> ```bash
-> bun add react@^19.2.5 react-dom@^19.2.5
-> bun add -D @types/react@^19 @types/react-dom@^19
-> ```
-
-### 0.3 Install Tauri plugins
-
-```bash
-bun tauri add http          # HTTP requests to devices
-bun tauri add websocket     # WebSocket connections to Gen2+ devices
-bun tauri add store         # Persist device list between sessions
-```
-
-Also add the `mdns-sd` crate manually in `src-tauri/Cargo.toml`:
-
-```toml
-[dependencies]
-mdns-sd = "0.19"
-tokio = { version = "1", features = ["full"] }
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
-```
-
-> **Note — `mdns-sd` 0.19 breaking change:** `ScopedIpV4` now carries `interface_ids`. When
-> extracting device IPs from a `ServiceResolved` event, iterate `info.get_addresses()` — each
-> element is now a `ScopedIpV4` struct. Call `.addr()` (or use `format!("{}", addr)` via `Display`)
-> rather than treating it as a plain `Ipv4Addr`. The high-level `ServiceEvent` and browse API are
-> otherwise unchanged.
-
-### 0.4 Configure Vite
-
-Write the full `vite.config.ts` once with both dev-server and test settings. Use `defineConfig` from `vitest/config` so the `test` block is type-safe:
-
-```ts
-// vite.config.ts
-/// <reference types="vitest" />
-import { defineConfig } from 'vitest/config'
-import react from '@vitejs/plugin-react'
-import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
-
-const host = process.env.TAURI_DEV_HOST
-
-export default defineConfig({
-  plugins: [TanStackRouterVite(), react()],
-  clearScreen: false,
-  server: {
-    host: host || false,
-    port: 5173,
-    strictPort: true,
-    hmr: host ? { protocol: 'ws', host, port: 5174 } : undefined,
-  },
-  test: {
-    environment: 'jsdom',
-    setupFiles: ['./src/test/setup.ts'],
-    globals: true,
-  },
-})
-```
-
-### 0.5 Configure PostCSS for Mantine
-
-```js
-// postcss.config.cjs
-module.exports = {
-  plugins: {
-    'postcss-preset-mantine': {},
-    'postcss-simple-vars': {
-      variables: {
-        'mantine-breakpoint-xs': '36em',
-        'mantine-breakpoint-sm': '48em',
-        'mantine-breakpoint-md': '62em',
-        'mantine-breakpoint-lg': '75em',
-        'mantine-breakpoint-xl': '88em',
-      },
-    },
-  },
-}
-```
-
-### 0.6 Configure TanStack Router for hash history (required for Tauri SPA)
-
-```ts
-// src/main.tsx
-import { createHashHistory, createRouter, RouterProvider } from '@tanstack/react-router'
-import { routeTree } from './routeTree.gen'
-
-const router = createRouter({ routeTree, history: createHashHistory() })
-
-declare module '@tanstack/react-router' {
-  interface Register { router: typeof router }
-}
-```
-
-### 0.7 Configure capabilities
-
-```json
-// src-tauri/capabilities/default.json (desktop)
-{
-  "$schema": "../gen/schemas/desktop-schema.json",
-  "identifier": "desktop-capability",
-  "platforms": ["macOS", "windows", "linux"],
-  "windows": ["main"],
-  "permissions": [
-    { "identifier": "http:default", "allow": [{ "url": "http://*/*" }] },
-    "websocket:default",
-    "store:default"
-  ]
-}
-```
-
-```json
-// src-tauri/capabilities/mobile.json
-{
-  "$schema": "../gen/schemas/mobile-schema.json",
-  "identifier": "mobile-capability",
-  "platforms": ["iOS", "android"],
-  "windows": ["main"],
-  "permissions": [
-    { "identifier": "http:default", "allow": [{ "url": "http://*/*" }] },
-    "websocket:default",
-    "store:default"
-  ]
-}
-```
-
-### 0.8 Initialize mobile targets
-
-```bash
-bun tauri android init
-bun tauri ios init
-```
-
-### 0.9 Set up testing
-
-```bash
-bun add -D vitest@^4.1.4 @testing-library/react@^16.3.2 @testing-library/user-event@^14.6.1 @testing-library/jest-dom@^6.9.1
-bun add -D @vitejs/plugin-react jsdom@^29.0.2
-```
-
-The `test` config is already part of `vite.config.ts` as written in Phase 0.4 — no separate step needed.
-
-Create `src/test/setup.ts`:
-
-```ts
-import '@testing-library/jest-dom'
-```
-
-### 0.10 Set up i18n
-
-```bash
-bun add i18next@^26.0.5 react-i18next@^17.0.4
-bun add i18next-resources-to-backend@^1.2.1 i18next-browser-languagedetector@^8.2.1
-```
-
-Create the i18n service at **`src/services/i18n.ts`**:
-
-```ts
-import i18next from 'i18next'
-import { initReactI18next } from 'react-i18next'
-import resourcesToBackend from 'i18next-resources-to-backend'
-import LanguageDetector from 'i18next-browser-languagedetector'
-
-i18next
-  .use(initReactI18next)
-  .use(LanguageDetector)                         // detects browser/OS locale
-  .use(
-    resourcesToBackend(
-      // Vite turns each JSON into a lazy chunk — no HTTP fetch, works in Tauri
-      (language: string, namespace: string) =>
-        import(`../locales/${language}/${namespace}.json`)
-    )
-  )
-  .init({
-    fallbackLng: 'en',
-    supportedLngs: ['en', 'de', 'fr', 'es', 'zh', 'ja'],
-    ns: ['common', 'devices', 'discovery', 'settings'],
-    defaultNS: 'common',
-    interpolation: { escapeValue: false },    // React already escapes
-    detection: {
-      // Persist the user's chosen language in localStorage
-      order: ['localStorage', 'navigator'],
-      caches: ['localStorage'],
-    },
-  })
-
-export default i18next
-```
-
-Add the **TypeScript type declaration** so every `t()` call is strictly typed (wrong keys = compile error):
-
-```ts
-// src/types/i18n.d.ts
-// Requires "resolveJsonModule": true in tsconfig.json
-// The relative paths below are relative to this file's location (src/types/)
-import 'i18next'
-
-declare module 'i18next' {
-  interface CustomTypeOptions {
-    defaultNS: 'common'
-    resources: {
-      common:    typeof import('../locales/en/common.json')
-      devices:   typeof import('../locales/en/devices.json')
-      discovery: typeof import('../locales/en/discovery.json')
-      settings:  typeof import('../locales/en/settings.json')
-    }
-  }
-}
-```
-
-Ensure `tsconfig.json` has both `"resolveJsonModule": true` and `"moduleResolution": "bundler"` (Vite default). Without `resolveJsonModule`, the `typeof import(...)` inside the declaration will not resolve the JSON shape and TypeScript will type every `t()` call as `string` with no key safety.
-
-Create the **initial English locale files** as the source of truth. All other locales copy this structure:
-
-```jsonc
-// src/locales/en/common.json
-{
-  "appName": "Shelly Manager",
-  "actions": {
-    "save": "Save",
-    "cancel": "Cancel",
-    "confirm": "Confirm",
-    "delete": "Delete",
-    "retry": "Retry",
-    "close": "Close"
-  },
-  "status": {
-    "online": "Online",
-    "offline": "Offline",
-    "connecting": "Connecting",
-    "error": "Error"
-  },
-  "errors": {
-    "networkUnreachable": "Device unreachable. Check your network.",
-    "authFailed": "Authentication failed. Check your password.",
-    "unknown": "An unexpected error occurred."
-  }
-}
-```
-
-```jsonc
-// src/locales/en/devices.json
-{
-  "types": {
-    "switch": "Switch",
-    "dimmer": "Dimmer",
-    "cct": "Tunable White",
-    "rgb": "RGB Light",
-    "rgbw": "RGBW Light",
-    "cover": "Cover / Blind",
-    "sensor": "Sensor",
-    "energy": "Energy Monitor",
-    "input": "Input",
-    "unknown": "Unknown"
-  },
-  "controls": {
-    "on": "On",
-    "off": "Off",
-    "channel": "Channel {{n}}",
-    "brightness": "Brightness",
-    "colorTemperature": "Colour Temperature",
-    "warm": "Warm",
-    "cool": "Cool",
-    "color": "Colour",
-    "white": "White",
-    "colorBrightness": "Colour Brightness",
-    "open": "Open",
-    "close": "Close",
-    "stop": "Stop",
-    "goToPosition": "Go to Position",
-    "position": "Position",
-    "state": {
-      "open": "Open",
-      "closed": "Closed",
-      "opening": "Opening",
-      "closing": "Closing",
-      "stopped": "Stopped",
-      "calibrating": "Calibrating"
-    },
-    "input": {
-      "pressed": "Pressed",
-      "released": "Released",
-      "closed": "Closed",
-      "open": "Open"
-    }
-  },
-  "power": {
-    "activePower": "Power",
-    "apparentPower": "Apparent Power",
-    "voltage": "Voltage",
-    "current": "Current",
-    "powerFactor": "Power Factor",
-    "frequency": "Frequency",
-    "totalEnergy": "Total Energy",
-    "returnedEnergy": "Returned Energy",
-    "phaseA": "Phase A",
-    "phaseB": "Phase B",
-    "total": "Total"
-  },
-  "sensors": {
-    "temperature": "Temperature",
-    "humidity": "Humidity",
-    "flood": "Water / Flood",
-    "floodDetected": "Water detected!",
-    "floodClear": "Dry",
-    "smoke": "Smoke",
-    "smokeAlarm": "Smoke alarm!",
-    "smokeClear": "Clear",
-    "mute": "Mute",
-    "illuminance": "Illuminance",
-    "illuminanceLevel": {
-      "dark": "Dark",
-      "twilight": "Twilight",
-      "bright": "Bright"
-    },
-    "motion": "Motion",
-    "motionDetected": "Motion detected",
-    "motionClear": "No motion",
-    "lastMotion": "Last motion {{time}}",
-    "battery": "Battery",
-    "externalPower": "External Power",
-    "voltage": "Voltage"
-  },
-  "info": {
-    "model": "Model",
-    "firmware": "Firmware",
-    "ipAddress": "IP Address",
-    "uptime": "Uptime",
-    "lastSeen": "Last seen",
-    "generation": "Generation",
-    "channelName": "Channel Name"
-  },
-  "firmware": {
-    "checkForUpdate": "Check for Update",
-    "updateAvailable": "Update available: {{version}}",
-    "upToDate": "Up to date",
-    "updateConfirm": "Update to {{version}}?",
-    "updating": "Updating…",
-    "updateSuccess": "Device updated successfully.",
-    "updateFailed": "Update failed. Please try again."
-  },
-  "schedule": {
-    "title": "Schedules",
-    "addSchedule": "Add Schedule",
-    "deleteSchedule": "Delete Schedule",
-    "noSchedules": "No schedules configured.",
-    "confirmDelete": "Delete this schedule?"
-  },
-  "dangerZone": {
-    "title": "Danger Zone",
-    "reboot": "Reboot Device",
-    "factoryReset": "Factory Reset",
-    "factoryResetConfirm": "This will erase all settings on the device. Continue?",
-    "rebooting": "Rebooting…",
-    "rebootSuccess": "Device is restarting."
-  }
-}
-```
-
-```jsonc
-// src/locales/en/discovery.json
-{
-  "title": "Discover Devices",
-  "methods": {
-    "mdns": "Auto-discover (mDNS)",
-    "scan": "Scan subnet",
-    "manual": "Add manually"
-  },
-  "steps": {
-    "chooseMethod": "Choose Method",
-    "searching": "Searching…",
-    "review": "Review & Add"
-  },
-  "form": {
-    "ipAddress": "IP Address",
-    "port": "Port",
-    "deviceName": "Device Name (optional)",
-    "username": "Username",
-    "password": "Password",
-    "cidr": "IP Range (CIDR)",
-    "add": "Add Device",
-    "verify": "Verifying…"
-  },
-  "found_one": "Found {{count}} device",
-  "found_other": "Found {{count}} devices",
-  "noDevicesFound": "No devices found. Try a different method.",
-  "addSelected": "Add Selected"
-}
-```
-
-```jsonc
-// src/locales/en/settings.json
-{
-  "title": "Settings",
-  "sections": {
-    "appearance": "Appearance",
-    "language": "Language",
-    "discovery": "Discovery",
-    "about": "About"
-  },
-  "theme": {
-    "label": "Theme",
-    "light": "Light",
-    "dark": "Dark",
-    "system": "System"
-  },
-  "temperatureUnit": {
-    "label": "Temperature Unit",
-    "celsius": "°C",
-    "fahrenheit": "°F"
-  },
-  "language": {
-    "label": "Language",
-    "en": "English",
-    "de": "Deutsch",
-    "fr": "Français",
-    "es": "Español",
-    "zh": "中文",
-    "ja": "日本語"
-  },
-  "polling": {
-    "label": "Polling interval",
-    "seconds": "{{count}}s"
-  },
-  "discovery": {
-    "defaultCidr": "Default CIDR",
-    "defaultMethods": "Default methods"
-  },
-  "about": {
-    "version": "Version",
-    "tauriVersion": "Tauri version",
-    "license": "License"
-  }
-}
-```
-
-> **Key extraction:** Run `bunx i18next-parser --config i18next-parser.config.cjs` to scan source files for `t('key')` calls and auto-sync locale JSON files. Add `i18next-parser` as a dev dependency and include extraction as a pre-commit or CI step.
-
-### 0.11 Checklist
-
-- [ ] `bun tauri dev` launches the desktop window successfully
-- [ ] `bun tauri android dev` connects to an emulator
-- [ ] `bun tauri ios dev` opens the iOS simulator
-- [ ] TanStack Router plugin generates `routeTree.gen.ts` on save
-- [ ] Mantine `MantineProvider` renders without errors
-- [ ] Vitest runs `bun test` with zero failures
-- [ ] `t('common:actions.save')` resolves correctly and TypeScript rejects unknown keys
 
 ---
 
-## Phase 1 – Core Infrastructure
+## Bug 3 — "Add Selected" is a huge button
 
-### 1.1 Mantine Provider setup
+**Status:** Open  
+**File:** `src/components/discovery/FoundDevicesList.tsx`
 
-Wrap the entire app in `MantineProvider` with a custom theme in `src/main.tsx`.
+### Root cause
 
-- Use `createTheme()` to set `primaryColor`, `fontFamily`, and `defaultRadius: 'md'`
-- Add `Notifications` from `@mantine/notifications`
-- Add `QueryClientProvider` from TanStack Query
-- Import `'./services/i18n'` as a **side-effect** before rendering so i18next is initialized before any component calls `useTranslation`
+A full-width `<Button>` with verbose translated text is used at the bottom of the device list.
+
+### Fix
+
+- Replace the `Button` with a Mantine `ActionIcon` (`variant="filled"`, `size="lg"`, `color="blue"`) containing `IconCheck`.
+- Overlay a `Badge` showing the selected count using Mantine's `Indicator` component (top-right corner of the ActionIcon).
+- Add a `Tooltip` with label `t('addSelected')` for screen-reader and hover accessibility.
+- Place it right-aligned via `Group justify="flex-end"`.
 
 ```tsx
-// src/main.tsx
-import './services/i18n'  // initialize i18next — must be first
-import { Suspense } from 'react'
-import { I18nextProvider } from 'react-i18next'
-import i18next from 'i18next'
-
-<I18nextProvider i18n={i18next}>
-  <MantineProvider theme={theme}>
-    <Notifications />
-    <QueryClientProvider client={queryClient}>
-      {/*
-        Suspense is required: the first locale chunk loads asynchronously.
-        Replace the fallback with a full-screen Mantine Loader for best UX.
-      */}
-      <Suspense fallback={<AppLoader />}>
-        <RouterProvider router={router} />
-      </Suspense>
-    </QueryClientProvider>
-  </MantineProvider>
-</I18nextProvider>
+<Group justify="flex-end" mt="xs">
+  <Tooltip label={`${t('addSelected')} (${selected.size})`}>
+    <Indicator label={String(selected.size)} size={16} disabled={selected.size === 0}>
+      <ActionIcon
+        variant="filled"
+        size="lg"
+        color="blue"
+        disabled={selected.size === 0}
+        onClick={handleAdd}
+        aria-label={t('addSelected')}
+      >
+        <IconCheck size={18} />
+      </ActionIcon>
+    </Indicator>
+  </Tooltip>
+</Group>
 ```
-
-> **Why `<Suspense>`?** `i18next-resources-to-backend` loads locale JSON via dynamic `import()`. Until the first chunk resolves, `useTranslation` suspends the render tree. Wrapping the router in `<Suspense>` catches that and shows a loading indicator instead of crashing.
-
-### 1.2 TypeScript types (`src/types/`)
-
-Define these types carefully — everything depends on them:
-
-**`device.ts`**
-```ts
-export type DeviceGeneration = 'gen2' | 'gen3' | 'gen4'
-
-/**
- * The primary functional category of a device.
- * Determined once at add-time from Shelly.GetStatus component keys.
- * Stored in StoredDevice so the dashboard can render the right icon
- * and inline control without re-fetching status.
- */
-export type DeviceType =
-  | 'switch'      // Switch.*  — relay, smart plug (no dimming)
-  | 'dimmer'      // Light.* with brightness only (no colour)
-  | 'cct'         // Light.* with brightness + colour temperature
-  | 'rgb'         // Light.* in RGB mode (RGB.*)
-  | 'rgbw'        // Light.* in RGBW mode (RGBW.*)
-  | 'cover'       // Cover.* — blinds, shutters, garage doors
-  | 'sensor'      // Read-only: temperature, humidity, flood, smoke, motion…
-  | 'energy'      // EM.* / EM1.* / PM1.* — energy monitoring only, no relay
-  | 'input'       // Input.* — button / contact input with no output
-  | 'unknown'     // Fallback; shows raw JSON status
-
-export type ConnectionStatus = 'online' | 'offline' | 'connecting' | 'error'
-
-export interface StoredDevice {
-  id: string              // MAC address (no colons, uppercase) — stable primary key
-  name: string            // User-given label or device-reported name
-  ip: string
-  port: number            // default 80
-  generation: DeviceGeneration
-  model: string           // Shelly model string, e.g. "Plus2PM", "Pro4PM"
-  app: string             // Shelly app string, e.g. "Switch", "Cover", "RGB"
-  type: DeviceType        // Derived once at add-time — see deviceTypeMap.ts
-  components: ShellyComponentSummary[]  // Ordered list of components from GetStatus
-  auth?: { username: string; password: string }
-  addedAt: number         // unix ms
-  lastSeenAt: number      // unix ms
-}
-
-/**
- * Lightweight summary of a single RPC component stored alongside the device.
- * Used to know which controls to render without a live status fetch.
- */
-export interface ShellyComponentSummary {
-  type: ShellyComponentType   // 'switch' | 'light' | 'cover' | ...
-  id: number                  // Component instance index (0, 1, 2, …)
-  name?: string               // Optional user-set name for the channel
-}
-
-export type ShellyComponentType =
-  | 'switch' | 'light' | 'light_cct' | 'rgb' | 'rgbw'
-  | 'cover' | 'input'
-  | 'temperature' | 'humidity' | 'flood' | 'smoke'
-  | 'illuminance' | 'motion' | 'devicepower' | 'voltmeter'
-  | 'em' | 'em1' | 'pm1'
-
-// Note: 'light_cct' is an internal sub-type — Shelly's GetStatus key is always 'light:N'
-// for both plain dimmers and CCT devices. The distinction is stored in
-// ShellyComponentSummary.type so ComponentList can dispatch correctly.
-// The status lookup key is always derived as: type === 'light_cct' ? `light:${id}` : `${type}:${id}`
-```
-
-**`shelly.ts`** — complete RPC response shapes for all supported component types:
-```ts
-// ── Device info ────────────────────────────────────────────────────────────
-export interface ShellyGetDeviceInfoResult {
-  name: string
-  id: string          // e.g. "shellyplus2pm-aabbccddee"
-  mac: string
-  model: string       // e.g. "SNSW-002P16EU"
-  gen: number         // 2, 3, or 4
-  fw_id: string
-  ver: string         // firmware version string
-  app: string         // "Switch" | "Cover" | "RGB" | "RGBW" | "Dimmer" | …
-  auth_en: boolean
-  auth_domain: string | null
-}
-
-// ── Shared sub-types ───────────────────────────────────────────────────────
-export interface AEnergy {
-  total: number           // Wh total since last reset
-  by_minute: number[]     // Wh for last 3 minutes
-  minute_ts: number       // Unix timestamp of the oldest minute slot
-}
-
-export interface Temperature {
-  tC: number
-  tF: number
-}
-
-// ── Switch (relay, smart plug) ─────────────────────────────────────────────
-// RPC methods: Switch.GetStatus, Switch.Set, Switch.Toggle
-export interface SwitchStatus {
-  id: number
-  source: string          // what last changed the relay ("init","button","http",…)
-  output: boolean         // true = ON
-  timer_started_at?: number
-  timer_duration?: number
-  apower?: number         // W — present only if device has power monitoring
-  voltage?: number        // V
-  current?: number        // A
-  pf?: number             // power factor
-  freq?: number           // Hz
-  aenergy?: AEnergy
-  ret_aenergy?: AEnergy   // returned energy (for bi-directional meters)
-  temperature?: Temperature
-  errors?: string[]
-}
-
-// Switch.Set params
-export interface SwitchSetParams {
-  id: number
-  on: boolean
-  toggle_after?: number   // seconds; auto-off timer
-}
-
-// ── Light (dimmer, tunable white, CCT) ────────────────────────────────────
-// RPC methods: Light.GetStatus, Light.Set
-// Used by: Dimmer G3/G4, Plus WallDimmer, Duo G3, RGBCCT Bulb G3 (CCT mode)
-export interface LightStatus {
-  id: number
-  source: string
-  output: boolean
-  brightness: number      // 0–100
-  white?: number          // 0–100 — only on CCT/tunable-white devices
-  temp?: number           // 2700–6500 K — colour temperature (CCT devices only)
-  apower?: number
-  voltage?: number
-  current?: number
-  aenergy?: AEnergy
-  temperature?: Temperature
-  errors?: string[]
-}
-
-export interface LightSetParams {
-  id: number
-  on?: boolean
-  brightness?: number     // 0–100
-  white?: number          // 0–100 (CCT devices)
-  temp?: number           // K (CCT devices)
-  transition_duration?: number  // ms
-}
-
-// ── RGB (addressable colour, 3-channel) ───────────────────────────────────
-// RPC methods: RGB.GetStatus, RGB.Set
-// Used by: Plus RGBW PM in RGB mode, RGBCCT Bulb G3 in RGB mode
-export interface RGBStatus {
-  id: number
-  source: string
-  output: boolean
-  brightness: number      // 0–100 (master brightness)
-  rgb: [number, number, number]   // [R, G, B] each 0–255
-  apower?: number
-  voltage?: number
-  current?: number
-  aenergy?: AEnergy
-  errors?: string[]
-}
-
-export interface RGBSetParams {
-  id: number
-  on?: boolean
-  brightness?: number
-  rgb?: [number, number, number]
-  transition_duration?: number
-}
-
-// ── RGBW (4-channel colour + white) ───────────────────────────────────────
-// RPC methods: RGBW.GetStatus, RGBW.Set
-// Used by: Plus RGBW PM in RGBW mode
-export interface RGBWStatus {
-  id: number
-  source: string
-  output: boolean
-  brightness: number
-  rgb: [number, number, number]
-  white: number           // 0–100 separate white channel
-  apower?: number
-  voltage?: number
-  current?: number
-  aenergy?: AEnergy
-  errors?: string[]
-}
-
-export interface RGBWSetParams {
-  id: number
-  on?: boolean
-  brightness?: number
-  rgb?: [number, number, number]
-  white?: number
-  transition_duration?: number
-}
-
-// ── Cover (blind / shutter / garage door) ─────────────────────────────────
-// RPC methods: Cover.GetStatus, Cover.Open, Cover.Close, Cover.Stop, Cover.GoToPosition
-export interface CoverStatus {
-  id: number
-  source: string
-  state: 'open' | 'closed' | 'opening' | 'closing' | 'stopped' | 'calibrating'
-  apower?: number
-  voltage?: number
-  current?: number
-  pf?: number
-  freq?: number
-  aenergy?: AEnergy
-  current_pos?: number    // 0–100; 0 = fully closed, 100 = fully open
-  target_pos?: number
-  move_timeout?: number
-  move_started_at?: number
-  pos_control: boolean    // true if device knows its position (calibrated)
-  temperature?: Temperature
-  errors?: string[]
-}
-
-// Cover.GoToPosition params
-export interface CoverGoToPositionParams {
-  id: number
-  pos: number             // 0–100
-}
-
-// ── Input (buttons, contacts) ─────────────────────────────────────────────
-// RPC: Input.GetStatus — read-only; events arrive via NotifyEvent
-export interface InputStatus {
-  id: number
-  state: boolean | null   // true = pressed/closed, null = not applicable
-  percent?: number        // ADC value (analogue inputs)
-  errors?: string[]
-}
-
-// ── Temperature sensor ────────────────────────────────────────────────────
-// RPC: Temperature.GetStatus
-// Present on: Plus H&T G3, any device with add-on temperature probe
-export interface TemperatureStatus {
-  id: number
-  tC: number | null
-  tF: number | null
-  errors?: string[]
-}
-
-// ── Humidity sensor ───────────────────────────────────────────────────────
-// RPC: Humidity.GetStatus
-// Present on: Plus H&T G3, H&T G3
-export interface HumidityStatus {
-  id: number
-  rh: number | null       // % relative humidity
-  errors?: string[]
-}
-
-// ── Flood (water leak) ────────────────────────────────────────────────────
-// RPC: Flood.GetStatus
-export interface FloodStatus {
-  id: number
-  flood: boolean          // true = water detected
-  errors?: string[]
-}
-
-// ── Smoke detector ────────────────────────────────────────────────────────
-// RPC: Smoke.GetStatus
-export interface SmokeStatus {
-  id: number
-  alarm: boolean
-  mute: boolean
-  errors?: string[]
-}
-
-// ── Illuminance ───────────────────────────────────────────────────────────
-// RPC: Illuminance.GetStatus
-export interface IlluminanceStatus {
-  id: number
-  lux: number | null
-  illuminance: 'dark' | 'twilight' | 'bright' | null
-  errors?: string[]
-}
-
-// ── Motion/Presence ───────────────────────────────────────────────────────
-// RPC: Motion.GetStatus (Gen2 Motion) / Presence.GetStatus (Presence G4)
-export interface MotionStatus {
-  id: number
-  motion: boolean
-  motion_ts?: number      // unix timestamp of last motion event
-  errors?: string[]
-}
-
-// ── Device power (battery) ────────────────────────────────────────────────
-// RPC: DevicePower.GetStatus — present on all battery-powered devices
-export interface DevicePowerStatus {
-  id: number
-  battery: {
-    V: number             // battery voltage
-    percent: number | null  // 0–100
-  }
-  external?: {
-    present: boolean
-  }
-  errors?: string[]
-}
-
-// ── Energy monitor — dual clamp (EM) ─────────────────────────────────────
-// RPC: EM.GetStatus
-// Used by: Shelly EM G3, Pro EM
-export interface EMStatus {
-  id: number
-  a_current: number       // A phase A
-  a_voltage: number       // V
-  a_act_power: number     // W active
-  a_aprt_power: number    // VA apparent
-  a_pf: number            // power factor
-  a_freq: number          // Hz
-  b_current: number
-  b_voltage: number
-  b_act_power: number
-  b_aprt_power: number
-  b_pf: number
-  b_freq: number
-  total_current: number
-  total_act_power: number
-  total_aprt_power: number
-  errors?: string[]
-}
-
-// ── Energy monitor — single clamp (EM1) ──────────────────────────────────
-// RPC: EM1.GetStatus
-// Used by: EM Mini G4, single-channel add-ons
-export interface EM1Status {
-  id: number
-  current: number         // A
-  voltage: number         // V
-  act_power: number       // W
-  aprt_power: number      // VA
-  pf: number
-  freq: number
-  errors?: string[]
-}
-
-// ── Power meter (PM1) ─────────────────────────────────────────────────────
-// RPC: PM1.GetStatus
-// Used by: PM Mini G3/G4 (standalone power meter, no relay)
-export interface PM1Status {
-  id: number
-  apower: number          // W
-  voltage: number         // V
-  current: number         // A
-  pf: number
-  freq: number
-  aenergy: AEnergy
-  errors?: string[]
-}
-
-// ── Voltmeter ─────────────────────────────────────────────────────────────
-// RPC: Voltmeter.GetStatus — on Uni and add-on ADC inputs
-export interface VoltmeterStatus {
-  id: number
-  voltage: number | null
-  errors?: string[]
-}
-
-// ── Aggregate status (Shelly.GetStatus result) ────────────────────────────
-// Shelly.GetStatus returns an object whose keys are component namespaces:
-//   { "switch:0": SwitchStatus, "switch:1": SwitchStatus, "temperature:0": TemperatureStatus, … }
-export type ShellyGetStatusResult = Record<string, unknown>
-```
-
-**`discovery.ts`**
-```ts
-export interface DiscoveredHost {
-  ip: string
-  port: number
-  hostname?: string
-  source: 'mdns' | 'scan' | 'manual'
-}
-```
-
-### 1.3 Device Type Detection (`src/utils/deviceTypeMap.ts`)
-
-The Shelly `app` field in `GetDeviceInfo` and the set of component keys in `GetStatus` together determine which controls to render. This mapping must be computed **once** when a device is added and stored in `StoredDevice` — never re-derived on every render.
-
-#### Detection algorithm
-
-```ts
-/**
- * Given the result of Shelly.GetStatus, extract an ordered list of
- * component summaries (type + id) that the device exposes.
- *
- * Shelly.GetStatus keys follow the pattern "<namespace>:<id>",
- * e.g. "switch:0", "switch:1", "cover:0", "temperature:0".
- */
-export function extractComponents(
-  status: ShellyGetStatusResult,
-  app: string   // needed to distinguish 'light' vs 'light_cct'
-): ShellyComponentSummary[] {
-  const isCCT = app.toLowerCase().includes('cct') ||
-                app.toLowerCase().includes('duo') ||
-                Object.keys(status).some(k => k.startsWith('light:') &&
-                  typeof (status[k] as Record<string, unknown>)?.temp === 'number')
-  const components: ShellyComponentSummary[] = []
-  for (const key of Object.keys(status)) {
-    const [ns, idStr] = key.split(':')
-    const id = Number(idStr ?? 0)
-    let type = namespaceToComponentType(ns) as ShellyComponentType | null
-    // Promote plain 'light' to 'light_cct' for CCT/tunable-white devices
-    if (type === 'light' && isCCT) type = 'light_cct'
-    if (type) components.push({ type, id })
-  }
-  // Stable order: controls first (switch, light, rgb, rgbw, cover),
-  // then sensors, then energy, then inputs
-  return components.sort(componentSortOrder)
-}
-
-/**
- * Derive the top-level DeviceType from the component list and the
- * Shelly `app` string. The `app` string is the authoritative source;
- * components are used to distinguish sub-variants.
- */
-export function deriveDeviceType(
-  app: string,
-  components: ShellyComponentSummary[]
-): DeviceType {
-  const appLower = app.toLowerCase()
-
-  if (appLower.includes('rgb') && appLower.includes('w')) return 'rgbw'
-  if (appLower.includes('rgb'))   return 'rgb'
-  if (appLower.includes('cover')) return 'cover'
-  if (appLower.includes('dimmer') || appLower.includes('light')) {
-    const hasCCT = components.some(c => c.type === 'light_cct') || appLower.includes('cct')
-    return hasCCT ? 'cct' : 'dimmer'
-  }
-  if (appLower.includes('switch') || appLower.includes('plug')) return 'switch'
-  if (appLower.includes('em') || appLower.includes('pm')) return 'energy'
-  if (appLower.includes('sensor') || appLower.includes('ht') ||
-      appLower.includes('flood') || appLower.includes('smoke') ||
-      appLower.includes('motion') || appLower.includes('presence') ||
-      appLower.includes('door') || appLower.includes('window')) return 'sensor'
-  if (appLower.includes('input') || appLower.includes('button')) return 'input'
-
-  // Fallback: infer from components
-  const types = new Set(components.map(c => c.type))
-  if (types.has('rgb'))    return 'rgb'
-  if (types.has('rgbw'))   return 'rgbw'
-  if (types.has('light'))  return 'dimmer'
-  if (types.has('cover'))  return 'cover'
-  if (types.has('switch')) return 'switch'
-  if (types.has('em') || types.has('em1') || types.has('pm1')) return 'energy'
-  return 'unknown'
-}
-```
-
-#### `app` string → `DeviceType` reference table
-
-| Shelly `app` value | `DeviceType` | Example devices |
-|---|---|---|
-| `"Switch"` | `switch` | Plus 1, Plus 1PM, Pro 4PM, Plug S G3 |
-| `"Cover"` | `cover` | Plus 2PM (cover mode), Pro Dual Cover PM |
-| `"Dimmer"` | `dimmer` | Dimmer G3, Plus WallDimmer |
-| `"Light"` | `dimmer` or `cct` | Duo G3 (CCT), vintage bulb |
-| `"RGB"` | `rgb` | RGBCCT Bulb G3 (RGB mode), Plus RGBW PM (RGB mode) |
-| `"RGBW"` | `rgbw` | Plus RGBW PM (RGBW mode) |
-| `"RGBCCT"` | `cct` | RGBCCT Bulb G3 (CCT mode) |
-| `"EM"` | `energy` | EM G3, Pro EM |
-| `"PM"` | `energy` | PM Mini G3/G4 |
-| `"HT"` / `"Sensor"` | `sensor` | Plus H&T G3, H&T G3 |
-| `"Smoke"` | `sensor` | Plus Smoke |
-| `"Flood"` | `sensor` | Flood G4 |
-| `"Motion"` | `sensor` | Motion 2 |
-| `"Presence"` | `sensor` | Presence G4 |
-| `"Input"` | `input` | Plus I4 (all inputs, no relay) |
-| `"Button"` | `input` | Button (WiFi push button) |
-
-#### `GetStatus` key → `ShellyComponentType` reference
-
-| Status key prefix | Internal `ShellyComponentType` | React component |
-|---|---|---|
-| `switch` | `switch` | `SwitchControl` |
-| `light` (plain dimmer) | `light` | `DimmerControl` |
-| `light` (CCT/tunable-white) | `light_cct` ¹ | `CCTControl` |
-| `rgb` | `rgb` | `RGBControl` |
-| `rgbw` | `rgbw` | `RGBWControl` |
-| `cover` | `cover` | `CoverControl` |
-| `input` | `input` | `InputDisplay` (read-only) |
-| `temperature` | `temperature` | `TemperatureSensor` |
-| `humidity` | `humidity` | `HumiditySensor` |
-| `flood` | `flood` | `FloodSensor` |
-| `smoke` | `smoke` | `SmokeSensor` |
-| `illuminance` | `illuminance` | `IlluminanceSensor` |
-| `motion` | `motion` | `MotionSensor` |
-| `devicepower` | `devicepower` | `BatteryIndicator` |
-| `voltmeter` | `voltmeter` | `VoltmeterDisplay` |
-| `em` | `em` | `EMDisplay` |
-| `em1` | `em1` | `EM1Display` |
-| `pm1` | `pm1` | `PM1Display` |
-
-¹ `light_cct` is an **internal** sub-type only — the actual `GetStatus` key is always `light:N`. `extractComponents` promotes it based on the `app` string or the presence of a `temp` field in the status object.
-
-### 1.4 Shelly RPC Client (`src/services/shellyClient.ts`)
-
-This is the core service. It must handle:
-
-1. **HTTP JSON-RPC calls** using `@tauri-apps/plugin-http`
-2. **SHA-256 Digest authentication** (Gen2+ spec) — implement the full challenge-response cycle
-3. **Retry on 401** — send unauthenticated, if 401 received, compute `ha1`/`ha2`/`response`, resend with `auth` object
-
-```ts
-// Pseudocode structure
-export class ShellyClient {
-  constructor(private device: StoredDevice) {}
-
-  // ── Core transport ───────────────────────────────────────────────────────
-  async call<T>(method: string, params?: Record<string, unknown>): Promise<T>
-  // 1. POST /rpc with { id, src: 'shelly-manager', method, params }
-  // 2. If 401, perform SHA-256 Digest auth challenge-response
-  // 3. Throw typed ShellyError on RPC-level { error: { code, message } }
-
-  // ── Device-level ─────────────────────────────────────────────────────────
-  async getDeviceInfo(): Promise<ShellyGetDeviceInfoResult>
-  async getStatus(): Promise<ShellyGetStatusResult>
-  async getConfig(): Promise<Record<string, unknown>>
-  async reboot(): Promise<void>
-  async factoryReset(): Promise<void>
-  async checkForUpdate(): Promise<{ stable?: { version: string }; beta?: { version: string } }>
-  async triggerUpdate(stage?: 'stable' | 'beta'): Promise<void>
-  async setAuth(user: string, realm: string, ha1: string): Promise<void>
-
-  // ── Switch ───────────────────────────────────────────────────────────────
-  async switchSet(id: number, on: boolean, toggleAfter?: number): Promise<void>
-  async switchToggle(id: number): Promise<void>
-  async switchSetConfig(id: number, config: { name?: string; auto_off?: boolean; auto_off_delay?: number }): Promise<void>
-
-  // ── Light (dimmer + CCT) ─────────────────────────────────────────────────
-  async lightSet(id: number, params: LightSetParams): Promise<void>
-
-  // ── RGB ──────────────────────────────────────────────────────────────────
-  async rgbSet(id: number, params: RGBSetParams): Promise<void>
-
-  // ── RGBW ─────────────────────────────────────────────────────────────────
-  async rgbwSet(id: number, params: RGBWSetParams): Promise<void>
-
-  // ── Cover ────────────────────────────────────────────────────────────────
-  async coverOpen(id: number): Promise<void>
-  async coverClose(id: number): Promise<void>
-  async coverStop(id: number): Promise<void>
-  async coverGoToPosition(id: number, pos: number): Promise<void>
-
-  // ── Smoke ────────────────────────────────────────────────────────────────
-  async smokeMute(id: number): Promise<void>
-
-  // ── Schedules ────────────────────────────────────────────────────────────
-  async scheduleList(): Promise<{ jobs: ScheduleJob[] }>
-  async scheduleCreate(job: Omit<ScheduleJob, 'id'>): Promise<{ id: number }>
-  async scheduleDelete(id: number): Promise<void>
-}
-```
-
-Write unit tests for `shellyClient.ts` that mock `fetch` (from `@tauri-apps/plugin-http`).
-
-### 1.5 Zustand Device Store (`src/store/deviceStore.ts`)
-
-```ts
-interface DeviceStore {
-  devices: Record<string, StoredDevice>
-  addDevice: (device: StoredDevice) => void
-  updateDevice: (id: string, patch: Partial<StoredDevice>) => void
-  removeDevice: (id: string) => void
-  hydrate: () => Promise<void>   // load from tauri-plugin-store
-  persist: () => Promise<void>   // save to tauri-plugin-store
-}
-```
-
-- Use `subscribeWithSelector` middleware (import from `zustand/middleware`) to trigger `persist()` on every write — the import path is unchanged in Zustand v5 but the store creation now uses the `create` export from `zustand` directly (no more default export)
-- `hydrate()` is called once on app startup in `__root.tsx`
-
-> **`tauri-plugin-store` v2 JS API:** Use `Store.load('devices.json')` (static async factory), **not** `new Store(...)` (removed in v2). The store auto-saves on every `set()` call by default; calling `store.save()` is only needed for explicit flushes. Example pattern for `devicePersistence.ts`:
-> ```ts
-> import { Store } from '@tauri-apps/plugin-store'
-> let _store: Awaited<ReturnType<typeof Store.load>> | null = null
-> async function getStore() {
->   if (!_store) _store = await Store.load('shelly-manager.json')
->   return _store
-> }
-> export async function loadDevices(): Promise<Record<string, StoredDevice>> {
->   const store = await getStore()
->   return (await store.get<Record<string, StoredDevice>>('devices')) ?? {}
-> }
-> export async function saveDevices(devices: Record<string, StoredDevice>): Promise<void> {
->   const store = await getStore()
->   await store.set('devices', devices)  // auto-saved; call store.save() to force flush
-> }
-> ```
-
-### 1.6 i18n Integration in the App Store
-
-Store the user's chosen language in `appStore` so it persists across sessions alongside the theme preference:
-
-```ts
-// src/store/appStore.ts
-interface AppPreferences {
-  theme: 'light' | 'dark' | 'system'
-  locale: string              // e.g. 'en', 'de', 'fr' — empty string = follow browser
-  pollingInterval: number     // seconds (10–120)
-  temperatureUnit: 'C' | 'F' // shown in TemperatureSensor and sensor card headers
-}
-```
-
-Also expose the temperature unit in the Settings page under the Appearance section as a `SegmentedControl` with "°C" and "°F" options.
-
-Add a `setLocale` action that:
-1. Updates `preferences.locale` in the Zustand store
-2. Calls `i18next.changeLanguage(locale)` — this triggers a lazy load of the new locale's chunks and re-renders all components using `useTranslation`
-3. Persists via `tauri-plugin-store`
-
-```ts
-setLocale: async (locale: string) => {
-  await i18next.changeLanguage(locale)
-  set(state => ({ preferences: { ...state.preferences, locale } }))
-  await get().persist()
-}
-```
-
-On app startup (in `__root.tsx`), after `hydrate()`, call `i18next.changeLanguage(preferences.locale)` only if `locale` is non-empty — otherwise let the `LanguageDetector` pick from the browser/OS.
-
-### 1.7 Translation Hook Usage Pattern
-
-All user-visible text in components **must** go through `useTranslation`. Never use raw string literals for UI copy.
-
-```tsx
-// ✅ Correct
-import { useTranslation } from 'react-i18next'
-
-function DeviceCard({ device }: { device: StoredDevice }) {
-  const { t } = useTranslation('devices')
-  return (
-    <Card>
-      <Text>{device.name}</Text>
-      <Badge>{t(`types.${device.type}`)}</Badge>
-      <Text size="sm" c="dimmed">{t('info.ipAddress')}: {device.ip}</Text>
-    </Card>
-  )
-}
-
-// ✅ Plurals (uses i18next count interpolation)
-const { t } = useTranslation('discovery')
-t('found', { count: devices.length })
-// → "Found 1 device" / "Found 5 devices"
-
-// ✅ Interpolation
-t('firmware.updateAvailable', { version: '1.4.2' })
-// → "Update available: 1.4.2"
-
-// ❌ Wrong — never do this
-<Text>IP Address: {device.ip}</Text>
-```
-
-For **numbers, dates, and units** — use the browser's `Intl` API directly (it automatically uses the active locale from `i18next.language`):
-
-```ts
-// src/utils/formatters.ts
-export const formatPower = (watts: number, locale: string) =>
-  new Intl.NumberFormat(locale, { style: 'unit', unit: 'watt', maximumFractionDigits: 1 }).format(watts)
-
-export const formatEnergy = (kwh: number, locale: string) =>
-  new Intl.NumberFormat(locale, { style: 'unit', unit: 'kilowatt-hour', maximumFractionDigits: 3 }).format(kwh)
-
-export const formatRelativeTime = (ms: number, locale: string) => {
-  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' })
-  const seconds = Math.round(ms / 1000)
-  if (Math.abs(seconds) < 60) return rtf.format(-seconds, 'second')
-  const minutes = Math.round(seconds / 60)
-  if (Math.abs(minutes) < 60) return rtf.format(-minutes, 'minute')
-  return rtf.format(-Math.round(minutes / 60), 'hour')
-}
-```
-
-Access the active locale in components with `const { i18n } = useTranslation()` → `i18n.language`.
-
-### 1.8 App Shell Layout (`src/components/layout/`)
-
-Design the responsive layout:
-
-**Mobile** (`< sm` breakpoint):
-- Full-width content area
-- Fixed bottom navigation bar with 4 tabs: Devices / Discover / Settings / (optional: Logs)
-- No sidebar
-
-**Desktop** (`>= sm` breakpoint):
-- Left sidebar navigation (200px wide)
-- Content takes remaining width
-
-Use Mantine `AppShell` with a layout that conditionally activates footer (mobile) vs navbar (desktop). The `footer` and `navbar` are both configured but one is always collapsed depending on viewport:
-
-```tsx
-<AppShell
-  footer={{ height: 60, collapsed: false }}   // always configured; BottomNav hides itself on desktop
-  navbar={{
-    width: 220,
-    breakpoint: 'sm',
-    collapsed: { mobile: true, desktop: false },  // sidebar visible only on desktop
-  }}
-  padding="md"
->
-  <AppShell.Header>…</AppShell.Header>
-  <AppShell.Navbar><SidebarNav /></AppShell.Navbar>
-  <AppShell.Footer><BottomNav /></AppShell.Footer>
-  <AppShell.Main><Outlet /></AppShell.Main>
-</AppShell>
-```
-
-> Both `BottomNav` and `SidebarNav` use Mantine's responsive props to show/hide on the correct breakpoint — `BottomNav` uses `hiddenFrom="sm"` and `SidebarNav` uses `visibleFrom="sm"`. The `AppShell.Footer` renders on all sizes but is visually empty on desktop because `BottomNav` is hidden. The `AppShell.Main` offset is automatically adjusted by Mantine based on which sections are active.
-
-**`BottomNav.tsx`** — `hiddenFrom="sm"` — Mantine `Group` with `NavLink`-style icon buttons using Tabler icons (`IconDevices`, `IconSearch`, `IconSettings`)
-
-**`SidebarNav.tsx`** — `visibleFrom="sm"` — Mantine `NavLink` list
-
-### 1.9 Root route (`src/routes/__root.tsx`)
-
-- Wraps everything in `AppShellLayout`
-- Calls `deviceStore.hydrate()` on mount (one-time)
-- After hydration, calls `i18next.changeLanguage(preferences.locale)` if a locale was previously saved
-- Renders `<Outlet />`
-
-### 1.10 Checklist
-
-- [ ] Types compile without errors (`bun tsc --noEmit`)
-- [ ] `extractComponents({ 'switch:0': {…}, 'switch:1': {…} })` returns two entries
-- [ ] `deriveDeviceType('Switch', components)` returns `'switch'`
-- [ ] `deriveDeviceType('Cover', components)` returns `'cover'`
-- [ ] Zustand store hydrates from `tauri-plugin-store` on startup
-- [ ] `StoredDevice.components` is populated at add-time and round-trips through `tauri-plugin-store`
-- [ ] AppShell shows bottom nav on mobile, sidebar on desktop
-- [ ] Navigation between routes works via hash history
-- [ ] Unit tests pass for `shellyClient.ts` auth flow
-- [ ] Unit tests for `extractComponents` and `deriveDeviceType` cover all `app` string variants
-- [ ] `useTranslation('devices')` resolves keys from `src/locales/en/devices.json`
-- [ ] TypeScript rejects `t('devices:nonexistent.key')` at compile time
-- [ ] Switching locale via `appStore.setLocale('de')` re-renders all translated strings
 
 ---
 
-## Phase 2 – Device Discovery
+## Bug 4 — Settings page arbitrary width cap and left-aligned
 
-### 2.1 Rust commands (`src-tauri/src/lib.rs`)
+**Status:** Open  
+**File:** `src/routes/settings.tsx`
 
-Implement three commands:
+### Root cause
 
-**`discover_mdns`** — Uses `mdns-sd` crate:
-```rust
-#[tauri::command]
-async fn discover_mdns(timeout_secs: u64) -> Result<Vec<DiscoveredHost>, String> {
-  // Browse _shelly._tcp.local. AND _http._tcp.local. simultaneously
-  // Parse TXT records for gen= field to filter non-Shelly _http devices
-  // Return after timeout_secs (default 5)
-}
-```
+The root `<Stack>` has `maw={520}` which caps the width and, having no centering wrapper, causes the content to be anchored to the left edge on wide viewports.
 
-**`scan_subnet`** — TCP connect-based scan on port 80:
-```rust
-#[tauri::command]
-async fn scan_subnet(cidr: String, port: u16, timeout_ms: u64) -> Result<Vec<DiscoveredHost>, String> {
-  // Parse CIDR to enumerate IPs
-  // Attempt TCP connect to each IP:port with timeout
-  // Collect responsive IPs
-  // Use tokio for concurrent scanning (bounded semaphore, e.g. 50 concurrent)
-}
-```
+### Fix
 
-**`verify_shelly_host`** — Call `/shelly` on a candidate IP to confirm it's a Shelly device:
-```rust
-// This is better done from the frontend via tauri-plugin-http
-// calling GET http://<ip>/shelly → confirms device + gets MAC/model
-// Keep this as a frontend service call, not a separate command
-```
+- Remove `maw={520}` from the `Stack`.
+- Wrap the `Stack` in a Mantine `<Container size="md">`. `Container` automatically centers its content and applies a responsive max-width that scales with breakpoints — matching the rest of the app's layout conventions.
 
-Register all commands in `lib.rs`:
-```rust
-tauri::Builder::default()
-  .plugin(tauri_plugin_http::init())
-  .plugin(tauri_plugin_websocket::init())
-  .plugin(tauri_plugin_store::Builder::default().build())
-  .invoke_handler(tauri::generate_handler![discover_mdns, scan_subnet])
-  .run(tauri::generate_context!())
-  .expect("error while running tauri application");
-```
-
-### 2.2 Discovery Service (`src/services/discovery.ts`)
-
-Orchestrates all three discovery methods and verifies each candidate:
-
-```ts
-export async function runDiscovery(
-  methods: ('mdns' | 'scan' | 'manual')[],
-  options: DiscoveryOptions,
-  onProgress: (host: DiscoveredHost) => void
-): Promise<StoredDevice[]>
-
-// Internal steps:
-// 1. Concurrently run selected methods; call onProgress for each raw DiscoveredHost
-// 2. Deduplicate by IP (keep first seen)
-// 3. For each candidate IP: GET http://<ip>/shelly
-//    → { type, mac, gen, fw, auth } — confirms Shelly device, gets MAC
-//    → Skip if gen < 2 (Gen1 not supported)
-// 4. Call Shelly.GetDeviceInfo RPC → get app, model, name, auth_en, ver
-// 5. Call Shelly.GetStatus RPC → get full component map
-// 6. extractComponents(status, app) → ShellyComponentSummary[]
-// 7. deriveDeviceType(app, components) → DeviceType
-// 8. Construct StoredDevice with all fields including components[]
-// 9. Return array of verified StoredDevices ready to add to deviceStore
-```
-
-### 2.3 Discovery Hook (`src/hooks/useDiscovery.ts`)
-
-```ts
-export function useDiscovery() {
-  const [status, setStatus] = useState<'idle' | 'running' | 'done' | 'error'>('idle')
-  const [found, setFound] = useState<StoredDevice[]>([])
-  const [progress, setProgress] = useState<DiscoveredHost[]>([])
-
-  const start = useCallback(async (methods: DiscoveryMethod[], opts: DiscoveryOptions) => {
-    // calls runDiscovery, updates state incrementally
-  }, [])
-
-  return { status, found, progress, start }
-}
-```
-
-### 2.4 Discover Route (`src/routes/discover.tsx`)
-
-Three-step wizard using Mantine `Stepper`:
-
-**Step 1 – Choose method:**
-- Checkboxes: Auto-discover (mDNS), Scan subnet, Add manually
-- If scan: input for CIDR range (default: auto-detect local subnet)
-- If manual: IP input + port + optional auth fields
-
-**Step 2 – Discovery running:**
-- `DiscoveryProgress.tsx` — animated spinner + list of found devices (incremental)
-- Cancel button
-
-**Step 3 – Review & add:**
-- `FoundDevicesList.tsx` — checkbox list of found devices (pre-selected)
-- "Add selected" button → adds to `deviceStore`
-
-All steps: small focused components, no single component > ~120 lines.
-
-### 2.5 Manual Add Form (`src/components/discovery/ManualAddForm.tsx`)
-
-Fields:
-- IP Address (required, validate IPv4)
-- Port (default 80)
-- Name (optional, fallback to device name)
-- Username / Password (optional)
-
-On submit: verify with `GET /shelly`, then `Shelly.GetDeviceInfo`.
-
-### 2.6 Checklist
-
-- [ ] mDNS discovery finds real Shelly devices on local network
-- [ ] Subnet scan identifies hosts with Shelly devices
-- [ ] Manual add form validates and saves a device
-- [ ] All three methods call `Shelly.GetStatus` and populate `StoredDevice.components`
-- [ ] Gen 1 devices (gen < 2 from `/shelly`) are skipped with a clear UI message
-- [ ] All three methods populate `deviceStore` correctly including `components[]`
-- [ ] Unit tests for `discovery.ts` (mock `invoke` and `fetch`)
-- [ ] Rust commands compile without warnings
-
----
-
-## Phase 3 – Device Detail & Control
-
-### 3.1 Dashboard (`src/routes/index.tsx`)
-
-- `DeviceGrid.tsx` — CSS Grid, responsive: 1 col mobile, 2–3 col desktop
-- Each `DeviceCard.tsx` shows:
-  - Device type icon (Tabler)
-  - Name + model
-  - `DeviceStatusBadge` (online/offline/connecting)
-  - Primary control inline (toggle for switches, current brightness for dimmers)
-  - Power reading if available (W)
-- Tap/click navigates to `/devices/$deviceId`
-
-Use TanStack Query to poll all devices' `Shelly.GetStatus` every 30 s (configurable).
-
-### 3.2 Device Detail Route (`src/routes/devices/$deviceId.tsx`)
-
-Layout:
-- Header: device name, IP, online badge, settings gear icon → `/devices/$deviceId/settings`
-- `DeviceInfoPanel.tsx` — model, firmware version, uptime
-- `ComponentList.tsx` — iterates `device.components` and renders the correct control per entry
-
-Route loader pre-fetches `Shelly.GetDeviceInfo` and `Shelly.GetStatus`.
-
-#### `ComponentList.tsx` — dispatch logic
-
-```tsx
-// src/components/devices/ComponentList.tsx
-import { SwitchControl } from './controls/SwitchControl'
-import { DimmerControl } from './controls/DimmerControl'
-import { CCTControl }    from './controls/CCTControl'
-import { RGBControl }    from './controls/RGBControl'
-import { RGBWControl }   from './controls/RGBWControl'
-import { CoverControl }  from './controls/CoverControl'
-import { InputDisplay }  from './controls/InputDisplay'
-import { TemperatureSensor }  from './sensors/TemperatureSensor'
-import { HumiditySensor }     from './sensors/HumiditySensor'
-import { FloodSensor }        from './sensors/FloodSensor'
-import { SmokeSensor }        from './sensors/SmokeSensor'
-import { IlluminanceSensor }  from './sensors/IlluminanceSensor'
-import { MotionSensor }       from './sensors/MotionSensor'
-import { BatteryIndicator }   from './sensors/BatteryIndicator'
-import { VoltmeterDisplay }   from './sensors/VoltmeterDisplay'
-import { EMDisplay }          from './energy/EMDisplay'
-import { EM1Display }         from './energy/EM1Display'
-import { PM1Display }         from './energy/PM1Display'
-
-export function ComponentList({ device, status }: {
-  device: StoredDevice
-  status: ShellyGetStatusResult | undefined
-}) {
-  return (
-    <Stack gap="sm">
-      {device.components.map(comp => {
-        // 'light_cct' is our internal sub-type; the actual GetStatus key is still 'light:N'
-        const statusKey = comp.type === 'light_cct' ? `light:${comp.id}` : `${comp.type}:${comp.id}`
-        const renderKey = `${comp.type}:${comp.id}`   // unique React key
-        const compStatus = status?.[statusKey]
-        const props = { deviceId: device.id, componentId: comp.id, status: compStatus, device }
-
-        switch (comp.type) {
-          case 'switch':      return <SwitchControl      key={renderKey} {...props} />
-          case 'light':       return <DimmerControl      key={renderKey} {...props} />
-          case 'light_cct':   return <CCTControl         key={renderKey} {...props} />
-          case 'rgb':         return <RGBControl         key={renderKey} {...props} />
-          case 'rgbw':        return <RGBWControl        key={renderKey} {...props} />
-          case 'cover':       return <CoverControl       key={renderKey} {...props} />
-          case 'input':       return <InputDisplay       key={renderKey} {...props} />
-          case 'temperature': return <TemperatureSensor  key={renderKey} {...props} />
-          case 'humidity':    return <HumiditySensor     key={renderKey} {...props} />
-          case 'flood':       return <FloodSensor        key={renderKey} {...props} />
-          case 'smoke':       return <SmokeSensor        key={renderKey} {...props} />
-          case 'illuminance': return <IlluminanceSensor  key={renderKey} {...props} />
-          case 'motion':      return <MotionSensor       key={renderKey} {...props} />
-          case 'devicepower': return <BatteryIndicator   key={renderKey} {...props} />
-          case 'voltmeter':   return <VoltmeterDisplay   key={renderKey} {...props} />
-          case 'em':          return <EMDisplay          key={renderKey} {...props} />
-          case 'em1':         return <EM1Display         key={renderKey} {...props} />
-          case 'pm1':         return <PM1Display         key={renderKey} {...props} />
-          default:            return null
-        }
-      })}
+```diff
++ <Container size="md">
+-   <Stack gap="lg" p="md" maw={520}>
++   <Stack gap="lg" p="md">
+      ...
     </Stack>
-  )
-}
++ </Container>
 ```
-
-#### Control components — specification
-
-Each control component receives `{ deviceId, componentId, status, device }` props and is self-contained (owns its own mutation hook).
 
 ---
 
-**`SwitchControl.tsx`** — relay, smart plug
-- Mantine `Switch` (large, labelled On/Off) — calls `Switch.Set { id, on }`
-- If `status.apower` is present: show live wattage inline using `formatPower()`
-- If `status.aenergy` is present: show total kWh in a collapsed `Accordion` section
-- Channel name: show `comp.name ?? t('controls.channel', { n: componentId + 1 })`
-- Multi-channel: same component rendered once per `switch:N` entry — no special wrapper needed
+## Bug 5 — Correct color scheme only applied when opening settings
 
-**`DimmerControl.tsx`** — brightness-only dimmer
-- Mantine `Switch` for on/off + `Slider` (0–100) for brightness
-- Slider `onChangeEnd` calls `Light.Set { id, on: true, brightness }` to avoid spamming RPC on drag
-- Show current wattage if `status.apower` present
+**Status:** Open  
+**File:** `src/routes/__root.tsx`  
+**Secondary:** `src/routes/settings.tsx` (cleanup)
 
-**`CCTControl.tsx`** — tunable white (CCT) — dimmer + colour temperature
-- Same on/off `Switch` + brightness `Slider` as `DimmerControl`
-- Additional `Slider` for colour temperature (2700 K–6500 K) with warm↔cool label
-- Calls `Light.Set { id, brightness, temp }`
-- Display a small gradient swatch showing the warm-to-cool range
+### Root cause
 
-**`RGBControl.tsx`** — full colour (RGB)
-- On/off `Switch` + master brightness `Slider`
-- Mantine `ColorPicker` in `hex` format — `onChange` debounced 150 ms to avoid flooding
-- On colour change: convert hex → `[R, G, B]` → call `RGB.Set { id, rgb, brightness }`
-- Show current power if available
+`setColorScheme` (Mantine) is only called inside `settings.tsx` in a `useEffect` on that page's mount. The stored theme preference is never applied to Mantine when the app first launches — Mantine defaults to `'light'` until the user opens Settings.
 
-**`RGBWControl.tsx`** — colour + separate white channel (RGBW)
-- All of `RGBControl` above
-- Additional `Slider` for white channel (0–100) — calls `RGBW.Set { id, rgb, white, brightness }`
-- Label the two sliders "Colour brightness" and "White"
+### Fix
 
-**`CoverControl.tsx`** — blinds, shutters, garage doors
-- Three `Button` components: Open / Stop / Close — call `Cover.Open`, `Cover.Stop`, `Cover.Close`
-- If `status.pos_control === true`: show a `Slider` (0–100) + "Go to position" button — calls `Cover.GoToPosition { id, pos }`
-- Show current state badge: `open` / `closed` / `opening` / `closing` / `stopped` / `calibrating`
-- Disable Open/Close during `opening`/`closing`; always enable Stop
-
-**`InputDisplay.tsx`** — contact / button input (read-only)
-- Display state as a `Badge`: "Pressed" / "Released" / "Closed" / "Open" depending on context
-- Show `status.percent` for analogue inputs (ADC) as a percentage progress bar
-- No controls — inputs are event-driven (via WS `NotifyEvent`); display only
-
----
-
-#### Sensor components — specification
-
-All sensor components are **read-only display** cards. They use a shared `SensorCard.tsx` wrapper (icon + label + value + optional alert colour).
-
-**`TemperatureSensor.tsx`**
-- Show `tC` and `tF` (toggle via user preference stored in `appStore`)
-- Alert colour (Mantine `red`) if outside configurable threshold
-
-**`HumiditySensor.tsx`**
-- Show `rh` % with a visual progress bar (0–100)
-- Alert if > 80% (configurable)
-
-**`FloodSensor.tsx`**
-- Large alert banner (`Alert` color `blue`) when `flood === true`
-- Green status when dry
-
-**`SmokeSensor.tsx`**
-- Full-width red `Alert` with alarm icon when `alarm === true`
-- Mute button (calls `Smoke.Mute`) when alarm is active
-
-**`IlluminanceSensor.tsx`**
-- Show `lux` value and `illuminance` category badge (dark / twilight / bright)
-
-**`MotionSensor.tsx`**
-- Show motion state as a pulsing badge when `motion === true`
-- Show `motion_ts` as a relative timestamp ("Last motion 2 min ago")
-
-**`BatteryIndicator.tsx`**
-- `Progress` bar showing `battery.percent`
-- Colour: green > 50%, amber 20–50%, red < 20%
-- Show voltage `battery.V` in small text
-- Show "External power" badge if `external.present === true`
-
-**`VoltmeterDisplay.tsx`**
-- Show `voltage` V in a `Stat`-style display
-
----
-
-#### Energy display components — specification
-
-**`EMDisplay.tsx`** — dual-clamp energy monitor (EM)
-- Two expandable sections: Phase A and Phase B (collapsed by default on mobile)
-- Each shows: active power (W), apparent power (VA), current (A), voltage (V), power factor, frequency
-- Summary row: total current + total active power always visible
-
-**`EM1Display.tsx`** — single-clamp (EM1)
-- Single row: power (W), current (A), voltage (V), power factor, frequency
-
-**`PM1Display.tsx`** — power meter only (PM1, no relay)
-- Same as `EM1Display` + total energy (kWh from `aenergy.total`)
-- Formatted with `formatEnergy()` using active locale
-
-### 3.3 Multi-Instance & Multi-Channel Devices
-
-Many Gen2+ devices expose multiple instances of the same component (e.g. a Plus 2PM has `switch:0` and `switch:1`). The `ComponentList` loop handles this automatically because `device.components` contains one entry per instance. However there are specific UX considerations:
-
-#### Channel naming
-
-- Each `SwitchControl` / `DimmerControl` / `CoverControl` reads `comp.name` first.
-- If the user has not named the channel, fall back to `t('controls.channel', { n: id + 1 })` → "Channel 1".
-- The name can be edited in Device Settings via `Switch.SetConfig { id, config: { name } }`.
-
-#### Dashboard inline control for multi-channel devices
-
-The `DeviceCard.tsx` primary control on the dashboard must handle multiple instances gracefully:
-
-| Channels | Dashboard inline control |
-|---|---|
-| 1 switch | Full `Switch` toggle |
-| 2–4 switches | Row of small icon-only `ActionIcon` toggles, one per channel |
-| 1 dimmer | Compact `Slider` (no label) |
-| 2+ dimmers | Brightness indicator badges only — tap card to open detail |
-| 1 cover | Mini Open/Close/Stop `SegmentedControl` |
-| 2+ covers | State badges only — tap card to open detail |
-| Sensor-only | Primary sensor value (e.g. "21.3 °C / 58 %") |
-| Energy-only | Total active power (W) |
-
-Implement `DeviceCardInlineControl.tsx` which takes `device` and `status` and renders the appropriate inline control using the logic above. This keeps `DeviceCard.tsx` under 120 lines.
-
-#### Devices with mixed component types
-
-Some devices expose both actuator and sensor components simultaneously:
-
-| Device | Components present |
-|---|---|
-| Plus 1PM | `switch:0` + optional add-on: `temperature:0` or `humidity:0` |
-| Pro 4PM | `switch:0..3` + `temperature:0..3` (device temperatures) |
-| Plus 2PM (cover mode) | `cover:0` + `input:0`, `input:1` |
-| H&T G3 | `temperature:0` + `humidity:0` + `devicepower:0` |
-| Flood G4 | `flood:0` + `temperature:0` + `devicepower:0` |
-| Plus Smoke | `smoke:0` + `temperature:0` + `devicepower:0` |
-| EM G3 | `em:0` + `temperature:0` |
-| PM Mini G3 | `pm1:0` |
-
-`ComponentList` handles this automatically via the dispatch switch — all components render in the order returned by `extractComponents` (actuators first, sensors last by sort priority).
-
-### 3.4 Control hooks (`src/hooks/useDeviceControl.ts`)
-
-Use TanStack Query `useMutation` — one hook per actuator type. Each hook is parameterised by `deviceId` and `componentId` so multi-instance devices just call the same hook with different IDs:
-
-```ts
-export function useSwitchControl(deviceId: string, switchId: number) {
-  const mutation = useMutation({
-    mutationFn: ({ on }: { on: boolean }) => client.switchSet(switchId, on),
-    onSuccess: () => queryClient.invalidateQueries(['device', deviceId, 'status']),
-    onError: (err) => showNotification({ color: 'red', message: err.message }),
-  })
-  return mutation
-}
-
-// useDimmerControl(deviceId, lightId)   → Light.Set { brightness }
-// useCCTControl(deviceId, lightId)      → Light.Set { brightness, temp }
-// useRGBControl(deviceId, rgbId)        → RGB.Set  { rgb, brightness }
-// useRGBWControl(deviceId, rgbwId)      → RGBW.Set { rgb, white, brightness }
-// useCoverControl(deviceId, coverId)    → Cover.Open/Close/Stop/GoToPosition
-```
-
-### 3.5 Device polling hook (`src/hooks/useDeviceStatus.ts`)
-
-```ts
-export function useDeviceStatus(device: StoredDevice) {
-  return useQuery({
-    queryKey: ['device', device.id, 'status'],
-    queryFn: () => new ShellyClient(device).getStatus(),
-    refetchInterval: 30_000,  // 30s polling fallback
-    staleTime: 10_000,
-  })
-}
-```
-
-When WebSocket is active for a device (Phase 4), disable polling by setting `enabled: !wsConnected`.
-
-### 3.6 Device Settings Route (`src/routes/devices/$deviceId.settings.tsx`)
-
-Read-write settings panels:
-- **Network** — current IP, WiFi SSID (read-only)
-- **Name** — `Sys.SetConfig` to rename the device
-- **Authentication** — enable/disable, set password via `Shelly.SetAuth`
-- **Firmware** — current version, "Check for updates" button (`Shelly.CheckForUpdate`)
-- **Danger zone** — Factory reset (`Shelly.FactoryReset`), Reboot (`Shelly.Reboot`)
-
-All mutations use `useMutation` with optimistic updates and error notifications.
-
-### 3.7 Checklist
-
-- [ ] Dashboard shows all stored devices with live status badges and correct inline control
-- [ ] Multi-channel device (Plus 2PM) shows two independent toggles on dashboard
-- [ ] Clicking a device opens the detail page
-- [ ] `ComponentList` renders the correct component for every `ShellyComponentType`
-- [ ] Single-channel switch toggle calls `Switch.Set` and reflects new state
-- [ ] Multi-channel switch: each channel toggles independently
-- [ ] Dimmer brightness slider calls `Light.Set { brightness }` only on drag end
-- [ ] CCT dimmer exposes both brightness and colour temperature sliders
-- [ ] RGB colour picker converts hex → `[R,G,B]` and calls `RGB.Set`
-- [ ] RGBW control exposes colour picker + separate white channel slider
-- [ ] Cover Open/Close/Stop buttons call correct RPC methods
-- [ ] Cover position slider calls `Cover.GoToPosition` when `pos_control === true`
-- [ ] Cover Open/Close disabled during `opening`/`closing` state; Stop always enabled
-- [ ] Sensor readings render: temperature, humidity, flood, smoke, illuminance, motion
-- [ ] Battery indicator shows correct colour based on charge level
-- [ ] EM dual-channel display shows per-phase and total readings
-- [ ] PM1 display shows power + total energy formatted with correct locale decimal separator
-- [ ] Channel rename in Device Settings calls `Switch.SetConfig` and reflects in `ComponentList`
-- [ ] Settings page can rename device, toggle auth, trigger reboot, factory reset
-- [ ] Component tests: `SwitchControl`, `DimmerControl`, `CoverControl`, `RGBControl`, sensor displays
-
----
-
-## Phase 4 – Real-Time Updates
-
-### 4.1 WebSocket Manager (`src/services/wsManager.ts`)
-
-Manages a pool of WebSocket connections using `@tauri-apps/plugin-websocket`.
-
-```ts
-class WsManager {
-  private connections: Map<string, WebSocket> = new Map()  // deviceId → ws
-
-  async connect(device: StoredDevice): Promise<void>
-  // 1. Open ws://<ip>/rpc
-  // 2. Send initial request with src: 'shelly-manager' to activate notifications
-  // 3. If auth_en, perform digest challenge-response over WS
-  // 4. Subscribe to NotifyStatus and NotifyEvent frames
-  // 5. On message → parse frame type → dispatch to wsStatusStore
-
-  disconnect(deviceId: string): void
-
-  isConnected(deviceId: string): boolean
-}
-
-export const wsManager = new WsManager()
-```
-
-Key detail: on WebSocket, authenticate **once** per session, then all subsequent messages use the same `auth` object.
-
-### 4.2 WS Status Store (`src/store/wsStatusStore.ts`)
-
-```ts
-interface WsStatusStore {
-  statuses: Record<string, Record<string, unknown>>  // deviceId → component statuses
-  updateStatus: (deviceId: string, delta: Record<string, unknown>) => void
-  connected: Record<string, boolean>
-  setConnected: (deviceId: string, value: boolean) => void
-}
-```
-
-`NotifyStatus` frames contain partial deltas — deep-merge them into the existing status.
-
-### 4.3 useWsStatus hook (`src/hooks/useWsStatus.ts`)
-
-```ts
-export function useWsStatus(deviceId: string) {
-  const wsStatus = useWsStatusStore(s => s.statuses[deviceId])
-  const isConnected = useWsStatusStore(s => s.connected[deviceId])
-  return { wsStatus, isConnected }
-}
-```
-
-### 4.4 Integrate with Device Detail
-
-In `$deviceId.tsx`:
-- On mount: `wsManager.connect(device)`
-- On unmount: `wsManager.disconnect(device.id)`
-- Pass `wsStatus` down to control components for optimistic live rendering
-- When `isConnected` is true, disable TanStack Query polling for that device
-
-### 4.5 Gen 1 Polling Fallback
-
-For any device that fails WebSocket connection (Gen1 would not be supported here, but connection errors should degrade gracefully):
-- Keep TanStack Query polling active at 30s interval
-- Show a small indicator that the device is in polling mode
-
-### 4.6 Checklist
-
-- [ ] Toggling a switch on a Gen2+ device reflects in UI within < 200ms (via WS push)
-- [ ] `NotifyStatus` deltas are correctly merged into `wsStatusStore`
-- [ ] `NotifyEvent` frames (e.g., button presses) are shown as toast notifications
-- [ ] Disconnecting from detail page closes the WebSocket
-- [ ] Re-entering detail page re-establishes WebSocket
-- [ ] Unit tests for delta merge logic in `wsStatusStore`
-
----
-
-## Phase 5 – Advanced Features
-
-### 5.1 App Settings Route (`src/routes/settings.tsx`)
-
-- **Theme** — dark / light / system (Mantine `ColorSchemeScript` + `useMantineColorScheme`)
-- **Language** — `Select` component listing all supported locales with their native names; on change calls `appStore.setLocale(value)`. The entire UI re-renders in the new language immediately without a page reload.
-- **Polling interval** — slider (10s – 120s)
-- **Discovery preferences** — default CIDR, default methods
-- **About** — app version (from `tauri.conf.json`), Tauri version
-
-### 5.2 Language Switcher Component (`src/components/settings/LanguageSelect.tsx`)
-
-A small, reusable component that can be placed in both the Settings page and, optionally, in the AppShell header for quick access:
+In `RootLayout` (`__root.tsx`), subscribe to `isHydrated` and `preferences.theme` from `appStore`, then call `setColorScheme` once the store has been hydrated from disk:
 
 ```tsx
-import { Select } from '@mantine/core'
-import { useTranslation } from 'react-i18next'
-import { useAppStore } from '../../store/appStore'
+const { setColorScheme } = useMantineColorScheme()
+const isHydrated = useAppStore(s => s.isHydrated)
+const theme = useAppStore(s => s.preferences.theme)
 
-const SUPPORTED_LOCALES = [
-  { value: 'en', label: 'English' },
-  { value: 'de', label: 'Deutsch' },
-  { value: 'fr', label: 'Français' },
-  { value: 'es', label: 'Español' },
-  { value: 'zh', label: '中文' },
-  { value: 'ja', label: '日本語' },
-]
-
-export function LanguageSelect() {
-  const { i18n } = useTranslation()
-  const setLocale = useAppStore(s => s.setLocale)
-
-  return (
-    <Select
-      data={SUPPORTED_LOCALES}
-      value={i18n.language}
-      onChange={val => val && setLocale(val)}
-    />
-  )
-}
-```
-
-> **Language names:** always display language options in their **native script** (e.g. "Deutsch" not "German", "日本語" not "Japanese") so users can find their language regardless of the current app language.
-
-### 5.3 Adding a New Locale (workflow for contributors)
-
-1. Create `src/locales/<code>/` directory (e.g. `src/locales/pt/`)
-2. Copy all JSON files from `src/locales/en/` as a template
-3. Translate all values (do not change the keys)
-4. Add the locale code to `supportedLngs` in `src/services/i18n.ts`
-5. Add the locale to `SUPPORTED_LOCALES` in `LanguageSelect.tsx`
-6. Add the native label to `settings.json` under `language`
-7. Run `bunx i18next-parser` to verify no keys are missing
-
-### 5.4 Device Sorting & Filtering (Dashboard)
-
-Add a toolbar above `DeviceGrid`:
-- Search input (filter by name or IP)
-- Filter chips: All / Online / Offline / By type (switch, dimmer, etc.)
-- Sort: by name, by status, by last seen
-
-Implement purely in component state (no store needed).
-
-### 5.5 Device Groups (Optional V2 Feature)
-
-Allow users to assign devices to named rooms/groups:
-- Add `groupId?: string` to `StoredDevice`
-- Group store: `Record<string, { id: string; name: string; icon: string }>`
-- Dashboard can toggle between flat list and grouped view
-- Bulk control: turn all devices in a group on/off
-
-### 5.6 Schedules (Gen 2+)
-
-Read/write device schedules via `Schedule.List`, `Schedule.Create`, `Schedule.Delete`:
-- New tab/section in Device Settings: "Schedules"
-- List of cron-like schedules with human-readable descriptions
-- Add schedule form: day of week picker + time + action (on/off/toggle)
-
-### 5.7 Firmware Update Flow
-
-In Device Settings, `FirmwareCard.tsx`:
-1. Call `Shelly.CheckForUpdate` → show new version if available
-2. Confirm modal: "Update to v1.x.x?"
-3. Call `Shelly.Update` → device reboots
-4. Poll until device comes back online (exponential backoff, max 60s)
-5. Show success notification
-
-### 5.8 Checklist
-
-- [ ] Dark/light theme toggle persists across restarts
-- [ ] Language selector shows all supported locales in their native names
-- [ ] Switching language re-renders all UI copy without a page reload
-- [ ] Selected language persists across app restarts (stored in `tauri-plugin-store`)
-- [ ] App falls back to English for any missing translation key
-- [ ] Search + filter reduces device grid correctly
-- [ ] Schedule list displays and allows deletion
-- [ ] Firmware update flow completes end-to-end (test on real device or stub)
-
----
-
-## Phase 6 – Mobile Polish & Platform Specifics
-
-### 6.1 iOS Local Network Permission
-
-iOS requires a special entitlement and `Info.plist` key for local network access:
-
-In `src-tauri/gen/apple/<App>/`:
-- Add `NSLocalNetworkUsageDescription` to `Info.plist`
-- Add `NSBonjourServices` with `_shelly._tcp` and `_http._tcp`
-
-Without this, mDNS and HTTP to LAN addresses will silently fail on iOS.
-
-### 6.2 Android Network Config
-
-Android 9+ blocks cleartext (HTTP) traffic by default. Add a network security config:
-
-Create `src-tauri/gen/android/app/src/main/res/xml/network_security_config.xml`:
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<network-security-config>
-  <!--
-    Android <domain> elements take hostnames, NOT CIDR ranges.
-    For LAN device IPs (which are arbitrary), the simplest correct approach
-    is to permit cleartext for all private-range IPs individually — but since
-    we cannot enumerate them statically, use a base-config override scoped to
-    the app only (not system-wide). This is acceptable for a LAN management tool.
-  -->
-  <base-config cleartextTrafficPermitted="true">
-    <trust-anchors>
-      <certificates src="system" />
-    </trust-anchors>
-  </base-config>
-</network-security-config>
-```
-
-> **Why `base-config` instead of `domain-config`?** Shelly devices are accessed by raw IP address (e.g. `192.168.1.42`), not by hostname. Android's `<domain>` element matches hostnames only — CIDR notation is not valid there. Using `base-config cleartextTrafficPermitted="true"` permits cleartext for all connections from this app, which is appropriate for a local-network device manager that never connects to the internet through cleartext. If you want to restrict further, you can enumerate the specific IP addresses your users are likely to use as separate `<domain>` entries, but this is impractical for a general tool.
-
-Reference it in `AndroidManifest.xml`:
-```xml
-android:networkSecurityConfig="@xml/network_security_config"
-```
-
-### 6.3 Touch Targets & Mobile UX
-
-- All interactive elements: minimum 44×44 pt tap target
-- Use Mantine `size="lg"` on mobile for inputs and buttons
-- `PullToRefresh.tsx` — implement pull-down gesture on device list using pointer events + CSS translate
-- Bottom navigation active state with smooth transition
-- Loading skeletons (`Skeleton` from Mantine) instead of spinners where possible
-
-### 6.4 Safe Area Insets
-
-For notched iOS devices and Android gesture navigation:
-
-```css
-/* src/styles/global.css */
-:root {
-  --safe-area-top: env(safe-area-inset-top, 0px);
-  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
-}
-```
-
-Apply `padding-bottom: var(--safe-area-bottom)` to the bottom nav.
-
-### 6.5 Offline / Network Error State
-
-When the app cannot reach any device:
-- Show `ErrorAlert` with a "Retry" button
-- Distinguish between "device unreachable" and "no network at all"
-- Use `tauri-plugin-os` to detect platform for platform-specific error messages
-
-### 6.6 Checklist
-
-- [ ] iOS app prompts for local network permission on first use
-- [ ] Android connects to devices over HTTP (cleartext permitted)
-- [ ] All buttons/controls are easily tappable on a 375px screen
-- [ ] Pull-to-refresh works on the device list
-- [ ] Safe area insets prevent content hiding behind notch/home bar
-- [ ] Offline state shows a clear, actionable error
-
----
-
-## Phase 7 – Testing
-
-### 7.1 Unit Tests
-
-Location: colocate with source as `*.test.ts` or in `src/__tests__/`
-
-| File | What to test |
-|---|---|
-| `src/utils/auth.ts` | SHA-256 Digest auth computation (known inputs → expected output) |
-| `src/utils/rpc.ts` | JSON-RPC frame construction and parsing |
-| `src/utils/formatters.ts` | Power/energy/temperature formatting edge cases; locale-aware number formatting (`formatPower` in `en` vs `de`) |
-| `src/services/shellyClient.ts` | HTTP calls (mock fetch), auth retry on 401, RPC error handling |
-| `src/services/discovery.ts` | Orchestration (mock invoke + fetch), deduplication, error cases |
-| `src/store/deviceStore.ts` | add/update/remove operations, hydrate/persist round-trip |
-| `src/store/wsStatusStore.ts` | Delta merge: partial update, new key, nested values |
-| `src/store/appStore.ts` | `setLocale` calls `i18next.changeLanguage` and persists the value |
-| `src/locales/` | Schema validation: every locale has the same keys as `en/` (no missing or extra keys) |
-
-### 7.2 Component Tests
-
-Use `@testing-library/react` with a custom `renderWithProviders` helper that wraps in MantineProvider + QueryClientProvider + I18nextProvider + a test router.
-
-| Component | What to test |
-|---|---|
-| `DeviceCard` | Renders name, status badge; click navigates; device type label uses translation |
-| `SwitchControl` | Toggle calls mutation; disabled while loading |
-| `DimmerControl` | Slider change calls mutation with correct brightness value |
-| `ManualAddForm` | Validation errors shown in active language; submit triggers discovery |
-| `DiscoveryProgress` | Shows progress items and plural string ("Found 1 device" vs "Found 3 devices") |
-| `BottomNav` | Active tab highlighted based on current route |
-| `LanguageSelect` | Changing selection calls `setLocale`; selected value reflects `i18n.language` |
-
-### 7.3 Test Utilities
-
-```ts
-// src/test/renderWithProviders.tsx
-import { I18nextProvider } from 'react-i18next'
-import i18next from 'i18next'
-import { initReactI18next } from 'react-i18next'
-
-// Create a synchronous test i18n instance with inline resources
-// so tests do NOT depend on dynamic import() or Suspense
-const testI18n = i18next.createInstance()
-testI18n.use(initReactI18next).init({
-  lng: 'en',
-  fallbackLng: 'en',
-  resources: {
-    en: {
-      common:    require('../locales/en/common.json'),
-      devices:   require('../locales/en/devices.json'),
-      discovery: require('../locales/en/discovery.json'),
-      settings:  require('../locales/en/settings.json'),
-    },
-  },
-  interpolation: { escapeValue: false },
-})
-
-export function renderWithProviders(ui: ReactElement, { route = '/', lng = 'en' } = {}) {
-  testI18n.changeLanguage(lng)
-  return render(
-    <I18nextProvider i18n={testI18n}>
-      <MantineProvider>
-        <QueryClientProvider client={new QueryClient()}>
-          {/* memory router setup */}
-          {ui}
-        </QueryClientProvider>
-      </MantineProvider>
-    </I18nextProvider>
-  )
-}
-
-// src/test/mocks/tauri.ts
-vi.mock('@tauri-apps/plugin-http', () => ({ fetch: vi.fn() }))
-vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn() }))
-vi.mock('@tauri-apps/plugin-store', () => ({
-  // v2 API: Store.load() is a static async factory, not a constructor
-  Store: { load: vi.fn().mockResolvedValue({ get: vi.fn(), set: vi.fn(), save: vi.fn() }) },
-}))
-```
-
-> **Why a separate test i18n instance?** The app's `i18n` instance uses `i18next-resources-to-backend` with dynamic `import()`, which requires `<Suspense>`. In tests, loading is synchronous (`require`) so there is no suspension, no async setup, and no flaky timing issues.
-
-### 7.4 Locale Schema Validation Test
-
-Add `src/__tests__/locales.test.ts` to catch any missing or extra translation keys across locales:
-
-```ts
-import en_common    from '../locales/en/common.json'
-import en_devices   from '../locales/en/devices.json'
-import en_discovery from '../locales/en/discovery.json'
-import en_settings  from '../locales/en/settings.json'
-import de_common    from '../locales/de/common.json'
-// ... import all locales
-
-function getLeafKeys(obj: object, prefix = ''): string[] {
-  return Object.entries(obj).flatMap(([k, v]) =>
-    typeof v === 'object' && v !== null
-      ? getLeafKeys(v as object, `${prefix}${k}.`)
-      : [`${prefix}${k}`]
-  )
-}
-
-describe('locale completeness', () => {
-  const namespaces = [
-    ['common',    en_common,    de_common],
-    ['devices',   en_devices,   de_devices],
-    ['discovery', en_discovery, de_discovery],
-    ['settings',  en_settings,  de_settings],
-  ] as const
-
-  for (const [ns, en, ...others] of namespaces) {
-    const enKeys = new Set(getLeafKeys(en))
-    for (const locale of others) {
-      const localeKeys = new Set(getLeafKeys(locale))
-      it(`${ns}: no missing keys`, () => {
-        const missing = [...enKeys].filter(k => !localeKeys.has(k))
-        expect(missing).toEqual([])
-      })
-    }
+useEffect(() => {
+  if (isHydrated) {
+    setColorScheme(theme === 'system' ? 'auto' : theme)
   }
-})
+}, [isHydrated, theme, setColorScheme])
 ```
 
-### 7.5 Checklist
-
-- [ ] `bun test` passes all unit tests
-- [ ] `bun test --coverage` shows > 70% coverage on `services/` and `utils/`
-- [ ] All component tests pass, using the synchronous test i18n instance
-- [ ] Locale completeness test passes for all shipped languages
-- [ ] Plural strings tested with `count: 1` and `count: 5` in `renderWithProviders`
-- [ ] CI-ready: tests do not depend on a running Tauri instance or network
+After this change, remove the duplicate `useEffect` from `settings.tsx` that does the same sync on page mount (it becomes redundant).
 
 ---
 
-## Phase 8 – Release Builds
+## Bug 6 — Language toggle does nothing
 
-### 8.1 Desktop builds
+**Status:** Open  
+**File:** `src/components/settings/LanguageSelect.tsx`
 
-```bash
-bun tauri build
-# Produces:
-# macOS: src-tauri/target/release/bundle/macos/ShellyManager.app + .dmg
-# Windows: src-tauri/target/release/bundle/msi/*.msi
-# Linux: src-tauri/target/release/bundle/appimage/*.AppImage + .deb
+### Root cause
+
+`value={i18n.language}` is used as the Select's controlled value. When the browser locale is a regional tag like `'en-US'`, `i18n.language` returns `'en-US'` which does not match any option in `SUPPORTED_LOCALES` (which uses bare codes like `'en'`). The Select renders with no selected item. Users interact with it, `setLocale` is called, `i18next.changeLanguage` runs, but subsequent renders still read the (now correct) `i18n.language` directly — bypassing the Zustand store, which is the actual reactive source of truth.
+
+### Fix
+
+Use `appStore`'s `preferences.locale` (reactive Zustand state) as the primary value source, falling back to the normalized `i18n.language` for the initial browser-detected language:
+
+```tsx
+const locale = useAppStore(s => s.preferences.locale)
+const value = locale || i18n.language.split('-')[0]
+
+<Select
+  data={SUPPORTED_LOCALES}
+  value={value}
+  onChange={(val) => void (val && setLocale(val))}
+  allowDeselect={false}
+  w={180}
+/>
 ```
-
-### 8.2 Android build
-
-```bash
-bun tauri android build
-# Produces: src-tauri/gen/android/app/build/outputs/apk/
-```
-
-Sign the APK with a keystore for distribution.
-
-### 8.3 iOS build
-
-```bash
-bun tauri ios build
-# Produces: IPA in src-tauri/gen/apple/build/
-```
-
-Requires an Apple Developer account for distribution.
-
-### 8.4 Tauri update configuration
-
-Add `tauri-plugin-updater` if over-the-air updates are needed:
-```bash
-bun tauri add updater
-```
-
-Configure a public update JSON endpoint in `tauri.conf.json`.
-
-### 8.5 Checklist
-
-- [ ] Desktop build produces a working unsigned binary
-- [ ] Android APK installs on a physical device and connects to Shelly devices
-- [ ] iOS IPA installs via TestFlight and connects to Shelly devices
-- [ ] App version in About screen matches `tauri.conf.json`
 
 ---
 
-## Key Technical Decisions
+## Bug 7 — Version field is empty
 
-| Decision | Choice | Reason |
-|---|---|---|
-| Shelly generation support | Gen 2, 3, 4 only | Single unified JSON-RPC API, no legacy REST complexity |
-| HTTP client | `tauri-plugin-http` (not browser fetch) | Works on mobile, bypasses CORS, supports all platforms |
-| Auth | SHA-256 Digest implemented in frontend TS | Required by Shelly Gen2+ spec; no server-side component |
-| Real-time | WebSocket per device + polling fallback | Best UX; graceful degradation |
-| Routing | TanStack Router with `createHashHistory()` | Required for Tauri SPA (no server to handle HTML5 history) |
-| State | Zustand + TanStack Query | Zustand for registry/WS state, Query for async device data |
-| Persistence | `tauri-plugin-store` | Simplest cross-platform solution; no SQL needed |
-| mDNS | Custom Rust command with `mdns-sd` | No Tauri plugin exists; Rust is the only option |
-| Subnet scan | Custom Rust command with Tokio | Concurrent TCP probing, not possible from browser-sandboxed JS |
-| Component size | < ~120 lines per component | Maintainability; forced decomposition |
-| iOS cleartext HTTP | NSLocalNetworkUsageDescription + NSBonjourServices | Required to access local network on iOS |
-| Android cleartext HTTP | `network_security_config.xml` | Required for HTTP (not HTTPS) to LAN IPs on Android 9+ |
-| i18n library | `react-i18next` + `i18next` v26 | Largest ecosystem, full TypeScript key safety, lazy-loading via Vite dynamic `import()` — no HTTP server needed (Tauri-compatible) |
-| Translation loading | `i18next-resources-to-backend` + Vite dynamic `import()` | Each locale/namespace becomes a separate Vite chunk; zero network requests at runtime |
-| Translation format | JSON namespaces (`common`, `devices`, `discovery`, `settings`) | One chunk per route's namespace; maps to TanStack Router route structure |
-| Locale persistence | `appStore.locale` in `tauri-plugin-store` | Consistent with other user preferences; survives app restarts |
-| Number/date formatting | Native `Intl` API using `i18n.language` | No extra library; correct locale-aware formatting on all platforms |
+**Status:** Open  
+**Files:** `src-tauri/capabilities/default.json`, `src-tauri/capabilities/mobile.json`
 
----
+### Root cause
 
-## Dependency Reference
+Tauri v2 uses a capability-based permission model. `getVersion()` from `@tauri-apps/api/app` calls the Tauri core `app > version` command under the hood. Without `"core:app:default"` (or the narrower `"core:app:allow-version"`) listed in the capability manifest, the call is silently denied and returns an empty string. The `.catch()` handler in `settings.tsx` is never hit because the promise resolves — just with `''`.
 
-### Frontend
+### Fix
 
-| Package | Latest version | Purpose |
-|---|---|---|
-| `react` | 19.2.5 | UI runtime (**v19 required by Mantine v9**) |
-| `react-dom` | 19.2.5 | DOM renderer |
-| `@tanstack/react-router` | 1.168.22 | File-based routing |
-| `@tanstack/router-plugin` | 1.167.22 | Vite code-gen plugin |
-| `@tanstack/react-query` | 5.99.0 | Server state / polling |
-| `zustand` | 5.0.12 | Client state (use named `create` export; `subscribeWithSelector` from `zustand/middleware`) |
-| `@mantine/core` | 9.0.2 | UI component library (**v9, requires React 19**) |
-| `@mantine/hooks` | 9.0.2 | Utility hooks |
-| `@mantine/notifications` | 9.0.2 | Toast notifications |
-| `@tabler/icons-react` | 3.41.1 | Icon set |
-| `@tauri-apps/api` | 2.10.1 | Tauri JS API |
-| `@tauri-apps/plugin-http` | 2.5.8 | HTTP requests |
-| `@tauri-apps/plugin-websocket` | 2.4.2 | WebSocket client |
-| `@tauri-apps/plugin-store` | 2.4.2 | Persistent storage |
-| `i18next` | 26.0.5 | i18n core framework |
-| `react-i18next` | 17.0.4 | React bindings for i18next |
-| `i18next-resources-to-backend` | 1.2.1 | Lazy-loads locale JSON via Vite dynamic `import()` |
-| `i18next-browser-languagedetector` | 8.2.1 | Detects locale from browser/OS, persists to `localStorage` |
+Add `"core:app:default"` to the `permissions` array in **both** capability files:
 
-### Dev / Testing
-
-| Package | Latest version | Purpose |
-|---|---|---|
-| `vitest` | 4.1.4 | Test runner |
-| `@testing-library/react` | 16.3.2 | Component testing |
-| `@testing-library/user-event` | 14.6.1 | User interaction simulation |
-| `@testing-library/jest-dom` | 6.9.1 | DOM matchers |
-| `jsdom` | 29.0.2 | DOM environment for tests |
-| `postcss` | 8.5.10 | CSS processor |
-| `postcss-preset-mantine` | 1.18.0 | PostCSS config for Mantine |
-| `postcss-simple-vars` | 7.0.1 | CSS variables in PostCSS |
-| `i18next-parser` | latest | CLI key extraction — scans source for `t('key')` calls and syncs locale JSON |
-
-### Rust (src-tauri/Cargo.toml)
-
-| Crate | Latest version | Purpose |
-|---|---|---|
-| `tauri` | 2.10.3 | App framework |
-| `tauri-plugin-http` | 2.5.8 | HTTP plugin |
-| `tauri-plugin-websocket` | 2.4.2 | WS plugin |
-| `tauri-plugin-store` | 2.4.2 | Store plugin |
-| `mdns-sd` | 0.19.0 | mDNS discovery (**breaking: `ScopedIpV4` now has `interface_ids`**) |
-| `tokio` | 1.52.1 | Async runtime (subnet scan) |
-| `serde` | 1.0.228 | Serialization framework |
-| `serde_json` | 1.0.149 | JSON serialization |
-
----
-
-## i18n Language Reference
-
-### Supported locales at launch
-
-| Code | Language | Native name | Direction |
-|---|---|---|---|
-| `en` | English | English | LTR |
-| `de` | German | Deutsch | LTR |
-| `fr` | French | Français | LTR |
-| `es` | Spanish | Español | LTR |
-| `zh` | Chinese (Simplified) | 中文 | LTR |
-| `ja` | Japanese | 日本語 | LTR |
-
-> Additional locales can be added by following the workflow in **Phase 5.3**.
-
-### Namespace → Route mapping
-
-| Namespace | Loaded by | Contents |
-|---|---|---|
-| `common` | All routes (eager) | App name, shared actions, status labels, error messages |
-| `devices` | `/` and `/devices/$id` | Device type names, control labels, info labels, firmware, schedules |
-| `discovery` | `/discover` | Wizard copy, form labels, found-count plurals |
-| `settings` | `/settings` | Settings labels, theme options, language names, about section |
-
-### Translation file conventions
-
-- **Keys** use `camelCase` dot-notation: `actions.save`, `firmware.updateAvailable`
-- **Interpolation** uses double curly braces: `"Update to {{version}}"`
-- **Plurals** use `_one` / `_other` suffixes (i18next v4+ plural convention):
-  ```json
-  { "found_one": "Found {{count}} device", "found_other": "Found {{count}} devices" }
-  ```
-  Call with `t('found', { count: n })` — i18next selects the correct form automatically.
-- **Never** put HTML in translation strings. Use `<Trans>` component from `react-i18next` only if rich formatting (bold, links) is absolutely necessary.
-- **Fallback**: any missing key falls back to the `en` namespace value; the fallback is logged as a warning in development mode.
-
-### Key extraction
-
-```bash
-# Install parser (once)
-bun add -D i18next-parser
-
-# Create i18next-parser.config.cjs
-# (configure input glob, output path, supported locales)
-
-# Run extraction — adds new keys to all locale files, flags orphaned keys
-bunx i18next-parser
+**`src-tauri/capabilities/default.json`**
+```json
+"permissions": [
+  "core:app:default",
+  { "identifier": "http:default", "allow": [{ "url": "http://*/*" }] },
+  "websocket:default",
+  "store:default"
+]
 ```
 
-Add to CI as a check step: if extraction produces any diff, the build fails (ensures no untranslated keys ship).
+**`src-tauri/capabilities/mobile.json`** — same change.
+
+---
+
+## Bug 8 — mDNS does not work on iOS
+
+**Status:** Open  
+**File:** `src-tauri/src/lib.rs`
+
+### Root cause
+
+iOS sandboxes UDP multicast (port 5353). Before `mdns-sd` can successfully bind the multicast socket, iOS must have shown the _Local Network Usage_ permission dialog and the user must have accepted it. This dialog is only triggered by an actual TCP or UDP connection attempt to a local-network address — not by the raw socket bind that happens inside the Rust `ServiceDaemon`. The app never triggers the prompt, so permission is never granted, and the daemon silently finds nothing.
+
+`NSLocalNetworkUsageDescription` and `NSBonjourServices` in `Info.plist` are already correctly set (required but not sufficient on their own).
+
+### Fix — Permission primer
+
+Add a `#[cfg(target_os = "ios")]` block at the start of `discover_mdns` that fires a short-timeout TCP connection attempt to a common LAN gateway address. The connection is expected to fail; its sole purpose is to cause iOS to show the permission dialog before `ServiceDaemon::new()` attempts to bind the multicast socket.
+
+```rust
+#[cfg(target_os = "ios")]
+{
+    // Trigger the iOS Local Network Usage permission dialog.
+    // This connection is expected to fail; we only need the attempt to
+    // cause iOS to show the local-network permission prompt.
+    let _ = tokio::time::timeout(
+        Duration::from_millis(200),
+        tokio::net::TcpStream::connect("192.168.1.1:80"),
+    )
+    .await;
+    // Allow iOS a moment to process the permission prompt before we bind
+    // the multicast socket.
+    tokio::time::sleep(Duration::from_millis(500)).await;
+}
+```
+
+Additionally, in the discovery UI (`src/routes/discover.tsx` or `src/components/discovery/DiscoveryProgress.tsx`), show a dismissible `Alert` (color `"yellow"`) on iOS when mDNS returns zero results, instructing the user to:
+1. Open iOS Settings → Privacy → Local Network and enable access for Shelly Manager.
+2. Alternatively, use Subnet Scan or Manual Add.
+
+---
+
+## Bug 9 — Subnet scan returns no devices for large CIDRs
+
+**Status:** Open  
+**Files:** `src-tauri/src/lib.rs`, `src/components/discovery/DiscoveryMethodSelect.tsx`
+
+### Root cause
+
+A `/16` CIDR expands to 65 534 host addresses. The current code immediately spawns **all 65 534 Tokio tasks** into a single `JoinSet`, then limits concurrency with a semaphore of 50. Even though the tasks are lightweight, this causes:
+
+1. **Memory pressure** — ~65k task handles allocated at once.
+2. **Extreme scan time** — `65 534 / 50 × timeout_ms` ≈ 11 minutes at 500 ms/host. The frontend likely times out or the user gives up.
+3. **File-descriptor exhaustion** — each in-flight task holds an open TCP socket.
+
+### Fix — Two-part
+
+#### Part A — Rust: chunked batch processing
+
+Instead of a single `JoinSet` over all IPs, process hosts in chunks of 256. Each chunk is fully resolved before the next is spawned. This bounds in-flight task count and file-descriptor usage without changing the overall algorithm or adding new crates.
+
+Also:
+- Raise the semaphore to 100 for better throughput on small CIDRs.
+- Add a hard cap: if `expand_cidr` yields more than **8 192** hosts (prefix < `/19`), return an early `Err` with the message `"CIDR too large — maximum supported range is /19 (8192 hosts). Use a narrower subnet."`.
+
+```rust
+// Hard cap
+if ips.len() > 8192 {
+    return Err("CIDR too large — maximum supported range is /19 (8192 hosts). Use a narrower subnet.".to_string());
+}
+
+// Chunked scan — process 256 IPs at a time
+for chunk in ips.chunks(256) {
+    let mut join_set: JoinSet<Option<DiscoveredHost>> = JoinSet::new();
+    for ip in chunk {
+        let sem = semaphore.clone();
+        let ip_str = ip.clone();
+        join_set.spawn(async move {
+            let _permit = sem.acquire().await.ok()?;
+            // ... TCP connect as before
+        });
+    }
+    while let Some(result) = join_set.join_next().await {
+        if let Ok(Some(host)) = result {
+            results.push(host);
+        }
+    }
+}
+```
+
+#### Part B — UI: proactive validation
+
+In `DiscoveryMethodSelect.tsx`, parse the CIDR on input change and show:
+- A Mantine `Alert` (color `"orange"`) when prefix length < 21 (> 2 048 hosts): "Large subnet detected — scanning may take several minutes. Consider narrowing to /24."
+- A Mantine `Alert` (color `"red"`) when prefix length < 19 (> 8 192 hosts): "Subnet too large — maximum supported is /19. Please use a narrower range."  This matches the Rust-side hard cap so the user sees the validation before the scan starts.
+
+---
+
+## Bug 10 — Stepper stacks steps vertically on mobile
+
+**Status:** Open  
+**File:** `src/routes/discover.tsx`
+
+### Root cause
+
+Mantine's `Stepper` renders all step labels and content stacked vertically on narrow viewports. With three steps, this wastes significant vertical space and is visually confusing on small screens.
+
+### Fix — Responsive step indicator
+
+Extract each step's body into named sub-components (`StepChooseMethod`, `StepSearching`, `StepReview`) that receive the same props. Then render two separate layout variants using `hiddenFrom` / `visibleFrom`:
+
+**Mobile (`base`, hidden from `sm`):**
+- A `Group justify="space-between"` containing the current step title (`Text fw={600}`) and a `Badge variant="outline"` showing "N / 3".
+- A thin `Progress` bar below: `value={(step / 2) * 100}`, `size="xs"`, `animated` when `step === 1`.
+- The active step's sub-component renders below the bar — no other step content is mounted.
+
+**Desktop (`sm+`, visible from `sm`):**
+- The existing `Stepper` unchanged, using the same sub-components as children.
+
+```tsx
+{/* Mobile */}
+<Box hiddenFrom="sm">
+  <Group justify="space-between" mb={4}>
+    <Text fw={600}>{stepTitles[step]}</Text>
+    <Badge variant="outline">{step + 1} / 3</Badge>
+  </Group>
+  <Progress value={(step / 2) * 100} size="xs" animated={step === 1} mb="md" />
+  {step === 0 && <StepChooseMethod {...stepProps} />}
+  {step === 1 && <StepSearching {...stepProps} />}
+  {step === 2 && <StepReview {...stepProps} />}
+</Box>
+
+{/* Desktop */}
+<Box visibleFrom="sm">
+  <Stepper active={step} color="blue" allowNextStepsSelect={false}>
+    <Stepper.Step label={t('steps.chooseMethod')}>
+      <StepChooseMethod {...stepProps} />
+    </Stepper.Step>
+    <Stepper.Step label={t('steps.searching')} loading={status === 'running'}>
+      <StepSearching {...stepProps} />
+    </Stepper.Step>
+    <Stepper.Step label={t('steps.review')}>
+      <StepReview {...stepProps} />
+    </Stepper.Step>
+  </Stepper>
+</Box>
+```

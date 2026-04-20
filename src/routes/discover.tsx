@@ -1,13 +1,17 @@
 import { useState } from 'react'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import {
+  Badge,
+  Box,
   Container,
   Title,
   Stepper,
+  Progress,
   Button,
   Group,
   Alert,
   Stack,
+  Text,
 } from '@mantine/core'
 import { IconAlertCircle } from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
@@ -74,80 +78,119 @@ function DiscoverPage() {
     (d, i, arr) => arr.findIndex((x) => x.id === d.id) === i
   )
 
+  const stepTitles = [
+    t('steps.chooseMethod'),
+    t('steps.searching'),
+    t('steps.review'),
+  ]
+
+  // Shared step content — used by both mobile and desktop render paths.
+  const stepChooseMethod = (
+    <Stack gap="md" mt="md">
+      <DiscoveryMethodSelect
+        methods={methods}
+        onMethodsChange={setMethods}
+        cidr={cidr}
+        onCidrChange={setCidr}
+        onManualDevice={handleManualDevice}
+      />
+      <Group justify="flex-end" mt="sm">
+        <Button
+          color="blue"
+          onClick={handleStartDiscovery}
+          disabled={
+            methods.filter((m) => m !== 'manual').length === 0 &&
+            manualDevices.length === 0
+          }
+        >
+          {methods.some((m) => m !== 'manual')
+            ? t('steps.searching').replace('…', '')
+            : t('steps.review')}
+        </Button>
+      </Group>
+    </Stack>
+  )
+
+  const stepSearching = (
+    <Stack gap="md" mt="md">
+      {error && (
+        <Alert color="red" icon={<IconAlertCircle size={16} />}>
+          {error}
+        </Alert>
+      )}
+      <DiscoveryProgress
+        status={status}
+        progress={progress}
+        found={found.length}
+      />
+      <Group justify="space-between" mt="sm">
+        <Button variant="default" onClick={handleBack}>
+          {tc('actions.cancel')}
+        </Button>
+        {status === 'done' || status === 'error' ? (
+          <Button color="blue" onClick={() => setStep(2)}>
+            {t('steps.review')}
+          </Button>
+        ) : null}
+      </Group>
+    </Stack>
+  )
+
+  const stepReview = (
+    <Stack gap="md" mt="md">
+      <FoundDevicesList devices={allFound} onAdd={handleAdd} />
+      <Group>
+        <Button variant="default" onClick={handleBack}>
+          {tc('actions.cancel')}
+        </Button>
+      </Group>
+    </Stack>
+  )
+
   return (
     <Container size="sm" py="md">
       <Stack gap="lg">
         <Title order={2}>{t('title')}</Title>
 
-        <Stepper active={step} color="blue" allowNextStepsSelect={false}>
-          <Stepper.Step
-            label={t('steps.chooseMethod')}
-            loading={false}
-          >
-            <Stack gap="md" mt="md">
-              <DiscoveryMethodSelect
-                methods={methods}
-                onMethodsChange={setMethods}
-                cidr={cidr}
-                onCidrChange={setCidr}
-                onManualDevice={handleManualDevice}
-              />
-              <Group justify="flex-end" mt="sm">
-                <Button
-                  color="blue"
-                  onClick={handleStartDiscovery}
-                  disabled={
-                    methods.filter((m) => m !== 'manual').length === 0 &&
-                    manualDevices.length === 0
-                  }
-                >
-                  {methods.some((m) => m !== 'manual')
-                    ? t('steps.searching').replace('…', '')
-                    : t('steps.review')}
-                </Button>
-              </Group>
-            </Stack>
-          </Stepper.Step>
+        {/* ── Mobile layout (hidden on sm+) ── */}
+        <Box hiddenFrom="sm">
+          <Group justify="space-between" mb={6}>
+            <Text fw={600} size="sm">{stepTitles[step]}</Text>
+            <Badge variant="outline" size="sm">{step + 1} / 3</Badge>
+          </Group>
+          <Progress
+            value={(step / 2) * 100}
+            size="xs"
+            animated={step === 1}
+            mb="md"
+          />
+          {step === 0 && stepChooseMethod}
+          {step === 1 && stepSearching}
+          {step === 2 && stepReview}
+        </Box>
 
-          <Stepper.Step
-            label={t('steps.searching')}
-            loading={status === 'running'}
-          >
-            <Stack gap="md" mt="md">
-              {error && (
-                <Alert color="red" icon={<IconAlertCircle size={16} />}>
-                  {error}
-                </Alert>
-              )}
-              <DiscoveryProgress
-                status={status}
-                progress={progress}
-                found={found.length}
-              />
-              <Group justify="space-between" mt="sm">
-                <Button variant="default" onClick={handleBack}>
-                  {tc('actions.cancel')}
-                </Button>
-                {status === 'done' || status === 'error' ? (
-                  <Button color="blue" onClick={() => setStep(2)}>
-                    {t('steps.review')}
-                  </Button>
-                ) : null}
-              </Group>
-            </Stack>
-          </Stepper.Step>
+        {/* ── Desktop layout (visible on sm+) ── */}
+        <Box visibleFrom="sm">
+          <Stepper active={step} color="blue" allowNextStepsSelect={false}>
+            <Stepper.Step
+              label={t('steps.chooseMethod')}
+              loading={false}
+            >
+              {stepChooseMethod}
+            </Stepper.Step>
 
-          <Stepper.Step label={t('steps.review')}>
-            <Stack gap="md" mt="md">
-              <FoundDevicesList devices={allFound} onAdd={handleAdd} />
-              <Group>
-                <Button variant="default" onClick={handleBack}>
-                  {tc('actions.cancel')}
-                </Button>
-              </Group>
-            </Stack>
-          </Stepper.Step>
-        </Stepper>
+            <Stepper.Step
+              label={t('steps.searching')}
+              loading={status === 'running'}
+            >
+              {stepSearching}
+            </Stepper.Step>
+
+            <Stepper.Step label={t('steps.review')}>
+              {stepReview}
+            </Stepper.Step>
+          </Stepper>
+        </Box>
       </Stack>
     </Container>
   )

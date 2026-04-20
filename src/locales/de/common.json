@@ -6,7 +6,8 @@
     "confirm": "Bestätigen",
     "delete": "Löschen",
     "retry": "Wiederholen",
-    "close": "Schließen"
+    "close": "Schließen",
+    "refresh": "Aktualisieren"
   },
   "status": {
     "online": "Online",

@@ -14,11 +14,17 @@ const SUPPORTED_LOCALES = [
 export function LanguageSelect() {
   const { i18n } = useTranslation()
   const setLocale = useAppStore((s) => s.setLocale)
+  // Use the persisted locale from the store as the primary reactive value.
+  // Fall back to the browser-detected language (normalized to bare code, e.g.
+  // 'en-US' → 'en') so the select always shows a valid selection even before
+  // the user explicitly picks a language.
+  const storedLocale = useAppStore((s) => s.preferences.locale)
+  const value = storedLocale || i18n.language.split('-')[0]
 
   return (
     <Select
       data={SUPPORTED_LOCALES}
-      value={i18n.language}
+      value={value}
       onChange={(val) => void (val && setLocale(val))}
       allowDeselect={false}
       w={180}

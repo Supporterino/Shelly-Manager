@@ -17,7 +17,9 @@
     "username": "Benutzername",
     "password": "Passwort",
     "cidr": "IP-Bereich (CIDR)",
-    "add": "Ger\u00e4t hinzuf\u00fcgen",
+    "cidrLargeWarning": "Großes Subnetz — der Scan kann mehrere Minuten dauern. Empfehlung: /24 verwenden.",
+    "cidrTooLarge": "Subnetz zu groß — Maximum ist /19 (8192 Hosts). Bitte einen kleineren Bereich angeben.",
+    "add": "Gerät hinzufügen",
     "verify": "Pr\u00fcfe\u2026"
   },
   "found_one": "{{count}} Ger\u00e4t gefunden",

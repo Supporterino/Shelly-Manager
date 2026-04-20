@@ -29,7 +29,7 @@ const mockSetLocale = vi.fn()
 
 vi.mock('../store/appStore', () => ({
   useAppStore: vi.fn((selector: (s: unknown) => unknown) =>
-    selector({ setLocale: mockSetLocale })
+    selector({ setLocale: mockSetLocale, preferences: { locale: undefined } })
   ),
 }))
 

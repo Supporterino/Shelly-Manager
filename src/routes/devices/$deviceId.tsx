@@ -3,13 +3,13 @@ import {
   ActionIcon,
   Divider,
   Group,
-  ScrollArea,
   Skeleton,
   Stack,
   Text,
   Title,
+  Tooltip,
 } from '@mantine/core'
-import { IconSettings } from '@tabler/icons-react'
+import { IconRefresh, IconSettings } from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
 import { useDeviceStore } from '../../store/deviceStore'
@@ -30,6 +30,7 @@ export const Route = createFileRoute('/devices/$deviceId')({
 function DeviceDetailPage() {
   const { deviceId } = Route.useParams()
   const { t } = useTranslation('devices')
+  const { t: tc } = useTranslation('common')
   const location = useLocation()
   const device = useDeviceStore((s) => s.devices[deviceId])
   const updateDevice = useDeviceStore((s) => s.updateDevice)
@@ -90,17 +91,28 @@ function DeviceDetailPage() {
     : undefined
 
   return (
-    <ScrollArea h="100%">
-      <Stack gap="md" p="md">
-        {/* Header */}
-        <Group justify="space-between" align="center">
-          <Stack gap={2}>
-            <Group gap="xs" align="center">
-              <Title order={3}>{device.name}</Title>
-              <DeviceStatusBadge status={connectionStatus} />
-            </Group>
-            <Text size="xs" c="dimmed">{device.ip}:{device.port}</Text>
-          </Stack>
+    <Stack gap="md" p="md">
+      {/* Header */}
+      <Group justify="space-between" align="center">
+        <Stack gap={2}>
+          <Group gap="xs" align="center">
+            <Title order={3}>{device.name}</Title>
+            <DeviceStatusBadge status={connectionStatus} />
+          </Group>
+          <Text size="xs" c="dimmed">{device.ip}:{device.port}</Text>
+        </Stack>
+        <Group gap="xs">
+          <Tooltip label={tc('actions.refresh')}>
+            <ActionIcon
+              variant="light"
+              size="lg"
+              aria-label={tc('actions.refresh')}
+              loading={isLoading}
+              onClick={() => void refetch()}
+            >
+              <IconRefresh size={18} />
+            </ActionIcon>
+          </Tooltip>
           <Link to="/devices/$deviceId/settings" params={{ deviceId }}>
             <ActionIcon
               variant="light"
@@ -111,30 +123,30 @@ function DeviceDetailPage() {
             </ActionIcon>
           </Link>
         </Group>
+      </Group>
 
-        <Divider />
+      <Divider />
 
-        {/* Device info */}
-        <DeviceInfoPanel device={device} uptime={uptime} />
+      {/* Device info */}
+      <DeviceInfoPanel device={device} uptime={uptime} />
 
-        <Divider />
+      <Divider />
 
-        {/* Component controls */}
-        {isLoading && !status ? (
-          <Stack gap="sm">
-            <Skeleton height={60} radius="md" />
-            <Skeleton height={60} radius="md" />
-          </Stack>
-        ) : error ? (
-          <ErrorAlert
-            message={(error as Error).message}
-            errorKind={classifyNetworkError(error)}
-            onRetry={() => void refetch()}
-          />
-        ) : (
-          <ComponentList device={device} status={status} />
-        )}
-      </Stack>
-    </ScrollArea>
+      {/* Component controls */}
+      {isLoading && !status ? (
+        <Stack gap="sm">
+          <Skeleton height={60} radius="md" />
+          <Skeleton height={60} radius="md" />
+        </Stack>
+      ) : error ? (
+        <ErrorAlert
+          message={(error as Error).message}
+          errorKind={classifyNetworkError(error)}
+          onRetry={() => void refetch()}
+        />
+      ) : (
+        <ComponentList device={device} status={status} />
+      )}
+    </Stack>
   )
 }

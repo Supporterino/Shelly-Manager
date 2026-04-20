@@ -6,7 +6,8 @@
     "confirm": "Confirm",
     "delete": "Delete",
     "retry": "Retry",
-    "close": "Close"
+    "close": "Close",
+    "refresh": "刷新"
   },
   "status": {
     "online": "Online",

@@ -376,9 +376,9 @@ pub struct DiscoveredHost {
 ### Running tests
 
 ```bash
-bun test               # run all tests once
-bun test --watch       # watch mode
-bun test --coverage    # with coverage report
+bun run test               # run all tests once (uses Vitest via package.json script)
+bun run test --watch       # watch mode
+bun run test --coverage    # with coverage report
 ```
 
 ### Mocking Tauri in tests
@@ -519,12 +519,12 @@ const { t } = useTranslation('devices')
 
 Use this as a quick reference for current build status. Update as phases complete.
 
-- [ ] Phase 0 — Scaffolding & Toolchain
-- [ ] Phase 1 — Core Infrastructure
-- [ ] Phase 2 — Device Discovery
-- [ ] Phase 3 — Device Detail & Control
-- [ ] Phase 4 — Real-Time Updates (WebSocket)
-- [ ] Phase 5 — Advanced Features
-- [ ] Phase 6 — Mobile Polish
-- [ ] Phase 7 — Testing
+- [x] Phase 0 — Scaffolding & Toolchain
+- [x] Phase 1 — Core Infrastructure
+- [x] Phase 2 — Device Discovery
+- [x] Phase 3 — Device Detail & Control
+- [x] Phase 4 — Real-Time Updates (WebSocket)
+- [x] Phase 5 — Advanced Features
+- [x] Phase 6 — Mobile Polish
+- [x] Phase 7 — Testing
 - [ ] Phase 8 — Release Builds

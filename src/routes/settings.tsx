@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import {
+  Container,
   Divider,
   Group,
   ScrollArea,
@@ -29,17 +30,6 @@ function SettingsPage() {
   const setTemperatureUnit = useAppStore((s) => s.setTemperatureUnit)
   const [appVersion, setAppVersion] = useState<string>('')
 
-  // Sync Mantine color scheme with stored theme on mount
-  useEffect(() => {
-    const theme = preferences.theme
-    if (theme === 'system') {
-      setColorScheme('auto')
-    } else {
-      setColorScheme(theme)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   useEffect(() => {
     getVersion().then(setAppVersion).catch(() => setAppVersion('—'))
   }, [])
@@ -56,98 +46,100 @@ function SettingsPage() {
 
   return (
     <ScrollArea h="100%">
-      <Stack gap="lg" p="md" maw={520}>
-        <Title order={2}>{t('title')}</Title>
+      <Container size="md">
+        <Stack gap="lg" p="md">
+          <Title order={2}>{t('title')}</Title>
 
-        {/* Appearance */}
-        <Stack gap="xs">
-          <Text fw={600} size="sm" tt="uppercase" c="dimmed">
-            {t('sections.appearance')}
-          </Text>
-          <Group justify="space-between" align="center">
-            <Text>{t('theme.label')}</Text>
-            <SegmentedControl
-              value={preferences.theme}
-              onChange={handleThemeChange}
-              data={[
-                { label: t('theme.light'), value: 'light' },
-                { label: t('theme.dark'), value: 'dark' },
-                { label: t('theme.system'), value: 'system' },
-              ]}
-              size="sm"
-            />
-          </Group>
-          <Group justify="space-between" align="center">
-            <Text>{t('temperatureUnit.label')}</Text>
-            <SegmentedControl
-              value={preferences.temperatureUnit}
-              onChange={(v) => void setTemperatureUnit(v as 'C' | 'F')}
-              data={[
-                { label: t('temperatureUnit.celsius'), value: 'C' },
-                { label: t('temperatureUnit.fahrenheit'), value: 'F' },
-              ]}
-              size="sm"
-            />
-          </Group>
-        </Stack>
-
-        <Divider />
-
-        {/* Language */}
-        <Stack gap="xs">
-          <Text fw={600} size="sm" tt="uppercase" c="dimmed">
-            {t('sections.language')}
-          </Text>
-          <Group justify="space-between" align="center">
-            <Text>{t('language.label')}</Text>
-            <LanguageSelect />
-          </Group>
-        </Stack>
-
-        <Divider />
-
-        {/* Polling */}
-        <Stack gap="xs">
-          <Text fw={600} size="sm" tt="uppercase" c="dimmed">
-            {t('polling.label')}
-          </Text>
-          <Group justify="space-between" align="center">
-            <Text size="sm" c="dimmed">
-              {t('polling.seconds', { count: preferences.pollingInterval })}
+          {/* Appearance */}
+          <Stack gap="xs">
+            <Text fw={600} size="sm" tt="uppercase" c="dimmed">
+              {t('sections.appearance')}
             </Text>
-          </Group>
-          <Slider
-            value={preferences.pollingInterval}
-            onChange={(v) => void setPollingInterval(v)}
-            min={10}
-            max={120}
-            step={5}
-            marks={[
-              { value: 10, label: '10s' },
-              { value: 60, label: '60s' },
-              { value: 120, label: '120s' },
-            ]}
-            mb="xs"
-          />
-        </Stack>
+            <Group justify="space-between" align="center">
+              <Text>{t('theme.label')}</Text>
+              <SegmentedControl
+                value={preferences.theme}
+                onChange={handleThemeChange}
+                data={[
+                  { label: t('theme.light'), value: 'light' },
+                  { label: t('theme.dark'), value: 'dark' },
+                  { label: t('theme.system'), value: 'system' },
+                ]}
+                size="sm"
+              />
+            </Group>
+            <Group justify="space-between" align="center">
+              <Text>{t('temperatureUnit.label')}</Text>
+              <SegmentedControl
+                value={preferences.temperatureUnit}
+                onChange={(v) => void setTemperatureUnit(v as 'C' | 'F')}
+                data={[
+                  { label: t('temperatureUnit.celsius'), value: 'C' },
+                  { label: t('temperatureUnit.fahrenheit'), value: 'F' },
+                ]}
+                size="sm"
+              />
+            </Group>
+          </Stack>
 
-        <Divider />
+          <Divider />
 
-        {/* About */}
-        <Stack gap="xs">
-          <Text fw={600} size="sm" tt="uppercase" c="dimmed">
-            {t('sections.about')}
-          </Text>
-          <Group justify="space-between">
-            <Text size="sm">{t('about.version')}</Text>
-            <Text size="sm" c="dimmed">{appVersion}</Text>
-          </Group>
-          <Group justify="space-between">
-            <Text size="sm">{t('about.license')}</Text>
-            <Text size="sm" c="dimmed">MIT</Text>
-          </Group>
+          {/* Language */}
+          <Stack gap="xs">
+            <Text fw={600} size="sm" tt="uppercase" c="dimmed">
+              {t('sections.language')}
+            </Text>
+            <Group justify="space-between" align="center">
+              <Text>{t('language.label')}</Text>
+              <LanguageSelect />
+            </Group>
+          </Stack>
+
+          <Divider />
+
+          {/* Polling */}
+          <Stack gap="xs">
+            <Text fw={600} size="sm" tt="uppercase" c="dimmed">
+              {t('polling.label')}
+            </Text>
+            <Group justify="space-between" align="center">
+              <Text size="sm" c="dimmed">
+                {t('polling.seconds', { count: preferences.pollingInterval })}
+              </Text>
+            </Group>
+            <Slider
+              value={preferences.pollingInterval}
+              onChange={(v) => void setPollingInterval(v)}
+              min={10}
+              max={120}
+              step={5}
+              marks={[
+                { value: 10, label: '10s' },
+                { value: 60, label: '60s' },
+                { value: 120, label: '120s' },
+              ]}
+              mb="xs"
+            />
+          </Stack>
+
+          <Divider />
+
+          {/* About */}
+          <Stack gap="xs">
+            <Text fw={600} size="sm" tt="uppercase" c="dimmed">
+              {t('sections.about')}
+            </Text>
+            <Group justify="space-between">
+              <Text size="sm">{t('about.version')}</Text>
+              <Text size="sm" c="dimmed">{appVersion}</Text>
+            </Group>
+            <Group justify="space-between">
+              <Text size="sm">{t('about.license')}</Text>
+              <Text size="sm" c="dimmed">MIT</Text>
+            </Group>
+          </Stack>
         </Stack>
-      </Stack>
+      </Container>
     </ScrollArea>
   )
 }
