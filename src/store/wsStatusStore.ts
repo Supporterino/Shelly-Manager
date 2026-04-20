@@ -8,6 +8,9 @@ interface WsStatusStore {
   connected: Record<string, boolean>;
   /** deviceId → HTTP poll reachability (independent of WS) */
   httpConnected: Record<string, boolean>;
+  /** Full replace — use for NotifyFullStatus snapshots */
+  setStatus: (deviceId: string, snapshot: Record<string, unknown>) => void;
+  /** Deep-merge delta — use for NotifyStatus partial updates */
   updateStatus: (deviceId: string, delta: Record<string, unknown>) => void;
   setConnected: (deviceId: string, value: boolean) => void;
   setHttpConnected: (deviceId: string, value: boolean) => void;
@@ -44,6 +47,12 @@ export const useWsStatusStore = create<WsStatusStore>()(
     statuses: {},
     connected: {},
     httpConnected: {},
+
+    setStatus: (deviceId, snapshot) => {
+      set((state) => ({
+        statuses: { ...state.statuses, [deviceId]: snapshot },
+      }));
+    },
 
     updateStatus: (deviceId, delta) => {
       set((state) => {

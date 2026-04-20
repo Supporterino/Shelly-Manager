@@ -85,7 +85,10 @@ function DeviceDetailPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, deviceId, updateDevice]);
 
-  // Connect WebSocket on mount, disconnect on unmount
+  // Connect WebSocket on mount, disconnect on unmount.
+  // Only `device?.id` is in deps — including the full `device` object would cause
+  // a reconnect loop: updateDevice() (lastSeenAt above) creates a new object reference
+  // on every status push, which would re-run this effect, disconnect, and flicker values.
   useEffect(() => {
     if (!device) return;
     void wsManager.connect(device);
@@ -93,7 +96,7 @@ function DeviceDetailPage() {
       wsManager.disconnect(device.id);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [device?.id, device]);
+  }, [device?.id]);
 
   // When a child route (e.g. /settings) is active, let it render in full
   if (location.pathname.endsWith('/settings')) {

@@ -52,7 +52,7 @@ class WsManager {
     // Skip if already connected
     if (this.connections.has(device.id)) return;
 
-    const { updateStatus, setConnected } = useWsStatusStore.getState();
+    const { updateStatus, setStatus, setConnected } = useWsStatusStore.getState();
 
     let ws: WebSocket;
     try {
@@ -100,11 +100,12 @@ class WsManager {
         return;
       }
 
-      // ── NotifyStatus / NotifyFullStatus → deep-merge delta ──────────────────
-      if (
-        (frame.method === 'NotifyStatus' || frame.method === 'NotifyFullStatus') &&
-        frame.params != null
-      ) {
+      // ── NotifyFullStatus → full replace; NotifyStatus → deep-merge delta ───
+      if (frame.method === 'NotifyFullStatus' && frame.params != null) {
+        setStatus(device.id, frame.params);
+        return;
+      }
+      if (frame.method === 'NotifyStatus' && frame.params != null) {
         updateStatus(device.id, frame.params);
         return;
       }
