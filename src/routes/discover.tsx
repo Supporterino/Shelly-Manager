@@ -10,6 +10,7 @@ import {
   Button,
   Group,
   Alert,
+  ScrollArea,
   Stack,
   Text,
 } from '@mantine/core'
@@ -148,6 +149,7 @@ function DiscoverPage() {
   )
 
   return (
+    <ScrollArea h="100%">
     <Container size="sm" py="md">
       <Stack gap="lg">
         <Title order={2}>{t('title')}</Title>
@@ -193,5 +195,6 @@ function DiscoverPage() {
         </Box>
       </Stack>
     </Container>
+    </ScrollArea>
   )
 }

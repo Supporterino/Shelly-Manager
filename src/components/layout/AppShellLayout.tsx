@@ -17,6 +17,14 @@ export function AppShellLayout({ children }: AppShellLayoutProps) {
         collapsed: { mobile: true, desktop: false },
       }}
       padding="md"
+      styles={{
+        main: {
+          minHeight: 'unset',
+          height: 'calc(100dvh - var(--app-shell-footer-offset, 3.75rem))',
+          overflow: 'hidden',
+          paddingBottom: 'var(--app-shell-padding)',
+        },
+      }}
     >
       <AppShell.Navbar>
         <SidebarNav />

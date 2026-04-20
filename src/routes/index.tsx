@@ -4,6 +4,7 @@ import {
   Button,
   Center,
   Group,
+  ScrollArea,
   SegmentedControl,
   Select,
   Stack,
@@ -95,7 +96,7 @@ function DashboardPage() {
   }
 
   return (
-    <Stack gap="md">
+    <Stack gap="md" h="100%" style={{ overflow: 'hidden' }}>
       {/* Header */}
       <Group justify="space-between" align="center">
         <Title order={2}>{t('appName')}</Title>
@@ -160,7 +161,9 @@ function DashboardPage() {
         </Group>
       </Group>
 
-      <DeviceGrid devices={filtered} locale={locale} />
+      <ScrollArea style={{ flex: 1 }}>
+        <DeviceGrid devices={filtered} locale={locale} />
+      </ScrollArea>
     </Stack>
   )
 }
