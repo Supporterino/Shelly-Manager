@@ -15,11 +15,18 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.1.0</string>
+	<string>1.0.0</string>
 	<key>CFBundleVersion</key>
-	<string>0.1.0</string>
+	<string>1.0.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_shelly._tcp</string>
+		<string>_http._tcp</string>
+	</array>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Shelly Manager needs access to your local network to discover and control Shelly smart devices.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -39,13 +46,6 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>NSLocalNetworkUsageDescription</key>
-	<string>Shelly Manager needs access to your local network to discover and control Shelly smart devices.</string>
-	<key>NSBonjourServices</key>
-	<array>
-		<string>_shelly._tcp</string>
-		<string>_http._tcp</string>
 	</array>
 </dict>
 </plist>
