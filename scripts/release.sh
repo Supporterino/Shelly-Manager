@@ -174,33 +174,33 @@ IPA="src-tauri/gen/apple/build/arm64/Shelly Manager.ipa"
 [[ -f "$IPA" ]] || die "IPA not found at expected path: ${IPA}"
 
 # ─── macOS build ──────────────────────────────────────────────────────────────
-info "Building macOS (universal binary)…"
-
-APPSTORE_CONF="src-tauri/tauri.appstore.conf.json"
-BUNDLE_EXTRA_ARGS=()
-if [[ -f "$APPSTORE_CONF" ]]; then
-  info "Merging App Store config: ${APPSTORE_CONF}"
-  BUNDLE_EXTRA_ARGS=(--config "$APPSTORE_CONF")
-else
-  warn "${APPSTORE_CONF} not found — building without App Sandbox entitlements."
-  warn "The submission may be rejected by Apple. See: https://v2.tauri.app/distribute/app-store/#macos"
-fi
-
-bun run tauri build --no-bundle
-bun run tauri bundle --bundles app --target universal-apple-darwin "${BUNDLE_EXTRA_ARGS[@]+"${BUNDLE_EXTRA_ARGS[@]}"}"
-
-APP_PATH="src-tauri/target/universal-apple-darwin/release/bundle/macos/Shelly Manager.app"
-[[ -d "$APP_PATH" ]] || die ".app bundle not found at: ${APP_PATH}"
-
-PKG="${ROOT}/Shelly Manager.pkg"
-
-info "Signing and packaging .pkg…"
-xcrun productbuild \
-  --sign "$MAC_CERT" \
-  --component "$APP_PATH" \
-  /Applications \
-  "$PKG"
-ok "macOS .pkg created."
+#info "Building macOS (universal binary)…"
+#
+#APPSTORE_CONF="src-tauri/tauri.appstore.conf.json"
+#BUNDLE_EXTRA_ARGS=()
+#if [[ -f "$APPSTORE_CONF" ]]; then
+#  info "Merging App Store config: ${APPSTORE_CONF}"
+#  BUNDLE_EXTRA_ARGS=(--config "$APPSTORE_CONF")
+#else
+#  warn "${APPSTORE_CONF} not found — building without App Sandbox entitlements."
+#  warn "The submission may be rejected by Apple. See: https://v2.tauri.app/distribute/app-store/#macos"
+#fi
+#
+#bun run tauri build --no-bundle
+#bun run tauri bundle --bundles app --target universal-apple-darwin "${BUNDLE_EXTRA_ARGS[@]+"${BUNDLE_EXTRA_ARGS[@]}"}"
+#
+#APP_PATH="src-tauri/target/universal-apple-darwin/release/bundle/macos/Shelly Manager.app"
+#[[ -d "$APP_PATH" ]] || die ".app bundle not found at: ${APP_PATH}"
+#
+#PKG="${ROOT}/Shelly Manager.pkg"
+#
+#info "Signing and packaging .pkg…"
+#xcrun productbuild \
+#  --sign "$MAC_CERT" \
+#  --component "$APP_PATH" \
+#  /Applications \
+#  "$PKG"
+#ok "macOS .pkg created."
 
 # ─── Upload iOS ───────────────────────────────────────────────────────────────
 info "Uploading iOS IPA to App Store Connect…"
@@ -213,18 +213,18 @@ xcrun altool \
 ok "iOS upload complete."
 
 # ─── Upload macOS ─────────────────────────────────────────────────────────────
-info "Uploading macOS PKG to App Store Connect…"
-xcrun altool \
-  --upload-app \
-  --type macos \
-  --file "$PKG" \
-  --apiKey    "$APPLE_API_KEY" \
-  --apiIssuer "$APPLE_API_ISSUER"
-ok "macOS upload complete."
+#info "Uploading macOS PKG to App Store Connect…"
+#xcrun altool \
+#  --upload-app \
+#  --type macos \
+#  --file "$PKG" \
+#  --apiKey    "$APPLE_API_KEY" \
+#  --apiIssuer "$APPLE_API_ISSUER"
+#ok "macOS upload complete."
 
 # ─── Cleanup ──────────────────────────────────────────────────────────────────
-rm -f "$PKG"
-ok "Cleaned up temporary .pkg."
+#rm -f "$PKG"
+#ok "Cleaned up temporary .pkg."
 
 echo ""
 echo -e "${GREEN}${BOLD}Release v${NEW_VERSION} submitted successfully.${RESET}"
