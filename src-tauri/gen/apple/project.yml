@@ -1,6 +1,6 @@
 name: shelly-manager
 options:
-  bundleIdPrefix: com.shellymanager.app
+  bundleIdPrefix: de.supporterino
   deploymentTarget:
     iOS: 14.0
 fileGroups: [../../src]
@@ -11,7 +11,7 @@ settingGroups:
   app:
     base:
       PRODUCT_NAME: tauri-app
-      PRODUCT_BUNDLE_IDENTIFIER: com.shellymanager.app
+      PRODUCT_BUNDLE_IDENTIFIER: de.supporterino.shellman
 targetTemplates:
   app:
     type: application

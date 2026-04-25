@@ -34,7 +34,7 @@ export function buildRpcFrame(
 ): RpcFrame {
   return {
     id: _rpcId++,
-    src: 'shelly-manager',
+    src: 'shellman',
     method,
     ...(params ? { params } : {}),
     ...(auth ? { auth } : {}),

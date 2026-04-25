@@ -1,8 +1,8 @@
-# Shelly Manager
+# ShellMan
 
 A local-network manager for Shelly smart devices, built as a cross-platform desktop and mobile app.
 
-Shelly Manager lets you discover, monitor, and control Shelly Gen 2/3/4 devices on your local network — no cloud required. All communication happens directly over your LAN using the Shelly JSON-RPC 2.0 API.
+ShellMan lets you discover, monitor, and control Shelly Gen 2/3/4 devices on your local network — no cloud required. All communication happens directly over your LAN using the Shelly JSON-RPC 2.0 API.
 
 **Supported platforms:** iOS · Android · macOS · Windows · Linux
 

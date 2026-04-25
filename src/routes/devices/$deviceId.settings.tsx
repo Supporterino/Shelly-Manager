@@ -349,7 +349,7 @@ function DeviceSettingsPage() {
           setRemoveConfirm(false);
         }}
         title={tc('actions.delete')}
-        message={`Remove ${device.name} from Shelly Manager?`}
+        message={`Remove ${device.name} from ShellMan?`}
         confirmColor="red"
       />
     </ScrollArea>

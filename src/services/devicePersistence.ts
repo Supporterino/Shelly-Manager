@@ -5,7 +5,7 @@ let _store: Awaited<ReturnType<typeof Store.load>> | null = null;
 
 async function getStore(): Promise<Awaited<ReturnType<typeof Store.load>>> {
   if (!_store) {
-    _store = await Store.load('shelly-manager.json');
+    _store = await Store.load('shellman.json');
   }
   return _store;
 }

@@ -11,7 +11,7 @@ import { buildRpcFrame, parseRpcResponse } from '../utils/rpc';
 describe('buildRpcFrame', () => {
   it('includes required fields', () => {
     const frame = buildRpcFrame('Shelly.GetStatus');
-    expect(frame.src).toBe('shelly-manager');
+    expect(frame.src).toBe('shellman');
     expect(frame.method).toBe('Shelly.GetStatus');
     expect(typeof frame.id).toBe('number');
   });

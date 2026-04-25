@@ -40,7 +40,7 @@
 		C9F35C701E547B7FE54F5CDE /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		D250D515E4443DB58B23E465 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		D8A5933CC69CC6201B9D9AA6 /* shelly-manager_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "shelly-manager_iOS.entitlements"; sourceTree = "<group>"; };
-		EE08A32C52420B4612929023 /* Shelly Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Shelly Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EE08A32C52420B4612929023 /* ShellMan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ShellMan.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9EC5E163D6C95FCA2FC4EB6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -110,7 +110,7 @@
 		84821B2140A2E4FC33AEDB72 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				EE08A32C52420B4612929023 /* Shelly Manager.app */,
+				EE08A32C52420B4612929023 /* ShellMan.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -173,7 +173,7 @@
 			packageProductDependencies = (
 			);
 			productName = "shelly-manager_iOS";
-			productReference = EE08A32C52420B4612929023 /* Shelly Manager.app */;
+			productReference = EE08A32C52420B4612929023 /* ShellMan.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -353,8 +353,8 @@
 					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
 					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.shellymanager.app;
-				PRODUCT_NAME = "Shelly Manager";
+				PRODUCT_BUNDLE_IDENTIFIER = de.supporterino.shellman;
+				PRODUCT_NAME = "ShellMan";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = arm64;
@@ -397,8 +397,8 @@
 					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
 					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.shellymanager.app;
-				PRODUCT_NAME = "Shelly Manager";
+				PRODUCT_BUNDLE_IDENTIFIER = de.supporterino.shellman;
+				PRODUCT_NAME = "ShellMan";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = arm64;

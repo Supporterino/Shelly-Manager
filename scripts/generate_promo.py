@@ -1,5 +1,5 @@
 """
-App Store Promotional Image Generator for Shelly Manager.
+App Store Promotional Image Generator for ShellMan.
 
 Outputs:
   promo/iphone/ — 1242 × 2688 portrait images (one per iPhone screenshot)
@@ -297,8 +297,8 @@ def compose(
     draw_decorative_dots(draw, canvas_w - 340, 60, cols=7, rows=5, spacing=dot_sp)
     draw_decorative_dots(draw, 60, canvas_h - 280, cols=5, rows=4, spacing=dot_sp)
 
-    # ---- "SHELLY MANAGER" pill tag ----
-    tag_h = draw_tag_pill(bg, "SHELLY MANAGER", canvas_w // 2, pill_y_top, FONT_REG, pill_font_size)
+    # ---- "SHELLMAN" pill tag ----
+    tag_h = draw_tag_pill(bg, "SHELLMAN", canvas_w // 2, pill_y_top, FONT_REG, pill_font_size)
     draw = ImageDraw.Draw(bg)  # refresh after alpha_composite inside pill
 
     # ---- headline ----

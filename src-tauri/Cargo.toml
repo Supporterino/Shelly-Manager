@@ -1,7 +1,7 @@
 [package]
-name = "shelly-manager"
+name = "shellman"
 version = "1.0.1"
-description = "A local-network Shelly smart device manager"
+description = "A local-network Shelly smart device manager — ShellMan"
 authors = ["you"]
 edition = "2021"
 
