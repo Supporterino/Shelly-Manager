@@ -15,18 +15,19 @@ const mockVerifyHost = vi.hoisted(() => vi.fn());
 const mockPollUntilOnline = vi.hoisted(() => vi.fn());
 const mockPollUntilOffline = vi.hoisted(() => vi.fn());
 
-vi.mock('../services/shellyClient', () => ({
-  // Use a regular `function` (not arrow) so the mock is newable as a constructor.
-  // Vitest 4.x ignores arrow-function return values when called with `new`.
-  ShellyClient: vi.fn(function () {
-    return {
-      checkForUpdate: mockCheckForUpdate,
-      triggerUpdate: mockTriggerUpdate,
-      getDeviceInfo: mockGetDeviceInfo,
-    };
-  }),
-  verifyShellyHost: mockVerifyHost,
-}));
+vi.mock('../services/shellyClient', () => {
+  // Must use a class so the mock is newable as a constructor.
+  // Vitest 4.x requires 'function' or 'class' keyword for newable mocks.
+  class ShellyClient {
+    checkForUpdate = mockCheckForUpdate;
+    triggerUpdate = mockTriggerUpdate;
+    getDeviceInfo = mockGetDeviceInfo;
+  }
+  return {
+    ShellyClient: vi.fn(ShellyClient),
+    verifyShellyHost: mockVerifyHost,
+  };
+});
 
 vi.mock('../utils/firmware', async (importOriginal) => {
   const actual = await importOriginal<typeof import('../utils/firmware')>();

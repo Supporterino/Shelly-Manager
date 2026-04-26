@@ -5,10 +5,10 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import '../test/mocks/tauri';
-import { renderWithProviders } from '../test/renderWithProviders';
-import { useDeviceStore } from '../store/deviceStore';
-import type { StoredDevice } from '../types/device';
 import { ClearAllDevicesButton } from '../components/settings/ClearAllDevicesButton';
+import { useDeviceStore } from '../store/deviceStore';
+import { renderWithProviders } from '../test/renderWithProviders';
+import type { StoredDevice } from '../types/device';
 
 // Mock mantine notifications so we can assert on them without a real portal
 vi.mock('@mantine/notifications', () => ({
@@ -70,9 +70,7 @@ describe('ClearAllDevicesButton', () => {
 
     await user.click(screen.getByRole('button', { name: /cancel/i }));
 
-    await waitFor(() =>
-      expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
-    );
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
     expect(Object.keys(useDeviceStore.getState().devices)).toHaveLength(2);
   });
 
@@ -90,9 +88,7 @@ describe('ClearAllDevicesButton', () => {
 
     await user.click(screen.getByRole('button', { name: /confirm/i }));
 
-    await waitFor(() =>
-      expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
-    );
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
     expect(useDeviceStore.getState().devices).toEqual({});
     expect(notifications.show).toHaveBeenCalledOnce();
   });

@@ -11,7 +11,7 @@ import {
 } from '@mantine/core';
 import { IconArrowLeft, IconRefresh, IconSettings } from '@tabler/icons-react';
 import { createFileRoute, Link, Outlet, useLocation } from '@tanstack/react-router';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ErrorAlert } from '../../components/common/ErrorAlert';
 import { ComponentList } from '../../components/devices/ComponentList';
@@ -85,18 +85,24 @@ function DeviceDetailPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, deviceId, updateDevice]);
 
-  // Connect WebSocket on mount, disconnect on unmount.
-  // Only `device?.id` is in deps — including the full `device` object would cause
-  // a reconnect loop: updateDevice() (lastSeenAt above) creates a new object reference
-  // on every status push, which would re-run this effect, disconnect, and flicker values.
+  // Keep a stable ref to the latest device so the WebSocket effect can access
+  // it without being re-triggered on every object reference change.
+  const deviceRef = useRef(device);
+  deviceRef.current = device;
+
+  // Connect WebSocket on mount/device-change, disconnect on unmount.
+  // `deviceId` (a stable string) is the dependency — the full `device` object
+  // is read from the ref so we never cause a reconnect loop when updateDevice()
+  // creates a new object reference on every status push.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: deviceId intentionally triggers reconnect; device is read via ref to avoid reconnect loop
   useEffect(() => {
-    if (!device) return;
-    void wsManager.connect(device);
+    const currentDevice = deviceRef.current;
+    if (!currentDevice) return;
+    void wsManager.connect(currentDevice);
     return () => {
-      wsManager.disconnect(device.id);
+      wsManager.disconnect(currentDevice.id);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [device?.id]);
+  }, [deviceId]);
 
   // When a child route (e.g. /settings) is active, let it render in full
   if (location.pathname.endsWith('/settings')) {

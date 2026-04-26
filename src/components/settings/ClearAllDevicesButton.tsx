@@ -1,10 +1,10 @@
-import { useState } from 'react';
 import { Button } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconTrash } from '@tabler/icons-react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ConfirmModal } from '../common/ConfirmModal';
 import { useDeviceStore } from '../../store/deviceStore';
+import { ConfirmModal } from '../common/ConfirmModal';
 
 export function ClearAllDevicesButton() {
   const { t } = useTranslation('settings');

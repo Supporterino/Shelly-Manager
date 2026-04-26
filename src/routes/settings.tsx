@@ -14,8 +14,8 @@ import { createFileRoute } from '@tanstack/react-router';
 import { getVersion } from '@tauri-apps/api/app';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LanguageSelect } from '../components/settings/LanguageSelect';
 import { ClearAllDevicesButton } from '../components/settings/ClearAllDevicesButton';
+import { LanguageSelect } from '../components/settings/LanguageSelect';
 import { useAppStore } from '../store/appStore';
 
 export const Route = createFileRoute('/settings')({
