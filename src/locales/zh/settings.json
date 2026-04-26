@@ -4,6 +4,7 @@
     "appearance": "外观",
     "language": "语言",
     "discovery": "发现",
+    "devices": "设备",
     "about": "关于"
   },
   "theme": {
@@ -38,5 +39,11 @@
     "version": "版本",
     "tauriVersion": "Tauri 版本",
     "license": "许可证"
+  },
+  "devices": {
+    "clearAll": "清除所有设备",
+    "clearAllDescription": "从应用中移除所有设备。物理设备不受影响。",
+    "clearAllConfirmTitle": "清除所有设备？",
+    "clearAllConfirmMessage": "这将从 ShellMan 中移除全部 {{count}} 个设备。物理设备不受影响。"
   }
 }

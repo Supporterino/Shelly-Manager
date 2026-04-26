@@ -9,6 +9,7 @@ interface DeviceStore {
   addDevice: (device: StoredDevice) => void;
   updateDevice: (id: string, patch: Partial<StoredDevice>) => void;
   removeDevice: (id: string) => void;
+  clearAllDevices: () => void;
   hydrate: () => Promise<void>;
   persist: () => Promise<void>;
 }
@@ -42,6 +43,10 @@ export const useDeviceStore = create<DeviceStore>()(
         const { [id]: _removed, ...rest } = state.devices;
         return { devices: rest };
       });
+    },
+
+    clearAllDevices: () => {
+      set({ devices: {} });
     },
 
     hydrate: async () => {

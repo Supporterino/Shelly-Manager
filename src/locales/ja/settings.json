@@ -4,6 +4,7 @@
     "appearance": "外観",
     "language": "言語",
     "discovery": "探索",
+    "devices": "デバイス",
     "about": "情報"
   },
   "theme": {
@@ -38,5 +39,11 @@
     "version": "バージョン",
     "tauriVersion": "Tauriバージョン",
     "license": "ライセンス"
+  },
+  "devices": {
+    "clearAll": "すべてのデバイスを削除",
+    "clearAllDescription": "アプリからすべてのデバイスを削除します。物理デバイスには影響しません。",
+    "clearAllConfirmTitle": "すべてのデバイスを削除しますか？",
+    "clearAllConfirmMessage": "ShellMan からすべての {{count}} 台のデバイスが削除されます。物理デバイスには影響しません。"
   }
 }

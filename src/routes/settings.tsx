@@ -15,6 +15,7 @@ import { getVersion } from '@tauri-apps/api/app';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LanguageSelect } from '../components/settings/LanguageSelect';
+import { ClearAllDevicesButton } from '../components/settings/ClearAllDevicesButton';
 import { useAppStore } from '../store/appStore';
 
 export const Route = createFileRoute('/settings')({
@@ -122,6 +123,24 @@ function SettingsPage() {
               ]}
               mb="xs"
             />
+          </Stack>
+
+          <Divider />
+
+          {/* Devices */}
+          <Stack gap="xs">
+            <Text fw={600} size="sm" tt="uppercase" c="dimmed">
+              {t('sections.devices')}
+            </Text>
+            <Group justify="space-between" align="flex-start">
+              <Stack gap={2}>
+                <Text size="sm">{t('devices.clearAll')}</Text>
+                <Text size="xs" c="dimmed">
+                  {t('devices.clearAllDescription')}
+                </Text>
+              </Stack>
+              <ClearAllDevicesButton />
+            </Group>
           </Stack>
 
           <Divider />

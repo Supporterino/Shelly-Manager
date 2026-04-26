@@ -4,7 +4,8 @@
     "appearance": "Erscheinungsbild",
     "language": "Sprache",
     "discovery": "Entdeckung",
-    "about": "\u00dcber"
+    "devices": "Geräte",
+    "about": "Über"
   },
   "theme": {
     "label": "Design",
@@ -38,5 +39,11 @@
     "version": "Version",
     "tauriVersion": "Tauri-Version",
     "license": "Lizenz"
+  },
+  "devices": {
+    "clearAll": "Alle Geräte entfernen",
+    "clearAllDescription": "Alle Geräte aus der App entfernen. Die physischen Geräte werden nicht beeinflusst.",
+    "clearAllConfirmTitle": "Alle Geräte entfernen?",
+    "clearAllConfirmMessage": "Dadurch werden alle {{count}} Gerät(e) aus ShellMan entfernt. Die physischen Geräte sind nicht betroffen."
   }
 }

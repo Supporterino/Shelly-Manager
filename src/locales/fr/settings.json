@@ -4,6 +4,7 @@
     "appearance": "Apparence",
     "language": "Langue",
     "discovery": "Découverte",
+    "devices": "Appareils",
     "about": "À propos"
   },
   "theme": {
@@ -38,5 +39,11 @@
     "version": "Version",
     "tauriVersion": "Version de Tauri",
     "license": "Licence"
+  },
+  "devices": {
+    "clearAll": "Supprimer tous les appareils",
+    "clearAllDescription": "Supprimer tous les appareils de l'application. Les appareils physiques ne sont pas affectés.",
+    "clearAllConfirmTitle": "Supprimer tous les appareils ?",
+    "clearAllConfirmMessage": "Cela supprimera {{count}} appareil(s) de ShellMan. Les appareils physiques ne sont pas affectés."
   }
 }
