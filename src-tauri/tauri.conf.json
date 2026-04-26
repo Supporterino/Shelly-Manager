@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Shelly Manager",
+  "productName": "ShellMan",
   "version": "1.0.1",
-  "identifier": "com.shellymanager.app",
+  "identifier": "de.supporterino.shellman",
   "build": {
     "beforeDevCommand": "bun run dev",
     "devUrl": "http://localhost:1420",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Shelly Manager",
+        "title": "ShellMan",
         "width": 800,
         "height": 600
       }

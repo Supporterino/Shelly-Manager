@@ -1,4 +1,4 @@
-package com.shellymanager.app
+package de.supporterino.shellman
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge

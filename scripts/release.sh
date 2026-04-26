@@ -20,6 +20,37 @@
 #   ~/private_keys/
 #   ~/.private_keys/
 #   ~/.appstoreconnect/private_keys/
+#
+# ─── App Store Disclaimers ────────────────────────────────────────────────────
+#
+# ENGLISH:
+#   Disclaimer: This app is an independent, unofficial third-party tool and is
+#   not affiliated with, endorsed by, sponsored by, or in any way connected to
+#   Allterco Robotics Ltd. or its subsidiaries. "Shelly®" is a registered
+#   trademark of Allterco Robotics Ltd. All product names, logos, and brands
+#   mentioned are property of their respective owners and are used solely for
+#   identification purposes. This app communicates with devices using their
+#   publicly documented, open JSON-RPC 2.0 API.
+#
+# DEUTSCH:
+#   Haftungsausschluss: Diese App ist ein unabhängiges, inoffizielles
+#   Drittanbieter-Werkzeug und steht in keiner Verbindung zu Allterco Robotics
+#   Ltd. oder dessen Tochtergesellschaften. Sie wird von Allterco Robotics Ltd.
+#   weder unterstützt noch gesponsert oder anderweitig autorisiert. „Shelly®"
+#   ist eine eingetragene Marke der Allterco Robotics Ltd. Alle genannten
+#   Produktnamen, Logos und Marken sind Eigentum ihrer jeweiligen Inhaber und
+#   werden ausschließlich zur Identifikation verwendet. Diese App kommuniziert
+#   mit Geräten über deren öffentlich dokumentierte, offene JSON-RPC 2.0 API.
+#
+# FRANÇAIS:
+#   Avertissement : Cette application est un outil tiers indépendant et non
+#   officiel, sans aucune affiliation avec Allterco Robotics Ltd. ou ses
+#   filiales. Elle n'est ni approuvée, ni sponsorisée, ni autorisée par
+#   Allterco Robotics Ltd. « Shelly® » est une marque déposée d'Allterco
+#   Robotics Ltd. Tous les noms de produits, logos et marques mentionnés sont
+#   la propriété de leurs détenteurs respectifs et sont utilisés uniquement à
+#   des fins d'identification. Cette application communique avec les appareils
+#   via leur API JSON-RPC 2.0 ouverte et publiquement documentée.
 
 set -euo pipefail
 
@@ -170,7 +201,7 @@ info "Building iOS (export-method: app-store-connect)…"
 bun run tauri ios build --export-method app-store-connect
 ok "iOS build complete."
 
-IPA="src-tauri/gen/apple/build/arm64/Shelly Manager.ipa"
+IPA="src-tauri/gen/apple/build/arm64/ShellMan.ipa"
 [[ -f "$IPA" ]] || die "IPA not found at expected path: ${IPA}"
 
 # ─── macOS build ──────────────────────────────────────────────────────────────
@@ -189,10 +220,10 @@ IPA="src-tauri/gen/apple/build/arm64/Shelly Manager.ipa"
 #bun run tauri build --no-bundle
 #bun run tauri bundle --bundles app --target universal-apple-darwin "${BUNDLE_EXTRA_ARGS[@]+"${BUNDLE_EXTRA_ARGS[@]}"}"
 #
-#APP_PATH="src-tauri/target/universal-apple-darwin/release/bundle/macos/Shelly Manager.app"
+#APP_PATH="src-tauri/target/universal-apple-darwin/release/bundle/macos/ShellMan.app"
 #[[ -d "$APP_PATH" ]] || die ".app bundle not found at: ${APP_PATH}"
 #
-#PKG="${ROOT}/Shelly Manager.pkg"
+#PKG="${ROOT}/ShellMan.pkg"
 #
 #info "Signing and packaging .pkg…"
 #xcrun productbuild \
