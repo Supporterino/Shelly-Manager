@@ -12,7 +12,7 @@ jobs:
     outputs:
       release_id: ${{ steps.create.outputs.result }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Create draft release
         id: create
@@ -63,7 +63,7 @@ jobs:
     runs-on: ${{ matrix.platform }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       # ── Runtime: Bun ──────────────────────────────────────────────────────────
       - uses: oven-sh/setup-bun@v2
