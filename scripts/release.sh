@@ -169,7 +169,7 @@ PYEOF
 
 # ─── 4. src-tauri/gen/apple/shelly-manager_iOS/Info.plist ────────────────────
 info "Updating Info.plist…"
-PLIST="src-tauri/gen/apple/shelly-manager_iOS/Info.plist"
+PLIST="src-tauri/gen/apple/shellman_iOS/Info.plist"
 /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${NEW_VERSION}" "$PLIST"
 /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${NEW_VERSION}"            "$PLIST"
 
