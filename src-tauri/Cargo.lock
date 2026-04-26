@@ -3700,7 +3700,7 @@ dependencies = [
 
 [[package]]
 name = "shellman"
-version = "1.0.2"
+version = "1.0.3"
 dependencies = [
  "mdns-sd",
  "serde",
