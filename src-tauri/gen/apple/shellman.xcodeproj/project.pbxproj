@@ -39,7 +39,7 @@
 		C9B64D999405B894C5EEE13D /* lib.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = lib.rs; sourceTree = "<group>"; };
 		C9F35C701E547B7FE54F5CDE /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		D250D515E4443DB58B23E465 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
-		D8A5933CC69CC6201B9D9AA6 /* shelly-manager_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "shelly-manager_iOS.entitlements"; sourceTree = "<group>"; };
+		D8A5933CC69CC6201B9D9AA6 /* shellman_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "shellman_iOS.entitlements"; sourceTree = "<group>"; };
 		EE08A32C52420B4612929023 /* ShellMan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ShellMan.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9EC5E163D6C95FCA2FC4EB6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -89,13 +89,13 @@
 			path = ../../src;
 			sourceTree = "<group>";
 		};
-		2343F7DB45923DF633B40C9B /* shelly-manager_iOS */ = {
+		2343F7DB45923DF633B40C9B /* shellman_iOS */ = {
 			isa = PBXGroup;
 			children = (
 				F9EC5E163D6C95FCA2FC4EB6 /* Info.plist */,
-				D8A5933CC69CC6201B9D9AA6 /* shelly-manager_iOS.entitlements */,
+				D8A5933CC69CC6201B9D9AA6 /* shellman_iOS.entitlements */,
 			);
-			path = "shelly-manager_iOS";
+			path = "shellman_iOS";
 			sourceTree = "<group>";
 		};
 		592740FA1221AE8BC70FFEC0 /* shelly-manager */ = {
@@ -123,7 +123,7 @@
 				2BFEA7B84E0D184F6C6C654D /* Assets.xcassets */,
 				A88B542BCC18172712DED4D3 /* LaunchScreen.storyboard */,
 				FD5D81CACD54B7846E5D8A93 /* Externals */,
-				2343F7DB45923DF633B40C9B /* shelly-manager_iOS */,
+				2343F7DB45923DF633B40C9B /* shellman_iOS */,
 				07C820AC8AEFDD5648AD800A /* Sources */,
 				213FE7808736633135283D05 /* src */,
 				E3A9594B60A35874A6882518 /* Frameworks */,
@@ -156,9 +156,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B240BBC2071E7231BD085045 /* shelly-manager_iOS */ = {
+		B240BBC2071E7231BD085045 /* shellman_iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B1DE56D4DAC8CCD5BB3F5509 /* Build configuration list for PBXNativeTarget "shelly-manager_iOS" */;
+			buildConfigurationList = B1DE56D4DAC8CCD5BB3F5509 /* Build configuration list for PBXNativeTarget "shellman_iOS" */;
 			buildPhases = (
 				2C26FA1756E7EF715DFA9B40 /* Build Rust Code */,
 				27B9EA981EF40B00D0196E7C /* Sources */,
@@ -169,10 +169,10 @@
 			);
 			dependencies = (
 			);
-			name = "shelly-manager_iOS";
+			name = "shellman_iOS";
 			packageProductDependencies = (
 			);
-			productName = "shelly-manager_iOS";
+			productName = "shellman_iOS";
 			productReference = EE08A32C52420B4612929023 /* ShellMan.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -199,7 +199,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B240BBC2071E7231BD085045 /* shelly-manager_iOS */,
+				B240BBC2071E7231BD085045 /* shellman_iOS */,
 			);
 		};
 /* End PBXProject section */
@@ -324,7 +324,7 @@
 				ARCHS = arm64;
 				ASSETCATALOG_COMPILER_APPICON_NAME = ShellyManager;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-				CODE_SIGN_ENTITLEMENTS = "shelly-manager_iOS/shelly-manager_iOS.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "shellman_iOS/shellman_iOS.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = 9687ZZBJM5;
 				ENABLE_BITCODE = NO;
@@ -333,7 +333,7 @@
 					"$(inherited)",
 					"\".\"",
 				);
-				INFOPLIST_FILE = "shelly-manager_iOS/Info.plist";
+				INFOPLIST_FILE = "shellman_iOS/Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -368,7 +368,7 @@
 				ARCHS = arm64;
 				ASSETCATALOG_COMPILER_APPICON_NAME = ShellyManager;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-				CODE_SIGN_ENTITLEMENTS = "shelly-manager_iOS/shelly-manager_iOS.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "shellman_iOS/shellman_iOS.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = 9687ZZBJM5;
 				ENABLE_BITCODE = NO;
@@ -377,7 +377,7 @@
 					"$(inherited)",
 					"\".\"",
 				);
-				INFOPLIST_FILE = "shelly-manager_iOS/Info.plist";
+				INFOPLIST_FILE = "shellman_iOS/Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -464,7 +464,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B1DE56D4DAC8CCD5BB3F5509 /* Build configuration list for PBXNativeTarget "shelly-manager_iOS" */ = {
+		B1DE56D4DAC8CCD5BB3F5509 /* Build configuration list for PBXNativeTarget "shellman_iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				84A765CA53A6A5F579822614 /* debug */,

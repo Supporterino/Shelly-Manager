@@ -3699,7 +3699,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "shelly-manager"
+name = "shellman"
 version = "1.0.1"
 dependencies = [
  "mdns-sd",

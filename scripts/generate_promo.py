@@ -11,7 +11,7 @@ import math
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname("../")
 SS_DIR = os.path.join(BASE_DIR, "screenshots")
 OUT_IPHONE = os.path.join(BASE_DIR, "promo", "iphone")
 OUT_IPAD = os.path.join(BASE_DIR, "promo", "ipad")
@@ -36,13 +36,13 @@ FRAME_CLR = (40,  55,  85)     # device frame border
 # ── Per-screenshot metadata ────────────────────────────────────────────────────
 IPHONE_SHOTS = [
     {
-        "file": "Simulator Screenshot - iPhone 17 Pro - 2026-04-20 at 20.20.37.png",
+        "file": "Simulator Screenshot - iPhone 17 Pro - 2026-04-26 at 17.39.35.png",
         "headline": "Instant Device\nDiscovery",
-        "subtitle": "Auto-discover every Shelly device on your\nlocal network — no manual setup required.",
+        "subtitle": "Auto-discover every device on your\nlocal network — no manual setup required.",
         "tag": "01_discover",
     },
     {
-        "file": "Simulator Screenshot - iPhone 17 Pro - 2026-04-20 at 20.21.18.png",
+        "file": "Simulator Screenshot - iPhone 17 Pro - 2026-04-26 at 17.50.11.png",
         "headline": "Full Device\nControl",
         "subtitle": "Toggle switches, monitor live power draw,\nand explore energy stats in real time.",
         "tag": "02_device_detail",
@@ -51,21 +51,21 @@ IPHONE_SHOTS = [
 
 IPAD_SHOTS = [
     {
-        "file": "Simulator Screenshot - iPad Pro 11-inch (M5) - 2026-04-20 at 20.23.35.png",
+        "file": "Simulator Screenshot - iPad Pro 13-inch (M5) - 2026-04-26 at 17.55.12.png",
         "headline": "Your Smart Home\nDashboard",
-        "subtitle": "All your Shelly devices in one clean, native interface\ndesigned for iPad's large display.",
+        "subtitle": "All your devices in one clean, native interface\ndesigned for iPad's large display.",
         "tag": "01_dashboard",
     },
     {
-        "file": "Simulator Screenshot - iPad Pro 11-inch (M5) - 2026-04-20 at 20.23.40.png",
+        "file": "Simulator Screenshot - iPad Pro 13-inch (M5) - 2026-04-26 at 17.55.32.png",
         "headline": "Three Ways to\nDiscover Devices",
         "subtitle": "mDNS auto-discovery, subnet scan, or manual entry —\nchoose the method that fits your setup.",
         "tag": "02_discover",
     },
     {
-        "file": "Simulator Screenshot - iPad Pro 11-inch (M5) - 2026-04-20 at 20.23.44.png",
+        "file": "Simulator Screenshot - iPad Pro 13-inch (M5) - 2026-04-26 at 17.55.22.png",
         "headline": "Always Up\nto Date",
-        "subtitle": "Check and push firmware updates to all your\nShelly Gen 2/3/4 devices from one place.",
+        "subtitle": "Check and push firmware updates to all your\n Gen 2/3/4 devices from one place.",
         "tag": "03_firmware",
     },
 ]
