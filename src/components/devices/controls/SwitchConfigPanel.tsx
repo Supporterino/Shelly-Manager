@@ -7,6 +7,7 @@ import {
   Loader,
   Modal,
   NumberInput,
+  ScrollArea,
   SegmentedControl,
   Select,
   SimpleGrid,
@@ -119,7 +120,7 @@ export function SwitchConfigPanel({ opened, onClose, deviceId, switchId }: Props
       onClose={onClose}
       title={t('controls.switch.configTitle')}
       size="md"
-      scrollAreaComponent={Modal.NativeScrollArea}
+      scrollAreaComponent={ScrollArea.Autosize}
     >
       {isLoading && (
         <Group justify="center" py="xl">
@@ -188,7 +189,7 @@ export function SwitchConfigPanel({ opened, onClose, deviceId, switchId }: Props
               checked={autoOn}
               onChange={(e) => setAutoOn(e.currentTarget.checked)}
             />
-            <Collapse in={autoOn}>
+            <Collapse expanded={autoOn}>
               <NumberInput
                 label={t('controls.switch.autoOnDelay')}
                 min={0}
@@ -201,7 +202,7 @@ export function SwitchConfigPanel({ opened, onClose, deviceId, switchId }: Props
               checked={autoOff}
               onChange={(e) => setAutoOff(e.currentTarget.checked)}
             />
-            <Collapse in={autoOff}>
+            <Collapse expanded={autoOff}>
               <NumberInput
                 label={t('controls.switch.autoOffDelay')}
                 min={0}

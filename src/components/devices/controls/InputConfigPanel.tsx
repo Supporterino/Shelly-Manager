@@ -7,6 +7,7 @@ import {
   Loader,
   Modal,
   NumberInput,
+  ScrollArea,
   SegmentedControl,
   SimpleGrid,
   Stack,
@@ -120,7 +121,7 @@ export function InputConfigPanel({ opened, onClose, deviceId, inputId }: Props) 
       onClose={onClose}
       title={t('controls.input.configTitle')}
       size="md"
-      scrollAreaComponent={Modal.NativeScrollArea}
+      scrollAreaComponent={ScrollArea.Autosize}
     >
       {isLoading && (
         <Group justify="center" py="xl">
@@ -164,7 +165,7 @@ export function InputConfigPanel({ opened, onClose, deviceId, inputId }: Props) 
           />
 
           {/* ── Switch + Button fields ────────────────────────────────── */}
-          <Collapse in={isSwitchOrButton}>
+          <Collapse expanded={isSwitchOrButton}>
             <Stack gap="sm">
               <Switch
                 label={t('controls.input.invert')}
@@ -180,7 +181,7 @@ export function InputConfigPanel({ opened, onClose, deviceId, inputId }: Props) 
           </Collapse>
 
           {/* ── Analog fields ─────────────────────────────────────────── */}
-          <Collapse in={type === 'analog'}>
+          <Collapse expanded={type === 'analog'}>
             <Stack gap="sm">
               <Switch
                 label={t('controls.input.invert')}
@@ -223,7 +224,7 @@ export function InputConfigPanel({ opened, onClose, deviceId, inputId }: Props) 
           </Collapse>
 
           {/* ── Count fields ──────────────────────────────────────────── */}
-          <Collapse in={type === 'count'}>
+          <Collapse expanded={type === 'count'}>
             <Stack gap="sm">
               <NumberInput
                 label={t('controls.input.freqWindow')}
