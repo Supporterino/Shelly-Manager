@@ -2,12 +2,16 @@ import { fetch } from '@tauri-apps/plugin-http';
 import type { StoredDevice } from '../types/device';
 import type {
   CoverGoToPositionParams,
+  InputConfig,
+  InputSetConfigResult,
   LightSetParams,
   RGBSetParams,
   RGBWSetParams,
   ScheduleJob,
   ShellyGetDeviceInfoResult,
   ShellyGetStatusResult,
+  SwitchConfig,
+  SwitchSetConfigResult,
   SwitchSetParams,
 } from '../types/shelly';
 import { computeDigestAuth, parseWwwAuthenticate } from '../utils/auth';
@@ -131,9 +135,13 @@ export class ShellyClient {
 
   async switchSetConfig(
     id: number,
-    config: { name?: string; auto_off?: boolean; auto_off_delay?: number },
-  ): Promise<void> {
-    await this.call('Switch.SetConfig', { id, config });
+    config: Partial<Omit<SwitchConfig, 'id'>>,
+  ): Promise<SwitchSetConfigResult> {
+    return this.call<SwitchSetConfigResult>('Switch.SetConfig', { id, config });
+  }
+
+  async switchGetConfig(id: number): Promise<SwitchConfig> {
+    return this.call<SwitchConfig>('Switch.GetConfig', { id });
   }
 
   // ── Light ────────────────────────────────────────────────────────────────
@@ -175,6 +183,19 @@ export class ShellyClient {
 
   async coverCalibrate(id: number): Promise<void> {
     await this.call('Cover.Calibrate', { id });
+  }
+
+  // ── Input ────────────────────────────────────────────────────────────────
+
+  async inputGetConfig(id: number): Promise<InputConfig> {
+    return this.call<InputConfig>('Input.GetConfig', { id });
+  }
+
+  async inputSetConfig(
+    id: number,
+    config: Partial<Omit<InputConfig, 'id'>>,
+  ): Promise<InputSetConfigResult> {
+    return this.call<InputSetConfigResult>('Input.SetConfig', { id, config });
   }
 
   // ── Smoke ────────────────────────────────────────────────────────────────

@@ -1,8 +1,8 @@
 import { notifications } from '@mantine/notifications';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ShellyClient } from '../services/shellyClient';
 import { useDeviceStore } from '../store/deviceStore';
-import type { LightSetParams, RGBSetParams, RGBWSetParams } from '../types/shelly';
+import type { InputConfig, LightSetParams, RGBSetParams, RGBWSetParams, SwitchConfig } from '../types/shelly';
 
 function getClient(deviceId: string): ShellyClient {
   const device = useDeviceStore.getState().devices[deviceId];
@@ -105,6 +105,54 @@ export function useCoverCalibrate(deviceId: string, coverId: number) {
   return useMutation({
     mutationFn: () => getClient(deviceId).coverCalibrate(coverId),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['device', deviceId, 'status'] }),
+    onError: (err: Error) =>
+      notifications.show({ color: 'red', title: 'Error', message: err.message }),
+  });
+}
+
+// ── Input Config ─────────────────────────────────────────────────────────────
+
+export function useInputConfig(deviceId: string, inputId: number) {
+  return useQuery({
+    queryKey: ['device', deviceId, 'input', inputId, 'config'],
+    queryFn: () => getClient(deviceId).inputGetConfig(inputId),
+    staleTime: 60_000,
+  });
+}
+
+export function useInputSetConfig(deviceId: string, inputId: number) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (config: Partial<Omit<InputConfig, 'id'>>) =>
+      getClient(deviceId).inputSetConfig(inputId, config),
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: ['device', deviceId, 'input', inputId, 'config'],
+      }),
+    onError: (err: Error) =>
+      notifications.show({ color: 'red', title: 'Error', message: err.message }),
+  });
+}
+
+// ── Switch Config ─────────────────────────────────────────────────────────────
+
+export function useSwitchConfig(deviceId: string, switchId: number) {
+  return useQuery({
+    queryKey: ['device', deviceId, 'switch', switchId, 'config'],
+    queryFn: () => getClient(deviceId).switchGetConfig(switchId),
+    staleTime: 60_000,
+  });
+}
+
+export function useSwitchSetConfig(deviceId: string, switchId: number) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (config: Partial<Omit<SwitchConfig, 'id'>>) =>
+      getClient(deviceId).switchSetConfig(switchId, config),
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: ['device', deviceId, 'switch', switchId, 'config'],
+      }),
     onError: (err: Error) =>
       notifications.show({ color: 'red', title: 'Error', message: err.message }),
   });

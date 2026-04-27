@@ -27,6 +27,31 @@ export interface Temperature {
 }
 
 // ── Switch (relay, smart plug) ─────────────────────────────────────────────
+
+export type SwitchInMode = 'momentary' | 'follow' | 'flip' | 'detached' | 'activate';
+export type SwitchInitialState = 'off' | 'on' | 'restore_last' | 'match_input';
+
+export interface SwitchConfig {
+  id: number;
+  name: string | null;
+  in_mode: SwitchInMode;
+  in_locked: boolean;
+  initial_state: SwitchInitialState;
+  auto_on: boolean;
+  auto_on_delay: number;
+  auto_off: boolean;
+  auto_off_delay: number;
+  // protection limits — device-specific, may be absent
+  power_limit?: number | null;
+  voltage_limit?: number | null;
+  undervoltage_limit?: number | null;
+  current_limit?: number | null;
+}
+
+export interface SwitchSetConfigResult {
+  restart_required: boolean;
+}
+
 export interface SwitchStatus {
   id: number;
   source: string;
@@ -153,6 +178,37 @@ export interface InputStatus {
   state: boolean | null;
   percent?: number;
   errors?: string[];
+}
+
+export type InputType = 'switch' | 'button' | 'analog' | 'count';
+
+export interface InputXTransform {
+  expr: string | null; // JS expression using 'x', e.g. "x*0.1"
+  unit: string | null; // display unit, e.g. "m/s"
+}
+
+export interface InputConfig {
+  id: number;
+  name: string | null;
+  type: InputType;
+  enable: boolean;
+  // switch + button only
+  invert?: boolean;
+  factory_reset?: boolean;
+  // analog only
+  report_thr?: number;                 // 1.0–50.0 %
+  range_map?: [number, number] | null; // [min, max]
+  xpercent?: InputXTransform;
+  // count only
+  count_rep_thr?: number;              // 1–2147483647
+  freq_window?: number;                // 1–3600 s
+  freq_rep_thr?: number;               // 0–10000 %
+  xcounts?: InputXTransform;
+  xfreq?: InputXTransform;
+}
+
+export interface InputSetConfigResult {
+  restart_required: boolean;
 }
 
 // ── Temperature sensor ────────────────────────────────────────────────────

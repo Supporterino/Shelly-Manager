@@ -25,6 +25,8 @@ import { useCoverCalibrate } from '../../hooks/useDeviceControl';
 import { useDeviceStatus } from '../../hooks/useDeviceStatus';
 import { ShellyClient } from '../../services/shellyClient';
 import { useDeviceStore } from '../../store/deviceStore';
+import { InputConfigRow } from '../../components/devices/controls/InputConfigRow';
+import { SwitchConfigRow } from '../../components/devices/controls/SwitchConfigRow';
 
 export const Route = createFileRoute('/devices/$deviceId/settings')({
   component: DeviceSettingsPage,
@@ -234,6 +236,36 @@ function DeviceSettingsPage() {
                 .filter((c) => c.type === 'cover')
                 .map((c) => (
                   <CoverCalibrateRow key={c.id} deviceId={deviceId} coverId={c.id} />
+                ))}
+            </Stack>
+            <Divider />
+          </>
+        )}
+
+        {/* Input setup */}
+        {device.components.filter((c) => c.type === 'input').length > 0 && (
+          <>
+            <Stack gap="xs">
+              <Text fw={600}>{t('controls.input.setupTitle')}</Text>
+              {device.components
+                .filter((c) => c.type === 'input')
+                .map((c) => (
+                  <InputConfigRow key={c.id} deviceId={deviceId} inputId={c.id} />
+                ))}
+            </Stack>
+            <Divider />
+          </>
+        )}
+
+        {/* Output (switch) setup */}
+        {device.components.filter((c) => c.type === 'switch').length > 0 && (
+          <>
+            <Stack gap="xs">
+              <Text fw={600}>{t('controls.switch.setupTitle')}</Text>
+              {device.components
+                .filter((c) => c.type === 'switch')
+                .map((c) => (
+                  <SwitchConfigRow key={c.id} deviceId={deviceId} switchId={c.id} />
                 ))}
             </Stack>
             <Divider />
