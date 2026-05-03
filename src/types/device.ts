@@ -31,6 +31,8 @@ export interface StoredDevice {
   type: DeviceType; // Derived once at add-time — see deviceTypeMap.ts
   components: ShellyComponentSummary[];
   auth?: { username: string; password: string };
+  /** Preferred firmware update track. Undefined = use app default ('stable'). */
+  updateTrack?: 'stable' | 'beta';
   addedAt: number; // unix ms
   lastSeenAt: number; // unix ms
 }

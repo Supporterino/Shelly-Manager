@@ -8,6 +8,8 @@ export interface AppPreferences {
   locale: string; // e.g. 'en', 'de', 'fr' — empty string = follow browser
   pollingInterval: number; // seconds (10–120)
   temperatureUnit: 'C' | 'F';
+  /** Default firmware update track for all devices. */
+  defaultUpdateTrack: 'stable' | 'beta';
 }
 
 const DEFAULT_PREFERENCES: AppPreferences = {
@@ -15,6 +17,7 @@ const DEFAULT_PREFERENCES: AppPreferences = {
   locale: '',
   pollingInterval: 30,
   temperatureUnit: 'C',
+  defaultUpdateTrack: 'stable',
 };
 
 interface AppStore {
@@ -24,6 +27,7 @@ interface AppStore {
   setLocale: (locale: string) => Promise<void>;
   setPollingInterval: (interval: number) => Promise<void>;
   setTemperatureUnit: (unit: 'C' | 'F') => Promise<void>;
+  setDefaultUpdateTrack: (track: 'stable' | 'beta') => Promise<void>;
   hydrate: () => Promise<void>;
   persist: () => Promise<void>;
 }
@@ -58,6 +62,13 @@ export const useAppStore = create<AppStore>()(
     setTemperatureUnit: async (temperatureUnit) => {
       set((state) => ({
         preferences: { ...state.preferences, temperatureUnit },
+      }));
+      await get().persist();
+    },
+
+    setDefaultUpdateTrack: async (defaultUpdateTrack) => {
+      set((state) => ({
+        preferences: { ...state.preferences, defaultUpdateTrack },
       }));
       await get().persist();
     },

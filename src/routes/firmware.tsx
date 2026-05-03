@@ -5,6 +5,7 @@ import {
   Center,
   Group,
   ScrollArea,
+  SegmentedControl,
   Stack,
   Text,
   Title,
@@ -19,6 +20,7 @@ import { ConfirmModal } from '../components/common/ConfirmModal';
 import { FirmwareDeviceList } from '../components/firmware/FirmwareDeviceList';
 import { FirmwareTable } from '../components/firmware/FirmwareTable';
 import { useFirmwareManager } from '../hooks/useFirmwareManager';
+import { useAppStore } from '../store/appStore';
 import { useDeviceStore } from '../store/deviceStore';
 import { useWsStatusStore } from '../store/wsStatusStore';
 import type { StoredDevice } from '../types/device';
@@ -38,6 +40,9 @@ function FirmwarePage() {
     Record<string, unknown>
   >;
 
+  const defaultUpdateTrack = useAppStore((s) => s.preferences.defaultUpdateTrack);
+  const setDefaultUpdateTrack = useAppStore((s) => s.setDefaultUpdateTrack);
+
   const {
     firmwareStates,
     checkDevice,
@@ -50,6 +55,13 @@ function FirmwarePage() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [batchConfirmOpen, setBatchConfirmOpen] = useState(false);
   const [batchTargets, setBatchTargets] = useState<StoredDevice[]>([]);
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+
+  const getDeviceTrack = useCallback(
+    (device: StoredDevice): 'stable' | 'beta' => device.updateTrack ?? defaultUpdateTrack,
+    [defaultUpdateTrack],
+  );
 
   // ── Derived state ──────────────────────────────────────────────────────────
 
@@ -125,11 +137,11 @@ function FirmwarePage() {
   // ── Action handlers ────────────────────────────────────────────────────────
 
   const handleCheckAll = () => {
-    void checkAll(devices);
+    void checkAll(devices, defaultUpdateTrack);
   };
 
   const handleCheckSelected = () => {
-    void checkSelected(selectedDevices);
+    void checkSelected(selectedDevices, defaultUpdateTrack);
   };
 
   const handleUpdateAll = () => {
@@ -148,7 +160,7 @@ function FirmwarePage() {
     setBatchConfirmOpen(false);
     const targets = batchTargets;
     setBatchTargets([]);
-    void updateSelected(targets).then(() => {
+    void updateSelected(targets, defaultUpdateTrack).then(() => {
       notifications.show({
         color: 'green',
         message: t('firmware.updateSuccess'),
@@ -159,6 +171,10 @@ function FirmwarePage() {
   const handleUpdateDevice = (device: StoredDevice) => {
     setBatchTargets([device]);
     setBatchConfirmOpen(true);
+  };
+
+  const handleCheckDevice = (device: StoredDevice) => {
+    void checkDevice(device, getDeviceTrack(device));
   };
 
   // ── Empty state ────────────────────────────────────────────────────────────
@@ -182,8 +198,19 @@ function FirmwarePage() {
   return (
     <Stack gap="md" h="100%" style={{ overflow: 'hidden' }}>
       {/* Page header */}
+      <Title order={2}>{t('firmware.pageTitle')}</Title>
+
+      {/* Toolbar: track switch + actions */}
       <Group justify="space-between" align="center" wrap="wrap" gap="xs">
-        <Title order={2}>{t('firmware.pageTitle')}</Title>
+        <SegmentedControl
+          size="sm"
+          value={defaultUpdateTrack}
+          onChange={(value) => setDefaultUpdateTrack(value as 'stable' | 'beta')}
+          data={[
+            { label: t('firmware.trackStable'), value: 'stable' },
+            { label: t('firmware.trackBeta'), value: 'beta' },
+          ]}
+        />
 
         <Group gap="xs" wrap="wrap">
           {/* Check actions */}
@@ -216,7 +243,7 @@ function FirmwarePage() {
           {devicesWithUpdates.length > 0 && selectedWithUpdates.length === 0 && (
             <Button
               size="sm"
-              color="blue"
+              color={defaultUpdateTrack === 'beta' ? 'orange' : 'blue'}
               leftSection={<IconCloudDownload size={14} />}
               disabled={anyBusy}
               onClick={handleUpdateAll}
@@ -228,7 +255,7 @@ function FirmwarePage() {
           {selectedWithUpdates.length > 0 && (
             <Button
               size="sm"
-              color="blue"
+              color={defaultUpdateTrack === 'beta' ? 'orange' : 'blue'}
               leftSection={<IconCloudDownload size={14} />}
               disabled={anyBusy}
               onClick={handleUpdateSelected}
@@ -255,7 +282,7 @@ function FirmwarePage() {
           globalBusy={anyBusy}
           onToggleSelect={handleToggleSelect}
           onToggleSelectAll={handleToggleSelectAll}
-          onCheckDevice={(d) => void checkDevice(d)}
+          onCheckDevice={handleCheckDevice}
           onUpdateDevice={handleUpdateDevice}
         />
       </Box>
@@ -269,7 +296,7 @@ function FirmwarePage() {
           globalBusy={anyBusy}
           onToggleSelect={handleToggleSelect}
           onToggleSelectAll={handleToggleSelectAll}
-          onCheckDevice={(d) => void checkDevice(d)}
+          onCheckDevice={handleCheckDevice}
           onUpdateDevice={handleUpdateDevice}
         />
       </ScrollArea>
@@ -283,9 +310,13 @@ function FirmwarePage() {
         }}
         onConfirm={handleBatchConfirm}
         title={t('firmware.updateAll')}
-        message={t('firmware.confirmBatchUpdate', { count: updateCount })}
+        message={
+          defaultUpdateTrack === 'beta'
+            ? t('firmware.confirmBatchUpdateBeta', { count: updateCount })
+            : t('firmware.confirmBatchUpdate', { count: updateCount })
+        }
         confirmLabel={t('firmware.updateNow')}
-        confirmColor="blue"
+        confirmColor={defaultUpdateTrack === 'beta' ? 'orange' : 'blue'}
         loading={anyBusy}
       />
     </Stack>

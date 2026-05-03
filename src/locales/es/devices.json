@@ -183,8 +183,13 @@
     "summaryAvailable": "{{count}} actualización(es) disponible(s)",
     "summaryAllUpToDate": "Todos los dispositivos están al día",
     "confirmBatchUpdate": "¿Actualizar {{count}} dispositivo(s) al firmware estable más reciente?",
+    "confirmBatchUpdateBeta": "¿Actualizar {{count}} dispositivo(s) al firmware beta más reciente?",
     "offlineSkipped": "Sin conexión — omitido",
-    "selectAll": "Seleccionar todo"
+    "selectAll": "Seleccionar todo",
+    "track": "Canal de actualización",
+    "trackStable": "Estable",
+    "trackBeta": "Beta",
+    "updateAvailableBeta": "Actualización beta disponible: {{version}}"
   },
   "schedule": {
     "title": "Programaciones",

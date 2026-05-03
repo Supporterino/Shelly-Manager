@@ -51,6 +51,7 @@ export function FirmwareDeviceList({
         const state = firmwareStates[device.id] ?? {
           status: 'idle' as const,
           currentVersion: device.model,
+          updateTrack: device.updateTrack ?? 'stable',
           pollStep: 0,
         };
         return (

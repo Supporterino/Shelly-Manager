@@ -19,15 +19,17 @@ export interface DeviceFirmwareState {
   status: FirmwareStatus;
   /** Version string displayed in the "Current Version" badge */
   currentVersion: string;
-  /** Available stable version, only set when status === 'update-available' */
+  /** Available version for the active track, only set when status === 'update-available' */
   availableVersion?: string;
+  /** Which track this state was checked against (stable | beta) */
+  updateTrack: 'stable' | 'beta';
   /** 0-indexed poll step (0 = not yet polling) — drives the progress bar */
   pollStep: number;
   /** Human-readable error message, only set when status === 'failed' */
   error?: string;
 }
 
-// ── Helper ────────────────────────────────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────────────────────
 
 /**
  * Derive the current version string for a device.
@@ -39,6 +41,39 @@ export function extractCurrentVersion(
 ): string {
   const sys = liveStatus?.sys as Record<string, unknown> | undefined;
   return (sys?.fw_id as string | undefined) ?? device.model;
+}
+
+/** Possible shapes returned by Shelly.CheckForUpdate (direct or wrapped). */
+interface CheckForUpdateResult {
+  stable?: { version?: string } | null;
+  beta?: { version?: string } | null;
+  available_updates?: {
+    stable?: { version?: string } | null;
+    beta?: { version?: string } | null;
+  } | null;
+}
+
+/**
+ * Extract the version string for a given track from a CheckForUpdate response.
+ * Handles both direct `{ stable?, beta? }` and wrapped `{ available_updates: { stable?, beta? } }`
+ * shapes, plus nullish values.
+ */
+export function extractTrackVersion(
+  result: CheckForUpdateResult,
+  track: 'stable' | 'beta',
+): string | undefined {
+  const direct = track === 'beta' ? result.beta : result.stable;
+  if (direct && typeof direct === 'object' && direct.version) {
+    return direct.version;
+  }
+  const wrapped =
+    track === 'beta'
+      ? result.available_updates?.beta
+      : result.available_updates?.stable;
+  if (wrapped && typeof wrapped === 'object' && wrapped.version) {
+    return wrapped.version;
+  }
+  return undefined;
 }
 
 // ── Hook ──────────────────────────────────────────────────────────────────────
@@ -54,6 +89,7 @@ export function useFirmwareManager(
         {
           status: 'idle' as FirmwareStatus,
           currentVersion: extractCurrentVersion(d, liveStatuses[d.id]),
+          updateTrack: d.updateTrack ?? 'stable',
           pollStep: 0,
         },
       ]),
@@ -70,6 +106,7 @@ export function useFirmwareManager(
             patch[d.id] = {
               status: 'idle',
               currentVersion: extractCurrentVersion(d, liveStatuses[d.id]),
+              updateTrack: d.updateTrack ?? 'stable',
               pollStep: 0,
             };
           }
@@ -90,8 +127,8 @@ export function useFirmwareManager(
   // ── Single device operations ───────────────────────────────────────────────
 
   const checkDevice = useCallback(
-    async (device: StoredDevice) => {
-      patchState(device.id, { status: 'checking', error: undefined });
+    async (device: StoredDevice, track: 'stable' | 'beta' = 'stable') => {
+      patchState(device.id, { status: 'checking', error: undefined, updateTrack: track });
       try {
         const client = new ShellyClient(device);
         const [result, deviceInfo] = await Promise.all([
@@ -102,16 +139,19 @@ export function useFirmwareManager(
         const versionPatch: Partial<DeviceFirmwareState> = deviceInfo?.ver
           ? { currentVersion: deviceInfo.ver }
           : {};
-        if (result.stable?.version) {
+        const trackVersion = extractTrackVersion(result as CheckForUpdateResult, track);
+        if (trackVersion) {
           patchState(device.id, {
             status: 'update-available',
-            availableVersion: result.stable.version,
+            availableVersion: trackVersion,
+            updateTrack: track,
             ...versionPatch,
           });
         } else {
           patchState(device.id, {
             status: 'up-to-date',
             availableVersion: undefined,
+            updateTrack: track,
             ...versionPatch,
           });
         }
@@ -126,10 +166,10 @@ export function useFirmwareManager(
   );
 
   const updateDevice = useCallback(
-    async (device: StoredDevice) => {
-      patchState(device.id, { status: 'updating', pollStep: 0, error: undefined });
+    async (device: StoredDevice, track: 'stable' | 'beta' = 'stable') => {
+      patchState(device.id, { status: 'updating', pollStep: 0, error: undefined, updateTrack: track });
       try {
-        await new ShellyClient(device).triggerUpdate('stable');
+        await new ShellyClient(device).triggerUpdate(track);
 
         // Phase 1: wait for the device to go offline.
         // Shelly.Update returns immediately — the device downloads firmware in
@@ -175,27 +215,27 @@ export function useFirmwareManager(
 
   /** Check all given devices in parallel */
   const checkAll = useCallback(
-    async (devicesToCheck: StoredDevice[]) => {
+    async (devicesToCheck: StoredDevice[], track: 'stable' | 'beta' = 'stable') => {
       ensureEntries(devicesToCheck);
-      await Promise.all(devicesToCheck.map((d) => checkDevice(d)));
+      await Promise.all(devicesToCheck.map((d) => checkDevice(d, track)));
     },
     [checkDevice, ensureEntries],
   );
 
   /** Check a selected subset of devices in parallel */
   const checkSelected = useCallback(
-    async (devicesToCheck: StoredDevice[]) => {
+    async (devicesToCheck: StoredDevice[], track: 'stable' | 'beta' = 'stable') => {
       ensureEntries(devicesToCheck);
-      await Promise.all(devicesToCheck.map((d) => checkDevice(d)));
+      await Promise.all(devicesToCheck.map((d) => checkDevice(d, track)));
     },
     [checkDevice, ensureEntries],
   );
 
   /** Update devices sequentially (safer for LAN stability) */
   const updateSelected = useCallback(
-    async (devicesToUpdate: StoredDevice[]) => {
+    async (devicesToUpdate: StoredDevice[], track: 'stable' | 'beta' = 'stable') => {
       for (const device of devicesToUpdate) {
-        await updateDevice(device);
+        await updateDevice(device, track);
       }
     },
     [updateDevice],

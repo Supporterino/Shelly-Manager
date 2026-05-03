@@ -183,8 +183,13 @@
     "summaryAvailable": "{{count}} mise(s) à jour disponible(s)",
     "summaryAllUpToDate": "Tous les appareils sont à jour",
     "confirmBatchUpdate": "Mettre à jour {{count}} appareil(s) avec le dernier firmware stable ?",
+    "confirmBatchUpdateBeta": "Mettre à jour {{count}} appareil(s) avec le dernier firmware bêta ?",
     "offlineSkipped": "Hors ligne — ignoré",
-    "selectAll": "Tout sélectionner"
+    "selectAll": "Tout sélectionner",
+    "track": "Canal de mise à jour",
+    "trackStable": "Stable",
+    "trackBeta": "Bêta",
+    "updateAvailableBeta": "Mise à jour bêta disponible : {{version}}"
   },
   "schedule": {
     "title": "Programmations",

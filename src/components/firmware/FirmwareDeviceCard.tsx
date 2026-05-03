@@ -93,7 +93,7 @@ export function FirmwareDeviceCard({
               <Text size="xs" c="dimmed">
                 →
               </Text>
-              <Badge variant="light" color="blue" size="xs">
+              <Badge variant="light" color={state.updateTrack === 'beta' ? 'orange' : 'blue'} size="xs">
                 {state.availableVersion}
               </Badge>
             </>

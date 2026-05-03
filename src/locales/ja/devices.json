@@ -183,8 +183,13 @@
     "summaryAvailable": "{{count}} 件の更新あり",
     "summaryAllUpToDate": "すべてのデバイスは最新です",
     "confirmBatchUpdate": "{{count}} 台のデバイスを最新の安定ファームウェアに更新しますか？",
+    "confirmBatchUpdateBeta": "{{count}} 台のデバイスを最新のベータファームウェアに更新しますか？",
     "offlineSkipped": "オフライン — スキップ",
-    "selectAll": "すべて選択"
+    "selectAll": "すべて選択",
+    "track": "更新チャンネル",
+    "trackStable": "安定版",
+    "trackBeta": "ベータ版",
+    "updateAvailableBeta": "ベータアップデート利用可能：{{version}}"
   },
   "schedule": {
     "title": "スケジュール",

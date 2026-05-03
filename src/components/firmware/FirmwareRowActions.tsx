@@ -43,7 +43,12 @@ export function FirmwareStatusBadge({ state }: { state: DeviceFirmwareState }) {
       );
     case 'update-available':
       return (
-        <Badge variant="light" color="blue" size="sm" leftSection={<IconCloudDownload size={12} />}>
+        <Badge
+          variant="light"
+          color={state.updateTrack === 'beta' ? 'orange' : 'blue'}
+          size="sm"
+          leftSection={<IconCloudDownload size={12} />}
+        >
           {t('firmware.updateAvailableShort', { version: state.availableVersion ?? '' })}
         </Badge>
       );

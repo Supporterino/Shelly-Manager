@@ -183,8 +183,13 @@
     "summaryAvailable": "{{count}} 个可用更新",
     "summaryAllUpToDate": "所有设备均为最新版本",
     "confirmBatchUpdate": "将 {{count}} 个设备更新至最新稳定固件？",
+    "confirmBatchUpdateBeta": "将 {{count}} 个设备更新至最新测试固件？",
     "offlineSkipped": "离线 — 已跳过",
-    "selectAll": "全选"
+    "selectAll": "全选",
+    "track": "更新通道",
+    "trackStable": "稳定版",
+    "trackBeta": "测试版",
+    "updateAvailableBeta": "测试版更新可用：{{version}}"
   },
   "schedule": {
     "title": "定时任务",

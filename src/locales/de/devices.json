@@ -183,8 +183,13 @@
     "summaryAvailable": "{{count}} Update(s) verfügbar",
     "summaryAllUpToDate": "Alle Geräte sind aktuell",
     "confirmBatchUpdate": "{{count}} Gerät(e) auf die neueste stabile Firmware aktualisieren?",
+    "confirmBatchUpdateBeta": "{{count}} Gerät(e) auf die neueste Beta-Firmware aktualisieren?",
     "offlineSkipped": "Offline — übersprungen",
-    "selectAll": "Alle auswählen"
+    "selectAll": "Alle auswählen",
+    "track": "Update-Kanal",
+    "trackStable": "Stabil",
+    "trackBeta": "Beta",
+    "updateAvailableBeta": "Beta-Update verfügbar: {{version}}"
   },
   "schedule": {
     "title": "Zeitpläne",

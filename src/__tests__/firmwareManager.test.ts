@@ -38,7 +38,7 @@ vi.mock('../utils/firmware', async (importOriginal) => {
   };
 });
 
-import { extractCurrentVersion, useFirmwareManager } from '../hooks/useFirmwareManager';
+import { extractCurrentVersion, extractTrackVersion, useFirmwareManager } from '../hooks/useFirmwareManager';
 import type { StoredDevice } from '../types/device';
 
 // ── Fixture factory ────────────────────────────────────────────────────────────
@@ -85,6 +85,54 @@ describe('extractCurrentVersion', () => {
   });
 });
 
+// ── extractTrackVersion ───────────────────────────────────────────────────────
+
+describe('extractTrackVersion', () => {
+  it('extracts stable version from direct shape', () => {
+    const result = { stable: { version: '1.5.0' } };
+    expect(extractTrackVersion(result, 'stable')).toBe('1.5.0');
+  });
+
+  it('extracts beta version from direct shape', () => {
+    const result = { beta: { version: '1.6.0-beta1' } };
+    expect(extractTrackVersion(result, 'beta')).toBe('1.6.0-beta1');
+  });
+
+  it('extracts stable version from available_updates wrapper', () => {
+    const result = { available_updates: { stable: { version: '1.5.0' } } };
+    expect(extractTrackVersion(result, 'stable')).toBe('1.5.0');
+  });
+
+  it('extracts beta version from available_updates wrapper', () => {
+    const result = { available_updates: { beta: { version: '1.6.0-beta1' } } };
+    expect(extractTrackVersion(result, 'beta')).toBe('1.6.0-beta1');
+  });
+
+  it('prefers direct shape over wrapper', () => {
+    const result = {
+      stable: { version: '2.0.0' },
+      available_updates: { stable: { version: '1.5.0' } },
+    };
+    expect(extractTrackVersion(result, 'stable')).toBe('2.0.0');
+  });
+
+  it('returns undefined when track is absent', () => {
+    expect(extractTrackVersion({}, 'stable')).toBeUndefined();
+    expect(extractTrackVersion({}, 'beta')).toBeUndefined();
+  });
+
+  it('returns undefined when version is missing', () => {
+    expect(extractTrackVersion({ stable: {} }, 'stable')).toBeUndefined();
+    expect(extractTrackVersion({ beta: {} }, 'beta')).toBeUndefined();
+  });
+
+  it('handles null values gracefully', () => {
+    expect(extractTrackVersion({ stable: null }, 'stable')).toBeUndefined();
+    expect(extractTrackVersion({ beta: null }, 'beta')).toBeUndefined();
+    expect(extractTrackVersion({ available_updates: null }, 'stable')).toBeUndefined();
+  });
+});
+
 // ── useFirmwareManager ────────────────────────────────────────────────────────
 
 describe('useFirmwareManager', () => {
@@ -114,6 +162,17 @@ describe('useFirmwareManager', () => {
     expect(result.current.firmwareStates.DEV001?.currentVersion).toBe('SNSW-001X16EU');
   });
 
+  it('initialises updateTrack from device.updateTrack when set', () => {
+    const betaDevice = makeDevice({ id: 'DEV003', updateTrack: 'beta' });
+    const { result } = renderHook(() => useFirmwareManager([betaDevice], {}));
+    expect(result.current.firmwareStates.DEV003?.updateTrack).toBe('beta');
+  });
+
+  it('defaults updateTrack to stable when device.updateTrack is undefined', () => {
+    const { result } = renderHook(() => useFirmwareManager([device1], {}));
+    expect(result.current.firmwareStates.DEV001?.updateTrack).toBe('stable');
+  });
+
   // ── checkDevice ─────────────────────────────────────────────────────────────
 
   describe('checkDevice', () => {
@@ -128,6 +187,7 @@ describe('useFirmwareManager', () => {
 
       expect(result.current.firmwareStates.DEV001?.status).toBe('up-to-date');
       expect(result.current.firmwareStates.DEV001?.availableVersion).toBeUndefined();
+      expect(result.current.firmwareStates.DEV001?.updateTrack).toBe('stable');
     });
 
     it('sets update-available with the correct version string', async () => {
@@ -141,6 +201,38 @@ describe('useFirmwareManager', () => {
 
       expect(result.current.firmwareStates.DEV001?.status).toBe('update-available');
       expect(result.current.firmwareStates.DEV001?.availableVersion).toBe('1.5.0');
+      expect(result.current.firmwareStates.DEV001?.updateTrack).toBe('stable');
+    });
+
+    it('sets update-available for beta track when beta version exists', async () => {
+      mockCheckForUpdate.mockResolvedValue({
+        stable: { version: '1.5.0' },
+        beta: { version: '1.6.0-beta1' },
+      });
+      mockGetDeviceInfo.mockResolvedValue({ ver: '1.4.0', fw_id: '20240101/1.4.0' });
+
+      const { result } = renderHook(() => useFirmwareManager([device1], {}));
+      await act(async () => {
+        await result.current.checkDevice(device1, 'beta');
+      });
+
+      expect(result.current.firmwareStates.DEV001?.status).toBe('update-available');
+      expect(result.current.firmwareStates.DEV001?.availableVersion).toBe('1.6.0-beta1');
+      expect(result.current.firmwareStates.DEV001?.updateTrack).toBe('beta');
+    });
+
+    it('sets up-to-date for beta track when no beta version exists', async () => {
+      mockCheckForUpdate.mockResolvedValue({ stable: { version: '1.5.0' } });
+      mockGetDeviceInfo.mockResolvedValue({ ver: '1.4.0', fw_id: '20240101/1.4.0' });
+
+      const { result } = renderHook(() => useFirmwareManager([device1], {}));
+      await act(async () => {
+        await result.current.checkDevice(device1, 'beta');
+      });
+
+      expect(result.current.firmwareStates.DEV001?.status).toBe('up-to-date');
+      expect(result.current.firmwareStates.DEV001?.availableVersion).toBeUndefined();
+      expect(result.current.firmwareStates.DEV001?.updateTrack).toBe('beta');
     });
 
     it('sets currentVersion from getDeviceInfo.ver on successful check', async () => {
@@ -228,6 +320,30 @@ describe('useFirmwareManager', () => {
       expect(result.current.firmwareStates.DEV001?.currentVersion).toBe('20240601-090000/1.5.0');
       expect(result.current.firmwareStates.DEV001?.availableVersion).toBeUndefined();
       expect(result.current.firmwareStates.DEV001?.pollStep).toBe(0);
+      expect(mockTriggerUpdate).toHaveBeenCalledWith('stable');
+    });
+
+    it('calls triggerUpdate with beta when track is beta', async () => {
+      mockTriggerUpdate.mockResolvedValue(undefined);
+      mockPollUntilOffline.mockResolvedValue(true);
+      mockPollUntilOnline.mockResolvedValue(true);
+      mockVerifyHost.mockResolvedValue({
+        type: 'SHSW',
+        mac: 'DEV001',
+        gen: 3,
+        fw_id: '20240601-090000/1.6.0-beta1',
+        ver: '1.6.0-beta1',
+        auth: false,
+      });
+
+      const { result } = renderHook(() => useFirmwareManager([device1], {}));
+      await act(async () => {
+        await result.current.updateDevice(device1, 'beta');
+      });
+
+      expect(result.current.firmwareStates.DEV001?.status).toBe('done');
+      expect(mockTriggerUpdate).toHaveBeenCalledWith('beta');
+      expect(result.current.firmwareStates.DEV001?.updateTrack).toBe('beta');
     });
 
     it('sets failed when device never goes offline (update did not start)', async () => {
@@ -329,6 +445,21 @@ describe('useFirmwareManager', () => {
       expect(mockCheckForUpdate).toHaveBeenCalledTimes(2);
     });
 
+    it('passes track parameter to all device checks', async () => {
+      mockCheckForUpdate.mockResolvedValue({ beta: { version: '2.0.0-beta1' } });
+      mockGetDeviceInfo.mockResolvedValue({ ver: '1.4.0', fw_id: '20240101/1.4.0' });
+
+      const { result } = renderHook(() => useFirmwareManager([device1, device2], {}));
+      await act(async () => {
+        await result.current.checkAll([device1, device2], 'beta');
+      });
+
+      expect(result.current.firmwareStates.DEV001?.status).toBe('update-available');
+      expect(result.current.firmwareStates.DEV001?.availableVersion).toBe('2.0.0-beta1');
+      expect(result.current.firmwareStates.DEV001?.updateTrack).toBe('beta');
+      expect(result.current.firmwareStates.DEV002?.updateTrack).toBe('beta');
+    });
+
     it('handles mixed results across devices independently', async () => {
       mockCheckForUpdate
         .mockResolvedValueOnce({}) // DEV001 — up-to-date
@@ -369,6 +500,28 @@ describe('useFirmwareManager', () => {
       expect(result.current.firmwareStates.DEV001?.status).toBe('done');
       expect(result.current.firmwareStates.DEV002?.status).toBe('done');
       expect(mockTriggerUpdate).toHaveBeenCalledTimes(2);
+    });
+
+    it('updates with beta track when passed', async () => {
+      mockTriggerUpdate.mockResolvedValue(undefined);
+      mockPollUntilOffline.mockResolvedValue(true);
+      mockPollUntilOnline.mockResolvedValue(true);
+      mockVerifyHost.mockResolvedValue({
+        type: 'SHSW',
+        mac: 'MAC',
+        gen: 3,
+        fw_id: '20240601/2.0.0-beta1',
+        ver: '2.0.0-beta1',
+        auth: false,
+      });
+
+      const { result } = renderHook(() => useFirmwareManager([device1], {}));
+      await act(async () => {
+        await result.current.updateSelected([device1], 'beta');
+      });
+
+      expect(result.current.firmwareStates.DEV001?.status).toBe('done');
+      expect(mockTriggerUpdate).toHaveBeenCalledWith('beta');
     });
 
     it('continues updating remaining devices even after one fails', async () => {
