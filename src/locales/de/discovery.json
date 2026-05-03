@@ -19,6 +19,10 @@
     "cidr": "IP-Bereich (CIDR)",
     "cidrLargeWarning": "Großes Subnetz — der Scan kann mehrere Minuten dauern. Empfehlung: /24 verwenden.",
     "cidrTooLarge": "Subnetz zu groß — Maximum ist /19 (8192 Hosts). Bitte einen kleineren Bereich angeben.",
+    "autoDetect": "Mein Netzwerk automatisch erkennen",
+    "selectInterface": "Netzwerkschnittstelle auswählen",
+    "noInterfaces": "Keine aktiven Netzwerkschnittstellen gefunden.",
+    "assumedPrefixWarning": "Subnetzmaske konnte nicht erkannt werden. Es wird /24 angenommen.",
     "add": "Gerät hinzufügen",
     "verify": "Pr\u00fcfe\u2026"
   },

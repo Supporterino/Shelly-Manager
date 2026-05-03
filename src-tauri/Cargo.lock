@@ -3702,6 +3702,7 @@ dependencies = [
 name = "shellman"
 version = "1.1.1"
 dependencies = [
+ "if-addrs",
  "mdns-sd",
  "serde",
  "serde_json",

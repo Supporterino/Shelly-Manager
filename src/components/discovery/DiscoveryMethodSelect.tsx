@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import type { StoredDevice } from '../../types/device';
 import type { DiscoveryMethod } from '../../types/discovery';
 import { ManualAddForm } from './ManualAddForm';
+import { SubnetAutoDetect } from './SubnetAutoDetect';
 
 interface DiscoveryMethodSelectProps {
   methods: DiscoveryMethod[];
@@ -77,6 +78,9 @@ export function DiscoveryMethodSelect({
                 {t('form.cidrTooLarge')}
               </Alert>
             )}
+            <div style={{ marginLeft: '1.5rem' }}>
+              <SubnetAutoDetect onCidrChange={onCidrChange} />
+            </div>
           </>
         )}
       </Stack>

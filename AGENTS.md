@@ -29,6 +29,7 @@ Full build plan: see [PLAN.md](./PLAN.md).
 | WebSocket | tauri-plugin-websocket |
 | mDNS discovery | Custom Rust command (`mdns-sd` crate) |
 | Subnet scan | Custom Rust command (Tokio TCP) |
+| Subnet auto-detect | Custom Rust command (`if-addrs` crate) |
 | i18n | react-i18next (i18next v26) + JSON namespaces, lazy-loaded via Vite |
 | Tests | Vitest + React Testing Library |
 
@@ -64,7 +65,7 @@ src/
 ├── components/      React components (see sub-sections below)
 │   ├── layout/      AppShell, BottomNav, SidebarNav
 │   ├── devices/     DeviceCard, controls/*, info/*
-│   ├── discovery/   DiscoveryProgress, ManualAddForm, etc.
+│   ├── discovery/   DiscoveryProgress, ManualAddForm, SubnetAutoDetect, etc.
 │   ├── settings/    LanguageSelect, ThemeToggle, etc.
 │   └── common/      Shared UI (ErrorAlert, ConfirmModal, etc.)
 ├── services/        Side-effect logic (shellyClient, wsManager, discovery, i18n.ts)
@@ -166,6 +167,7 @@ After sending one request with `src: 'shelly-manager'`, the device starts pushin
 |---|---|
 | mDNS | Rust command: browse `_shelly._tcp.local.` (Gen2+ only) and `_http._tcp.local.` with `gen=2/3/4` TXT filter |
 | Subnet scan | Rust command: TCP connect to port 80 on each IP in CIDR, then verify with `GET /shelly` |
+| Subnet auto-detect | Rust command `get_network_interfaces` reads local IPv4 interfaces + prefix. Single interface → prefills CIDR directly. Multiple → dropdown. Missing prefix → assumes /24 with a warning. |
 | Manual | User enters IP; frontend verifies with `GET /shelly` |
 
 `GET http://<ip>/shelly` returns `{ type, mac, auth, fw, gen }` — use this to confirm a device and get its MAC/gen before adding.
@@ -366,6 +368,13 @@ pub struct DiscoveredHost {
   pub port: u16,
   pub hostname: Option<String>,
   pub source: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct NetworkInterface {
+  pub name: String,
+  pub ip: String,
+  pub prefix: Option<u8>,
 }
 ```
 

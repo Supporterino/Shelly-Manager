@@ -19,6 +19,10 @@
     "cidr": "IP Range (CIDR)",
     "cidrLargeWarning": "Large subnet detected — scanning may take several minutes. Consider narrowing to /24.",
     "cidrTooLarge": "Subnet too large — maximum supported is /19 (8192 hosts). Please use a narrower range.",
+    "autoDetect": "Auto-detect my network",
+    "selectInterface": "Select network interface",
+    "noInterfaces": "No active network interfaces found.",
+    "assumedPrefixWarning": "Could not detect subnet mask. Assuming /24.",
     "add": "Add Device",
     "verify": "Verifying\u2026"
   },

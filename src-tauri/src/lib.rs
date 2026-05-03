@@ -158,6 +158,51 @@ async fn scan_subnet(
     Ok(results)
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct NetworkInterface {
+    pub name: String,
+    pub ip: String,
+    pub prefix: Option<u8>,
+}
+
+/// Returns all non-loopback IPv4 network interfaces with their subnet prefix.
+/// On mobile or restricted environments the prefix may be None, which the
+/// frontend should treat as an unknown netmask.
+#[tauri::command]
+async fn get_network_interfaces() -> Result<Vec<NetworkInterface>, String> {
+    let addrs = if_addrs::get_if_addrs().map_err(|e| e.to_string())?;
+
+    let mut interfaces = Vec::new();
+    for iface in addrs {
+        if iface.is_loopback() {
+            continue;
+        }
+        if let if_addrs::IfAddr::V4(ref v4) = iface.addr {
+            // Skip interfaces that are not operationally up
+            if !iface.is_oper_up() {
+                continue;
+            }
+            let prefix = {
+                let ones = v4.prefixlen;
+                // /30, /31, /32 are too small for meaningful scanning;
+                // treat them as unknown so the frontend falls back to /24.
+                if ones >= 30 || ones < 8 {
+                    None
+                } else {
+                    Some(ones)
+                }
+            };
+            interfaces.push(NetworkInterface {
+                name: iface.name.clone(),
+                ip: v4.ip.to_string(),
+                prefix,
+            });
+        }
+    }
+
+    Ok(interfaces)
+}
+
 /// Expand a CIDR notation into individual IP strings.
 fn expand_cidr(cidr: &str) -> Result<Vec<String>, Box<dyn std::error::Error>> {
     let parts: Vec<&str> = cidr.split('/').collect();
@@ -205,7 +250,7 @@ pub fn run() {
         .plugin(tauri_plugin_websocket::init())
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![discover_mdns, scan_subnet])
+        .invoke_handler(tauri::generate_handler![discover_mdns, scan_subnet, get_network_interfaces])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

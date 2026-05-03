@@ -7,6 +7,12 @@ export interface DiscoveredHost {
 
 export type DiscoveryMethod = 'mdns' | 'scan' | 'manual';
 
+export interface NetworkInterface {
+  name: string;
+  ip: string;
+  prefix: number | null;
+}
+
 export interface DiscoveryOptions {
   cidr?: string;
   timeoutSecs?: number;

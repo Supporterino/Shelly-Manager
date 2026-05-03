@@ -11,15 +11,18 @@ import { renderWithProviders } from '../test/renderWithProviders';
 import type { DiscoveredHost } from '../types/discovery';
 
 const mockVerifyManualHost = vi.fn();
+let mockGetNetworkInterfaces = vi.fn();
 
 vi.mock('../services/discovery', () => ({
   verifyManualHost: (...args: unknown[]) => mockVerifyManualHost(...args),
+  getNetworkInterfaces: () => mockGetNetworkInterfaces(),
   startMdnsDiscovery: vi.fn(),
   startSubnetScan: vi.fn(),
 }));
 
 import { DiscoveryProgress } from '../components/discovery/DiscoveryProgress';
 import { ManualAddForm } from '../components/discovery/ManualAddForm';
+import { SubnetAutoDetect } from '../components/discovery/SubnetAutoDetect';
 
 describe('ManualAddForm', () => {
   beforeEach(() => mockVerifyManualHost.mockReset());
@@ -142,5 +145,111 @@ describe('DiscoveryProgress', () => {
     expect(screen.getByText('192.168.1.10:80')).toBeInTheDocument();
     expect(screen.getByText('192.168.1.11:80')).toBeInTheDocument();
     expect(screen.getByText('shellyplus1-aabbcc')).toBeInTheDocument();
+  });
+});
+
+describe('SubnetAutoDetect', () => {
+  beforeEach(() => mockGetNetworkInterfaces.mockReset());
+
+  it('shows error when getNetworkInterfaces throws', async () => {
+    const user = userEvent.setup();
+    mockGetNetworkInterfaces = vi.fn(async () => {
+      throw new Error('Network access denied');
+    });
+
+    renderWithProviders(<SubnetAutoDetect onCidrChange={vi.fn()} />);
+
+    await user.click(screen.getByRole('button', { name: /auto-detect/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText('Network access denied')).toBeInTheDocument();
+    });
+  });
+
+  it('prefills CIDR when a single interface with prefix is found', async () => {
+    const user = userEvent.setup();
+    mockGetNetworkInterfaces.mockResolvedValue([
+      { name: 'en0', ip: '192.168.1.5', prefix: 24 },
+    ]);
+
+    const onCidrChange = vi.fn();
+    renderWithProviders(<SubnetAutoDetect onCidrChange={onCidrChange} />);
+
+    const btn = screen.getByRole('button', { name: /auto-detect/i });
+    await user.click(btn);
+
+    await waitFor(() => {
+      expect(onCidrChange).toHaveBeenCalledWith('192.168.1.0/24');
+    });
+  });
+
+  it('assumes /24 and shows warning when prefix is null', async () => {
+    const user = userEvent.setup();
+    mockGetNetworkInterfaces.mockResolvedValue([
+      { name: 'en0', ip: '10.0.0.5', prefix: null },
+    ]);
+
+    const onCidrChange = vi.fn();
+    renderWithProviders(<SubnetAutoDetect onCidrChange={onCidrChange} />);
+
+    await user.click(screen.getByRole('button', { name: /auto-detect/i }));
+
+    await waitFor(() => {
+      expect(onCidrChange).toHaveBeenCalledWith('10.0.0.0/24');
+    });
+    expect(screen.getByText('Could not detect subnet mask. Assuming /24.')).toBeInTheDocument();
+  });
+
+  it('shows interface dropdown when multiple interfaces are found', async () => {
+    const user = userEvent.setup();
+    mockGetNetworkInterfaces.mockResolvedValue([
+      { name: 'en0', ip: '192.168.1.5', prefix: 24 },
+      { name: 'en1', ip: '10.0.0.5', prefix: 24 },
+    ]);
+
+    const onCidrChange = vi.fn();
+    renderWithProviders(<SubnetAutoDetect onCidrChange={onCidrChange} />);
+
+    await user.click(screen.getByRole('button', { name: /auto-detect/i }));
+
+    await waitFor(() => {
+      expect(screen.getByRole('combobox', { name: /select network interface/i })).toBeInTheDocument();
+    });
+  });
+
+  it('prefills CIDR after selecting from dropdown', async () => {
+    const user = userEvent.setup();
+    mockGetNetworkInterfaces.mockResolvedValue([
+      { name: 'en0', ip: '192.168.1.5', prefix: 24 },
+      { name: 'en1', ip: '10.0.0.5', prefix: 24 },
+    ]);
+
+    const onCidrChange = vi.fn();
+    renderWithProviders(<SubnetAutoDetect onCidrChange={onCidrChange} />);
+
+    await user.click(screen.getByRole('button', { name: /auto-detect/i }));
+    await waitFor(() => {
+      expect(screen.getByRole('combobox', { name: /select network interface/i })).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByRole('combobox', { name: /select network interface/i }));
+    await user.click(screen.getByText('en1 (10.0.0.5)'));
+
+    await waitFor(() => {
+      expect(onCidrChange).toHaveBeenCalledWith('10.0.0.0/24');
+    });
+  });
+
+  it('shows error when no interfaces are found', async () => {
+    const user = userEvent.setup();
+    mockGetNetworkInterfaces.mockResolvedValue([]);
+
+    renderWithProviders(<SubnetAutoDetect onCidrChange={vi.fn()} />);
+
+    await user.click(screen.getByRole('button', { name: /auto-detect/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText('No active network interfaces found.')).toBeInTheDocument();
+    });
   });
 });

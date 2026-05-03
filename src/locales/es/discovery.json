@@ -19,6 +19,10 @@
     "cidr": "Rango IP (CIDR)",
     "cidrLargeWarning": "Subred grande detectada — el escaneo puede tardar varios minutos. Considera reducir a /24.",
     "cidrTooLarge": "Subred demasiado grande — el máximo soportado es /19 (8192 hosts). Usa un rango más estrecho.",
+    "autoDetect": "Detectar mi red automáticamente",
+    "selectInterface": "Seleccionar interfaz de red",
+    "noInterfaces": "No se encontraron interfaces de red activas.",
+    "assumedPrefixWarning": "No se pudo detectar la máscara de subred. Se asume /24.",
     "add": "Añadir dispositivo",
     "verify": "Verificando…"
   },

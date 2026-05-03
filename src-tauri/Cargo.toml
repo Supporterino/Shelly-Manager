@@ -27,4 +27,5 @@ tauri-plugin-websocket = "2"
 tauri-plugin-store = "2"
 mdns-sd = "0.19"
 tokio = { version = "1", features = ["full"] }
+if-addrs = "0.15"
 

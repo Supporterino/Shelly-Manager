@@ -19,6 +19,10 @@
     "cidr": "Plage IP (CIDR)",
     "cidrLargeWarning": "Grand sous-réseau détecté — le scan peut prendre plusieurs minutes. Envisagez de réduire à /24.",
     "cidrTooLarge": "Sous-réseau trop grand — le maximum supporté est /19 (8192 hôtes). Veuillez utiliser une plage plus petite.",
+    "autoDetect": "Détecter automatiquement mon réseau",
+    "selectInterface": "Sélectionner l'interface réseau",
+    "noInterfaces": "Aucune interface réseau active trouvée.",
+    "assumedPrefixWarning": "Masque de sous-réseau non détecté. /24 est supposé.",
     "add": "Ajouter l'appareil",
     "verify": "Vérification…"
   },

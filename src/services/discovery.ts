@@ -1,7 +1,7 @@
 import { invoke } from '@tauri-apps/api/core';
 import { fetch } from '@tauri-apps/plugin-http';
 import type { StoredDevice } from '../types/device';
-import type { DiscoveredHost, DiscoveryMethod, DiscoveryOptions } from '../types/discovery';
+import type { DiscoveredHost, DiscoveryMethod, DiscoveryOptions, NetworkInterface } from '../types/discovery';
 import { deriveDeviceType, extractComponents } from '../utils/deviceTypeMap';
 import { ShellyClient } from './shellyClient';
 
@@ -161,6 +161,13 @@ export async function runDiscovery(
   );
 
   return devices;
+}
+
+/**
+ * Fetch the active non-loopback IPv4 network interfaces from the OS.
+ */
+export async function getNetworkInterfaces(): Promise<NetworkInterface[]> {
+  return invoke<NetworkInterface[]>('get_network_interfaces');
 }
 
 /**
