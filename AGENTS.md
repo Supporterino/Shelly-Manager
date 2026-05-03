@@ -512,19 +512,3 @@ const { t } = useTranslation('devices')
 | Translation key returns key string | Namespace not loaded yet or key missing in JSON; check fallback log in dev console |
 | TypeScript accepts wrong i18n key | `src/types/i18n.d.ts` not imported or locale JSON changed without restarting TS server |
 | Language switch doesn't persist | `appStore.setLocale` must call both `i18next.changeLanguage()` AND `get().persist()` |
-
----
-
-## Phase Progress Tracker
-
-Use this as a quick reference for current build status. Update as phases complete.
-
-- [x] Phase 0 — Scaffolding & Toolchain
-- [x] Phase 1 — Core Infrastructure
-- [x] Phase 2 — Device Discovery
-- [x] Phase 3 — Device Detail & Control
-- [x] Phase 4 — Real-Time Updates (WebSocket)
-- [x] Phase 5 — Advanced Features
-- [x] Phase 6 — Mobile Polish
-- [x] Phase 7 — Testing
-- [ ] Phase 8 — Release Builds
