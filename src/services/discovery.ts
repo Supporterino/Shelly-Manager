@@ -1,7 +1,7 @@
-import { invoke } from '@tauri-apps/api/core';
+import { Channel, invoke } from '@tauri-apps/api/core';
 import { fetch } from '@tauri-apps/plugin-http';
 import type { StoredDevice } from '../types/device';
-import type { DiscoveredHost, DiscoveryMethod, DiscoveryOptions, NetworkInterface } from '../types/discovery';
+import type { DiscoveredHost, DiscoveryMethod, DiscoveryOptions, NetworkInterface, ScanProgress } from '../types/discovery';
 import { deriveDeviceType, extractComponents } from '../utils/deviceTypeMap';
 import { ShellyClient } from './shellyClient';
 
@@ -83,11 +83,16 @@ export async function runDiscovery(
   }
 
   if (methods.includes('scan') && cidr) {
+    const channel = new Channel<ScanProgress>();
+    if (options.onScanProgress) {
+      channel.onmessage = options.onScanProgress;
+    }
     promises.push(
       invoke<DiscoveredHost[]>('scan_subnet', {
         cidr,
         port,
         timeoutMs: 500,
+        onProgress: channel,
       })
         .then((hosts) => {
           for (const h of hosts) {
@@ -161,6 +166,13 @@ export async function runDiscovery(
   );
 
   return devices;
+}
+
+/**
+ * Signal an in-flight subnet scan to stop early.
+ */
+export async function cancelScan(): Promise<void> {
+  await invoke('cancel_scan');
 }
 
 /**

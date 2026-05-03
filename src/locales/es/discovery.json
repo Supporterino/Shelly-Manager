@@ -18,7 +18,7 @@
     "password": "Contraseña",
     "cidr": "Rango IP (CIDR)",
     "cidrLargeWarning": "Subred grande detectada — el escaneo puede tardar varios minutos. Considera reducir a /24.",
-    "cidrTooLarge": "Subred demasiado grande — el máximo soportado es /19 (8192 hosts). Usa un rango más estrecho.",
+    "cidrTooLarge": "Subred demasiado grande — el máximo soportado es /16 (65 534 hosts). Usa un rango más estrecho.",
     "autoDetect": "Detectar mi red automáticamente",
     "selectInterface": "Seleccionar interfaz de red",
     "noInterfaces": "No se encontraron interfaces de red activas.",
@@ -26,6 +26,7 @@
     "add": "Añadir dispositivo",
     "verify": "Verificando…"
   },
+  "scanningProgress": "Scanned {{scanned}} / {{total}} IPs",
   "found_one": "Se encontró {{count}} dispositivo",
   "found_other": "Se encontraron {{count}} dispositivos",
   "noDevicesFound": "No se encontraron dispositivos. Prueba otro método.",

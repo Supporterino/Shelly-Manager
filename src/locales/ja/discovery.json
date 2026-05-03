@@ -18,7 +18,7 @@
     "password": "パスワード",
     "cidr": "IPアドレス範囲 (CIDR)",
     "cidrLargeWarning": "大きなサブネットが検出されました — スキャンに数分かかる場合があります。/24 への絞り込みをご検討ください。",
-    "cidrTooLarge": "サブネットが大きすぎます — 最大サポートは /19（8192ホスト）です。より狭い範囲を使用してください。",
+    "cidrTooLarge": "サブネットが大きすぎます — 最大サポートは /16（65 534ホスト）です。より狭い範囲を使用してください。",
     "autoDetect": "ネットワークを自動検出",
     "selectInterface": "ネットワークインターフェースを選択",
     "noInterfaces": "アクティブなネットワークインターフェースが見つかりません。",
@@ -26,6 +26,7 @@
     "add": "デバイスを追加",
     "verify": "確認中…"
   },
+  "scanningProgress": "Scanned {{scanned}} / {{total}} IPs",
   "found_one": "{{count}} 台のデバイスが見つかりました",
   "found_other": "{{count}} 台のデバイスが見つかりました",
   "noDevicesFound": "デバイスが見つかりません。別の方法をお試しください。",

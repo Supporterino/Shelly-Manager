@@ -18,7 +18,7 @@
     "password": "密码",
     "cidr": "IP 范围 (CIDR)",
     "cidrLargeWarning": "检测到较大子网 — 扫描可能需要数分钟。建议缩小范围至 /24。",
-    "cidrTooLarge": "子网太大 — 最大支持 /19（8192 个主机）。请使用更小的范围。",
+    "cidrTooLarge": "子网太大 — 最大支持 /16（65 534 个主机）。请使用更小的范围。",
     "autoDetect": "自动检测我的网络",
     "selectInterface": "选择网络接口",
     "noInterfaces": "未找到活动的网络接口。",
@@ -26,6 +26,7 @@
     "add": "添加设备",
     "verify": "验证中…"
   },
+  "scanningProgress": "Scanned {{scanned}} / {{total}} IPs",
   "found_one": "找到 {{count}} 个设备",
   "found_other": "找到 {{count}} 个设备",
   "noDevicesFound": "未找到设备，请尝试其他方式。",

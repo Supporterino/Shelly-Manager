@@ -13,8 +13,16 @@ export interface NetworkInterface {
   prefix: number | null;
 }
 
+export interface ScanProgress {
+  scanned: number;
+  total: number;
+  found: number;
+  current_host?: DiscoveredHost;
+}
+
 export interface DiscoveryOptions {
   cidr?: string;
   timeoutSecs?: number;
   port?: number;
+  onScanProgress?: (progress: ScanProgress) => void;
 }

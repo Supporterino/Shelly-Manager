@@ -18,7 +18,7 @@
     "password": "Password",
     "cidr": "IP Range (CIDR)",
     "cidrLargeWarning": "Large subnet detected — scanning may take several minutes. Consider narrowing to /24.",
-    "cidrTooLarge": "Subnet too large — maximum supported is /19 (8192 hosts). Please use a narrower range.",
+    "cidrTooLarge": "Subnet too large — maximum supported is /16 (65 534 hosts). Please use a narrower range.",
     "autoDetect": "Auto-detect my network",
     "selectInterface": "Select network interface",
     "noInterfaces": "No active network interfaces found.",
@@ -26,6 +26,7 @@
     "add": "Add Device",
     "verify": "Verifying\u2026"
   },
+  "scanningProgress": "Scanned {{scanned}} / {{total}} IPs",
   "found_one": "Found {{count}} device",
   "found_other": "Found {{count}} devices",
   "noDevicesFound": "No devices found. Try a different method.",

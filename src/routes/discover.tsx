@@ -38,7 +38,7 @@ function DiscoverPage() {
   const [cidr, setCidr] = useState('');
   const [manualDevices, setManualDevices] = useState<StoredDevice[]>([]);
 
-  const { status, found, progress, error, start, reset } = useDiscovery();
+  const { status, found, progress, scanProgress, error, start, cancel, reset } = useDiscovery();
   const addDevice = useDeviceStore((s) => s.addDevice);
   const existingDevices = useDeviceStore((s) => s.devices);
 
@@ -113,7 +113,13 @@ function DiscoverPage() {
           {error}
         </Alert>
       )}
-      <DiscoveryProgress status={status} progress={progress} found={found.length} />
+      <DiscoveryProgress
+        status={status}
+        progress={progress}
+        found={found.length}
+        scanProgress={scanProgress}
+        onCancel={status === 'running' ? cancel : undefined}
+      />
       <Group justify="space-between" mt="sm">
         <Button variant="default" onClick={handleBack}>
           {tc('actions.cancel')}

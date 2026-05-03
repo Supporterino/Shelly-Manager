@@ -43,10 +43,10 @@ export function DiscoveryMethodSelect({
   const showManual = methods.includes('manual');
 
   const prefixLen = cidr ? parsePrefixLen(cidr) : null;
-  // prefix < 19 → > 8192 hosts → hard cap (matches Rust)
-  const cidrTooLarge = prefixLen !== null && prefixLen < 19;
-  // prefix < 21 → > 2048 hosts → warn (slow scan)
-  const cidrLarge = prefixLen !== null && prefixLen >= 19 && prefixLen < 21;
+  // prefix < 16 → > 65 534 hosts → hard cap (matches Rust)
+  const cidrTooLarge = prefixLen !== null && prefixLen < 16;
+  // prefix < 19 → > 8192 hosts → warn (slow scan)
+  const cidrLarge = prefixLen !== null && prefixLen >= 16 && prefixLen < 19;
 
   return (
     <Stack gap="md">

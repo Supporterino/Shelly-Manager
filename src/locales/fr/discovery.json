@@ -18,7 +18,7 @@
     "password": "Mot de passe",
     "cidr": "Plage IP (CIDR)",
     "cidrLargeWarning": "Grand sous-réseau détecté — le scan peut prendre plusieurs minutes. Envisagez de réduire à /24.",
-    "cidrTooLarge": "Sous-réseau trop grand — le maximum supporté est /19 (8192 hôtes). Veuillez utiliser une plage plus petite.",
+    "cidrTooLarge": "Sous-réseau trop grand — le maximum supporté est /16 (65 534 hôtes). Veuillez utiliser une plage plus petite.",
     "autoDetect": "Détecter automatiquement mon réseau",
     "selectInterface": "Sélectionner l'interface réseau",
     "noInterfaces": "Aucune interface réseau active trouvée.",
@@ -26,6 +26,7 @@
     "add": "Ajouter l'appareil",
     "verify": "Vérification…"
   },
+  "scanningProgress": "Scanned {{scanned}} / {{total}} IPs",
   "found_one": "{{count}} appareil trouvé",
   "found_other": "{{count}} appareils trouvés",
   "noDevicesFound": "Aucun appareil trouvé. Essayez une autre méthode.",

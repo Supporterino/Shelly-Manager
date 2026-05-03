@@ -8,7 +8,7 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import '../test/mocks/tauri';
 import { renderWithProviders } from '../test/renderWithProviders';
-import type { DiscoveredHost } from '../types/discovery';
+import type { DiscoveredHost, ScanProgress } from '../types/discovery';
 
 const mockVerifyManualHost = vi.fn();
 let mockGetNetworkInterfaces = vi.fn();
@@ -145,6 +145,35 @@ describe('DiscoveryProgress', () => {
     expect(screen.getByText('192.168.1.10:80')).toBeInTheDocument();
     expect(screen.getByText('192.168.1.11:80')).toBeInTheDocument();
     expect(screen.getByText('shellyplus1-aabbcc')).toBeInTheDocument();
+  });
+
+  it('shows progress bar and scan metrics when scanProgress is provided', () => {
+    const scanProgress: ScanProgress = { scanned: 256, total: 1024, found: 3 };
+    renderWithProviders(
+      <DiscoveryProgress status="running" progress={[]} found={0} scanProgress={scanProgress} />,
+    );
+    expect(screen.getByText('Scanned 256 / 1,024 IPs')).toBeInTheDocument();
+    expect(screen.getByText('Found 3 devices')).toBeInTheDocument();
+    expect(document.querySelector('[role="progressbar"]')).toBeInTheDocument();
+  });
+
+  it('shows Cancel button when running and onCancel is provided', async () => {
+    const user = userEvent.setup();
+    const onCancel = vi.fn();
+    const scanProgress: ScanProgress = { scanned: 100, total: 1000, found: 1 };
+    renderWithProviders(
+      <DiscoveryProgress
+        status="running"
+        progress={[]}
+        found={0}
+        scanProgress={scanProgress}
+        onCancel={onCancel}
+      />,
+    );
+    const cancelBtn = screen.getByRole('button', { name: /cancel/i });
+    expect(cancelBtn).toBeInTheDocument();
+    await user.click(cancelBtn);
+    expect(onCancel).toHaveBeenCalledTimes(1);
   });
 });
 

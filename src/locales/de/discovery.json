@@ -18,7 +18,7 @@
     "password": "Passwort",
     "cidr": "IP-Bereich (CIDR)",
     "cidrLargeWarning": "Großes Subnetz — der Scan kann mehrere Minuten dauern. Empfehlung: /24 verwenden.",
-    "cidrTooLarge": "Subnetz zu groß — Maximum ist /19 (8192 Hosts). Bitte einen kleineren Bereich angeben.",
+    "cidrTooLarge": "Subnetz zu groß — Maximum ist /16 (65 534 Hosts). Bitte einen kleineren Bereich angeben.",
     "autoDetect": "Mein Netzwerk automatisch erkennen",
     "selectInterface": "Netzwerkschnittstelle auswählen",
     "noInterfaces": "Keine aktiven Netzwerkschnittstellen gefunden.",
@@ -26,6 +26,7 @@
     "add": "Gerät hinzufügen",
     "verify": "Pr\u00fcfe\u2026"
   },
+  "scanningProgress": "Scanned {{scanned}} / {{total}} IPs",
   "found_one": "{{count}} Ger\u00e4t gefunden",
   "found_other": "{{count}} Ger\u00e4te gefunden",
   "noDevicesFound": "Keine Ger\u00e4te gefunden. Andere Methode versuchen.",

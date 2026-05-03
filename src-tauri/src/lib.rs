@@ -1,8 +1,10 @@
 use std::net::SocketAddr;
-use std::time::Duration;
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
+use std::time::Duration;
 use mdns_sd::{ServiceDaemon, ServiceEvent};
 use serde::{Deserialize, Serialize};
+use tauri::ipc::Channel;
 use tokio::task::JoinSet;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -11,6 +13,20 @@ pub struct DiscoveredHost {
     pub port: u16,
     pub hostname: Option<String>,
     pub source: String,
+}
+
+/// State shared between commands (e.g. cancellation flags).
+pub struct AppState {
+    cancel_scan: AtomicBool,
+}
+
+/// Progress payload sent from Rust to the frontend during subnet scanning.
+#[derive(Clone, Serialize)]
+struct ScanProgress {
+    scanned: u32,
+    total: u32,
+    found: u32,
+    current_host: Option<DiscoveredHost>,
 }
 
 /// Discover Shelly devices via mDNS.
@@ -100,29 +116,36 @@ async fn discover_mdns(timeout_secs: u64) -> Result<Vec<DiscoveredHost>, String>
 ///
 /// IPs are processed in chunks of 256 to keep the number of in-flight Tokio
 /// tasks and open file descriptors bounded, regardless of CIDR size. A hard
-/// cap of 8 192 hosts (prefix ≥ /19) is enforced; callers should validate
+/// cap of 65 534 hosts (prefix ≥ /16) is enforced; callers should validate
 /// the CIDR in the UI before invoking this command.
 #[tauri::command]
 async fn scan_subnet(
     cidr: String,
     port: u16,
     timeout_ms: u64,
+    on_progress: Channel<ScanProgress>,
+    state: tauri::State<'_, AppState>,
 ) -> Result<Vec<DiscoveredHost>, String> {
     let ips = expand_cidr(&cidr).map_err(|e| e.to_string())?;
 
-    // Hard cap — a /16 would take >10 minutes; refuse early with a clear message.
-    if ips.len() > 8192 {
+    // Hard cap — refuse subnets larger than /16 to prevent multi-hour scans.
+    if ips.len() > 65_534 {
         return Err(
-            "CIDR too large — maximum supported range is /19 (8192 hosts). \
+            "CIDR too large — maximum supported range is /16 (65 534 hosts). \
              Use a narrower subnet."
                 .to_string(),
         );
     }
 
+    // Reset cancellation flag at the start of every scan.
+    state.cancel_scan.store(false, Ordering::Relaxed);
+
     let timeout = Duration::from_millis(timeout_ms.max(100));
-    // Raised from 50 → 100 for better throughput on typical /24 subnets.
     let semaphore = Arc::new(tokio::sync::Semaphore::new(100));
     let mut results: Vec<DiscoveredHost> = Vec::new();
+
+    let total = ips.len() as u32;
+    let mut scanned: u32 = 0;
 
     // Process in chunks of 256 IPs to bound memory and file-descriptor usage.
     for chunk in ips.chunks(256) {
@@ -153,9 +176,30 @@ async fn scan_subnet(
                 results.push(host);
             }
         }
+
+        scanned += chunk.len() as u32;
+
+        let _ = on_progress.send(ScanProgress {
+            scanned,
+            total,
+            found: results.len() as u32,
+            current_host: None,
+        });
+
+        if state.cancel_scan.load(Ordering::Relaxed) {
+            break;
+        }
     }
 
     Ok(results)
+}
+
+/// Signal an in-flight subnet scan to stop early.
+/// The scan command will return whatever hosts it found up to that point.
+#[tauri::command]
+async fn cancel_scan(state: tauri::State<'_, AppState>) -> Result<(), String> {
+    state.cancel_scan.store(true, Ordering::Relaxed);
+    Ok(())
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -237,7 +281,7 @@ fn expand_cidr(cidr: &str) -> Result<Vec<String>, Box<dyn std::error::Error>> {
     // Skip network and broadcast addresses
     for ip_int in (network + 1)..broadcast {
         let bytes = ip_int.to_be_bytes();
-        ips.push(format!("{}.{}.{}.{}", bytes[0], bytes[1], bytes[2], bytes[3]));
+        ips.push(format!("{}.{ }.{ }.{ }", bytes[0], bytes[1], bytes[2], bytes[3]));
     }
 
     Ok(ips)
@@ -246,11 +290,19 @@ fn expand_cidr(cidr: &str) -> Result<Vec<String>, Box<dyn std::error::Error>> {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .manage(AppState {
+            cancel_scan: AtomicBool::new(false),
+        })
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_websocket::init())
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![discover_mdns, scan_subnet, get_network_interfaces])
+        .invoke_handler(tauri::generate_handler![
+            discover_mdns,
+            scan_subnet,
+            cancel_scan,
+            get_network_interfaces
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
