@@ -1,13 +1,13 @@
 /**
  * Displays and manages schedules for a Shelly device.
- * Lists existing schedules with human-readable display, delete button,
- * and an inline AddScheduleForm for creating new ones.
- * Part of Phase 5.6
+ * Lists existing schedules with human-readable display, edit inline, delete,
+ * delete-all, and an inline ScheduleForm for creating new ones.
+ * Part of Phase 3.4
  */
 
 import { ActionIcon, Badge, Button, Divider, Group, Loader, Stack, Text } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { IconPlus, IconTrash } from '@tabler/icons-react';
+import { IconPencil, IconPlus, IconTrash } from '@tabler/icons-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { TFunction } from 'i18next';
 import { useState } from 'react';
@@ -16,7 +16,7 @@ import { ShellyClient } from '../../services/shellyClient';
 import type { StoredDevice } from '../../types/device';
 import type { ScheduleJob } from '../../types/shelly';
 import { ConfirmModal } from '../common/ConfirmModal';
-import { AddScheduleForm } from './AddScheduleForm';
+import { ScheduleForm } from './ScheduleForm';
 
 /** Converts a Shelly cron timespec to a human-readable string.
  *  e.g. "0 0 22 * * 1,2,3" → "22:00 – Mon, Tue, Wed"
@@ -68,7 +68,9 @@ export function ScheduleSection({ device }: Props) {
   const queryClient = useQueryClient();
 
   const [showForm, setShowForm] = useState(false);
+  const [editJob, setEditJob] = useState<ScheduleJob | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
+  const [deleteAllOpen, setDeleteAllOpen] = useState(false);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['device', device.id, 'schedules'],
@@ -85,22 +87,44 @@ export function ScheduleSection({ device }: Props) {
     onSettled: () => setDeleteTarget(null),
   });
 
+  const deleteAllMutation = useMutation({
+    mutationFn: () => new ShellyClient(device).scheduleDeleteAll(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['device', device.id, 'schedules'] });
+      setDeleteAllOpen(false);
+    },
+    onError: (err: Error) =>
+      notifications.show({ color: 'red', title: 'Error', message: err.message }),
+  });
+
   const jobs: ScheduleJob[] = data?.jobs ?? [];
+
+  const handleEditDone = () => {
+    setEditJob(null);
+    setShowForm(false);
+  };
 
   return (
     <Stack gap="xs">
       <Group justify="space-between">
         <Text fw={600}>{t('schedule.title')}</Text>
-        {!showForm && (
-          <Button
-            size="xs"
-            variant="light"
-            leftSection={<IconPlus size={14} />}
-            onClick={() => setShowForm(true)}
-          >
-            {t('schedule.addSchedule')}
-          </Button>
-        )}
+        <Group gap="xs">
+          {jobs.length > 0 && (
+            <Button size="xs" variant="subtle" color="red" onClick={() => setDeleteAllOpen(true)}>
+              {t('schedule.deleteAll')}
+            </Button>
+          )}
+          {!showForm && !editJob && (
+            <Button
+              size="xs"
+              variant="light"
+              leftSection={<IconPlus size={14} />}
+              onClick={() => setShowForm(true)}
+            >
+              {t('schedule.addSchedule')}
+            </Button>
+          )}
+        </Group>
       </Group>
 
       {isLoading && <Loader size="xs" />}
@@ -120,34 +144,49 @@ export function ScheduleSection({ device }: Props) {
       {jobs.map((job, idx) => (
         <Stack key={job.id} gap={4}>
           {idx > 0 && <Divider />}
-          <Group justify="space-between" wrap="nowrap">
-            <Stack gap={2}>
-              <Text size="sm">{parseTimespec(job.timespec, i18n.language)}</Text>
-              <Group gap="xs">
-                <Badge size="xs" variant="light" color={job.enable ? 'green' : 'gray'}>
-                  {describeCall(job.calls, t)}
-                </Badge>
+          {editJob?.id === job.id ? (
+            <ScheduleForm
+              device={device}
+              initialJob={job}
+              onDone={handleEditDone}
+              onCancel={() => setEditJob(null)}
+            />
+          ) : (
+            <Group justify="space-between" wrap="nowrap">
+              <Stack gap={2}>
+                <Text size="sm">{parseTimespec(job.timespec, i18n.language)}</Text>
+                <Group gap="xs">
+                  <Badge size="xs" variant="light" color={job.enable ? 'green' : 'gray'}>
+                    {describeCall(job.calls, t)}
+                  </Badge>
+                </Group>
+              </Stack>
+              <Group gap={4}>
+                <ActionIcon
+                  variant="subtle"
+                  size="sm"
+                  aria-label={t('schedule.editSchedule')}
+                  onClick={() => setEditJob(job)}
+                >
+                  <IconPencil size={14} />
+                </ActionIcon>
+                <ActionIcon
+                  color="red"
+                  variant="subtle"
+                  size="sm"
+                  aria-label={t('schedule.deleteSchedule')}
+                  onClick={() => setDeleteTarget(job.id)}
+                >
+                  <IconTrash size={14} />
+                </ActionIcon>
               </Group>
-            </Stack>
-            <ActionIcon
-              color="red"
-              variant="subtle"
-              size="sm"
-              aria-label={t('schedule.deleteSchedule')}
-              onClick={() => setDeleteTarget(job.id)}
-            >
-              <IconTrash size={14} />
-            </ActionIcon>
-          </Group>
+            </Group>
+          )}
         </Stack>
       ))}
 
       {showForm && (
-        <AddScheduleForm
-          device={device}
-          onAdded={() => setShowForm(false)}
-          onCancel={() => setShowForm(false)}
-        />
+        <ScheduleForm device={device} onDone={handleEditDone} onCancel={() => setShowForm(false)} />
       )}
 
       <ConfirmModal
@@ -158,6 +197,16 @@ export function ScheduleSection({ device }: Props) {
         message={t('schedule.confirmDelete')}
         confirmColor="red"
         loading={deleteMutation.isPending}
+      />
+
+      <ConfirmModal
+        opened={deleteAllOpen}
+        onClose={() => setDeleteAllOpen(false)}
+        onConfirm={() => deleteAllMutation.mutate()}
+        title={t('schedule.deleteAll')}
+        message={t('schedule.deleteAllConfirm', { count: jobs.length })}
+        confirmColor="red"
+        loading={deleteAllMutation.isPending}
       />
     </Stack>
   );
