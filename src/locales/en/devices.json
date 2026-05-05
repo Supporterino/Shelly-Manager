@@ -5,6 +5,7 @@
     "cct": "Tunable White",
     "rgb": "RGB Light",
     "rgbw": "RGBW Light",
+    "rgbcct": "RGBCCT Light",
     "cover": "Cover / Blind",
     "sensor": "Sensor",
     "energy": "Energy Monitor",
@@ -141,7 +142,23 @@
     "lastMotion": "Last motion {{time}}",
     "battery": "Battery",
     "externalPower": "External Power",
-    "voltage": "Voltage"
+    "voltage": "Voltage",
+    "presence": "Presence",
+    "presenceDetected": "Present",
+    "presenceClear": "Not present",
+    "presenceZone": "Presence Zone",
+    "zoneActive": "Active",
+    "zoneInactive": "Inactive",
+    "bthome": "BTHome Sensor",
+    "window": "Window",
+    "windowOpen": "Open",
+    "windowClosed": "Closed",
+    "button": "Button",
+    "httpClient": "HTTP Client",
+    "httpConnected": "Connected",
+    "httpYes": "Yes",
+    "httpNo": "No",
+    "noData": "No data available"
   },
   "info": {
     "model": "Model",
@@ -195,9 +212,14 @@
     "title": "Schedules",
     "addSchedule": "Add Schedule",
     "deleteSchedule": "Delete Schedule",
+    "editSchedule": "Edit Schedule",
+    "deleteAll": "Delete All",
+    "deleteAllConfirm": "Delete all {{count}} schedule(s)? This cannot be undone.",
     "noSchedules": "No schedules configured.",
     "confirmDelete": "Delete this schedule?",
     "time": "Time",
+    "hour": "Hour",
+    "minute": "Minute",
     "days": "Days",
     "action": "Action"
   },
@@ -212,8 +234,197 @@
   "cover": {
     "setup": "Cover Setup",
     "calibrate": "Calibrate",
-    "calibrateDescription": "Run calibration to determine the cover\u2019s full range of motion.",
+    "calibrateDescription": "Run calibration to determine the cover's full range of motion.",
     "calibrateConfirm": "The cover will open and close completely to determine its range. Continue?",
     "calibrateSuccess": "Calibration started."
+  },
+  "config": {
+    "pageTitle": "Configuration",
+    "cover": {
+      "movement": "Movement",
+      "maxtimeOpen": "Max Open Time (s)",
+      "maxtimeClose": "Max Close Time (s)",
+      "initialState": "Initial State",
+      "invertDirections": "Invert Directions",
+      "inputMapping": "Input Mapping",
+      "inMode": "Input Mode",
+      "inModes": {
+        "oneButton": "One Button",
+        "twoButton": "Two Button"
+      },
+      "swapInputs": "Swap Inputs",
+      "obstacleDetection": "Obstacle Detection",
+      "obstacleDetectionEnable": "Enable Obstacle Detection",
+      "obstacleAction": "Obstacle Action",
+      "obstaclePower": "Obstacle Power (W)",
+      "obstacleDelay": "Obstacle Delay (ms)",
+      "reverse": "Reverse",
+      "safetySwitch": "Safety Switch",
+      "safetySwitchEnable": "Enable Safety Switch",
+      "safetyAction": "Safety Action",
+      "safetyAllowedDp": "Safety Position Delta (%)"
+    },
+    "light": {
+      "advanced": "Advanced",
+      "transitionDuration": "Transition Duration (ms)",
+      "minBrightness": "Min Brightness on Toggle (%)",
+      "nightMode": "Night Mode",
+      "nightBrightness": "Night Brightness (%)"
+    },
+    "rgb": {
+      "defaults": "Defaults",
+      "defaultBrightness": "Default Brightness (%)",
+      "defaultColor": "Default Colour"
+    },
+    "rgbw": {
+      "defaultWhite": "Default White (%)"
+    }
+  },
+  "energy": {
+    "resetTotals": "Reset Totals",
+    "resetConfirm": "Reset all energy totals? This cannot be undone."
+  },
+  "settings": {
+    "tabs": {
+      "general": "General",
+      "network": "Network",
+      "profile": "Profile",
+      "components": "Components",
+      "firmware": "Firmware",
+      "integrations": "Integrations",
+      "auth": "Authentication",
+      "methods": "Methods",
+      "advanced": "Advanced"
+    },
+    "system": {
+      "title": "System Settings",
+      "name": "Device Name",
+      "ecoMode": "Eco Mode",
+      "discoverable": "Discoverable on Network",
+      "timezone": "Timezone",
+      "detectLocation": "Auto-detect Location",
+      "deviceTime": "Device Time",
+      "syncTime": "Sync Time",
+      "restartRequired": "A restart is required for changes to take effect."
+    },
+    "wifi": {
+      "title": "WiFi",
+      "connectedTo": "Connected to {{ssid}}",
+      "notConnected": "Not connected",
+      "scan": "Scan Networks",
+      "scanning": "Scanning\u2026",
+      "connect": "Connect",
+      "password": "WiFi Password",
+      "staticIp": "Static IP Configuration",
+      "ip": "IP Address",
+      "netmask": "Subnet Mask",
+      "gateway": "Gateway",
+      "dns": "DNS Server",
+      "sta1": "Fallback WiFi (STA1)"
+    },
+    "ethernet": {
+      "title": "Ethernet",
+      "enable": "Enable Ethernet",
+      "mode": "IP Mode"
+    },
+    "ap": {
+      "title": "Access Point",
+      "ssid": "AP SSID",
+      "clients": "Connected Clients",
+      "noClients": "No clients connected.",
+      "clientMac": "MAC",
+      "clientIp": "IP",
+      "connectedSince": "Connected Since"
+    },
+    "profile": {
+      "title": "Device Profile",
+      "current": "Current: {{profile}}",
+      "switchTo": "Switch Profile",
+      "selectProfile": "Select a profile",
+      "confirmTitle": "Switch Profile?",
+      "confirmMessage": "This will delete {{webhooks}} webhook(s) and {{schedules}} schedule(s). Continue?"
+    },
+    "integrations": {
+      "title": "Cloud & Integration Status",
+      "noData": "No integration data available from this device.",
+      "cloud": "Cloud",
+      "mqtt": "MQTT",
+      "ws": "Outbound WebSocket",
+      "ble": "Bluetooth"
+    },
+    "auth": {
+      "title": "Authentication",
+      "enabled": "Authentication enabled",
+      "password": "Password",
+      "passwordPlaceholder": "Enter new password",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "Re-enter password",
+      "enable": "Enable Authentication",
+      "disable": "Disable Authentication",
+      "warnNoPassword": "Warning: enabling authentication without storing a password may lock you out.",
+      "enableConfirmTitle": "Enable Authentication?",
+      "enableConfirmMessage": "This will require a password for all future connections. Make sure you remember it.",
+      "disableConfirmTitle": "Disable Authentication?",
+      "disableConfirmMessage": "This will remove password protection from the device."
+    },
+    "methods": {
+      "title": "Device Methods",
+      "searchPlaceholder": "Search methods...",
+      "count": "{{count}} method(s) available"
+    }
+  },
+  "webhooks": {
+    "title": "Webhooks",
+    "noWebhooks": "No webhooks configured.",
+    "create": "Create Webhook",
+    "edit": "Edit Webhook",
+    "delete": "Delete Webhook",
+    "deleteAll": "Delete All",
+    "deleteAllConfirm": "Delete all {{count}} webhook(s)? This cannot be undone.",
+    "deleteConfirm": "Delete this webhook?",
+    "event": "Event",
+    "name": "Name",
+    "urls": "URLs",
+    "enable": "Enabled",
+    "condition": "Condition (JSON)",
+    "repeatPeriod": "Repeat Period (s)",
+    "windowStart": "Active Window Start",
+    "windowEnd": "Active Window End"
+  },
+  "kvs": {
+    "title": "Key-Value Store",
+    "searchPlaceholder": "Search keys...",
+    "noKeys": "No keys stored.",
+    "addKey": "Add Key",
+    "editKey": "Edit Key",
+    "key": "Key",
+    "value": "Value (JSON)",
+    "etag": "ETag",
+    "deleteKey": "Delete Key",
+    "deleteConfirm": "Delete key \"{{key}}\"?"
+  },
+  "scripts": {
+    "title": "Scripts",
+    "noScripts": "No scripts configured.",
+    "create": "Create Script",
+    "name": "Script Name",
+    "code": "Code",
+    "status": {
+      "label": "Status",
+      "running": "Running",
+      "stopped": "Stopped"
+    },
+    "memory": "Memory",
+    "cpu": "CPU %",
+    "start": "Start",
+    "stop": "Stop",
+    "viewCode": "View Code",
+    "editCode": "Edit Code",
+    "uploadCode": "Upload Code",
+    "eval": "Evaluate Expression",
+    "run": "Run",
+    "evalResult": "Result",
+    "deleteScript": "Delete Script",
+    "deleteConfirm": "Delete this script?"
   }
 }

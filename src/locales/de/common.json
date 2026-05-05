@@ -8,13 +8,14 @@
     "retry": "Wiederholen",
     "close": "Schließen",
     "refresh": "Aktualisieren",
-    "back": "Zur\u00fcck"
+    "back": "Zurück"
   },
   "status": {
     "online": "Online",
     "offline": "Offline",
     "connecting": "Verbinde",
-    "error": "Fehler"
+    "error": "Fehler",
+    "loading": "Loading…"
   },
   "errors": {
     "networkUnreachable": "Gerät nicht erreichbar. Netzwerk prüfen.",

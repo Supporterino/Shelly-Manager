@@ -14,7 +14,8 @@
     "online": "在线",
     "offline": "离线",
     "connecting": "连接中",
-    "error": "错误"
+    "error": "错误",
+    "loading": "Loading…"
   },
   "errors": {
     "networkUnreachable": "设备无法访问，请检查网络。",

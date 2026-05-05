@@ -14,7 +14,8 @@
     "online": "オンライン",
     "offline": "オフライン",
     "connecting": "接続中",
-    "error": "エラー"
+    "error": "エラー",
+    "loading": "Loading…"
   },
   "errors": {
     "networkUnreachable": "デバイスに接続できません。ネットワークを確認してください。",

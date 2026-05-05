@@ -14,7 +14,8 @@
     "online": "Online",
     "offline": "Offline",
     "connecting": "Connecting",
-    "error": "Error"
+    "error": "Error",
+    "loading": "Loading…"
   },
   "errors": {
     "networkUnreachable": "Device unreachable. Check your network.",

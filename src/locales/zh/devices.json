@@ -9,7 +9,8 @@
     "sensor": "传感器",
     "energy": "能耗监控",
     "input": "输入",
-    "unknown": "未知"
+    "unknown": "未知",
+    "rgbcct": "RGBCCT Light"
   },
   "controls": {
     "on": "开",
@@ -141,7 +142,23 @@
     "lastMotion": "上次动作 {{time}}",
     "battery": "电池",
     "externalPower": "外部电源",
-    "voltage": "电压"
+    "voltage": "电压",
+    "presence": "Presence",
+    "presenceDetected": "Present",
+    "presenceClear": "Not present",
+    "presenceZone": "Presence Zone",
+    "zoneActive": "Active",
+    "zoneInactive": "Inactive",
+    "bthome": "BTHome Sensor",
+    "window": "Window",
+    "windowOpen": "Open",
+    "windowClosed": "Closed",
+    "button": "Button",
+    "httpClient": "HTTP Client",
+    "httpConnected": "Connected",
+    "httpYes": "Yes",
+    "httpNo": "No",
+    "noData": "No data available"
   },
   "info": {
     "model": "型号",
@@ -199,7 +216,12 @@
     "confirmDelete": "删除此定时任务？",
     "time": "时间",
     "days": "日期",
-    "action": "操作"
+    "action": "操作",
+    "editSchedule": "Edit Schedule",
+    "deleteAll": "Delete All",
+    "deleteAllConfirm": "Delete all {{count}} schedule(s)? This cannot be undone.",
+    "hour": "Hour",
+    "minute": "Minute"
   },
   "dangerZone": {
     "title": "危险操作",
@@ -215,5 +237,194 @@
     "calibrateDescription": "运行校准以确定遮阳帘的完整行程范围。",
     "calibrateConfirm": "遮阳帘将完全打开和关闭以确定行程范围。继续？",
     "calibrateSuccess": "校准已启动。"
+  },
+  "settings": {
+    "tabs": {
+      "general": "常规",
+      "network": "网络",
+      "profile": "配置文件",
+      "components": "组件",
+      "firmware": "固件",
+      "advanced": "高级",
+      "integrations": "Integrations",
+      "auth": "Authentication",
+      "methods": "Methods"
+    },
+    "system": {
+      "title": "系统设置",
+      "name": "设备名称",
+      "ecoMode": "节能模式",
+      "discoverable": "在网络上可发现",
+      "timezone": "时区",
+      "detectLocation": "自动检测位置",
+      "deviceTime": "设备时间",
+      "syncTime": "同步时间",
+      "restartRequired": "需要重启才能使更改生效。"
+    },
+    "wifi": {
+      "title": "WiFi",
+      "connectedTo": "已连接到 {{ssid}}",
+      "notConnected": "未连接",
+      "scan": "扫描网络",
+      "scanning": "正在扫描…",
+      "connect": "连接",
+      "password": "WiFi密码",
+      "staticIp": "静态IP配置",
+      "ip": "IP地址",
+      "netmask": "子网掩码",
+      "gateway": "网关",
+      "dns": "DNS服务器",
+      "sta1": "备用WiFi (STA1)"
+    },
+    "ethernet": {
+      "title": "以太网",
+      "enable": "启用以太网",
+      "mode": "IP模式"
+    },
+    "ap": {
+      "title": "接入点",
+      "ssid": "AP SSID",
+      "clients": "已连接客户端",
+      "noClients": "没有客户端连接。",
+      "clientMac": "MAC",
+      "clientIp": "IP",
+      "connectedSince": "连接时间"
+    },
+    "profile": {
+      "title": "设备配置文件",
+      "current": "当前: {{profile}}",
+      "switchTo": "切换配置文件",
+      "selectProfile": "选择配置文件",
+      "confirmTitle": "切换配置文件？",
+      "confirmMessage": "这将删除 {{webhooks}} 个Webhook和 {{schedules}} 个计划。继续？"
+    },
+    "integrations": {
+      "title": "Cloud & Integration Status",
+      "noData": "No integration data available from this device.",
+      "cloud": "Cloud",
+      "mqtt": "MQTT",
+      "ws": "Outbound WebSocket",
+      "ble": "Bluetooth"
+    },
+    "auth": {
+      "title": "Authentication",
+      "enabled": "Authentication enabled",
+      "password": "Password",
+      "passwordPlaceholder": "Enter new password",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "Re-enter password",
+      "enable": "Enable Authentication",
+      "disable": "Disable Authentication",
+      "warnNoPassword": "Warning: enabling authentication without storing a password may lock you out.",
+      "enableConfirmTitle": "Enable Authentication?",
+      "enableConfirmMessage": "This will require a password for all future connections. Make sure you remember it.",
+      "disableConfirmTitle": "Disable Authentication?",
+      "disableConfirmMessage": "This will remove password protection from the device."
+    },
+    "methods": {
+      "title": "Device Methods",
+      "searchPlaceholder": "Search methods...",
+      "count": "{{count}} method(s) available"
+    }
+  },
+  "webhooks": {
+    "title": "Webhooks",
+    "noWebhooks": "No webhooks configured.",
+    "create": "Create Webhook",
+    "edit": "Edit Webhook",
+    "delete": "Delete Webhook",
+    "deleteAll": "Delete All",
+    "deleteAllConfirm": "Delete all {{count}} webhook(s)? This cannot be undone.",
+    "deleteConfirm": "Delete this webhook?",
+    "event": "Event",
+    "name": "Name",
+    "urls": "URLs",
+    "enable": "Enabled",
+    "condition": "Condition (JSON)",
+    "repeatPeriod": "Repeat Period (s)",
+    "windowStart": "Active Window Start",
+    "windowEnd": "Active Window End"
+  },
+  "kvs": {
+    "title": "Key-Value Store",
+    "searchPlaceholder": "Search keys...",
+    "noKeys": "No keys stored.",
+    "addKey": "Add Key",
+    "editKey": "Edit Key",
+    "key": "Key",
+    "value": "Value (JSON)",
+    "etag": "ETag",
+    "deleteKey": "Delete Key",
+    "deleteConfirm": "Delete key \"{{key}}\"?"
+  },
+  "scripts": {
+    "title": "Scripts",
+    "noScripts": "No scripts configured.",
+    "create": "Create Script",
+    "name": "Script Name",
+    "code": "Code",
+    "status": {
+      "label": "Status",
+      "running": "Running",
+      "stopped": "Stopped"
+    },
+    "memory": "Memory",
+    "cpu": "CPU %",
+    "start": "Start",
+    "stop": "Stop",
+    "viewCode": "View Code",
+    "editCode": "Edit Code",
+    "uploadCode": "Upload Code",
+    "eval": "Evaluate Expression",
+    "run": "Run",
+    "evalResult": "Result",
+    "deleteScript": "Delete Script",
+    "deleteConfirm": "Delete this script?"
+  },
+  "config": {
+    "pageTitle": "Configuration",
+    "cover": {
+      "movement": "Movement",
+      "maxtimeOpen": "Max Open Time (s)",
+      "maxtimeClose": "Max Close Time (s)",
+      "initialState": "Initial State",
+      "invertDirections": "Invert Directions",
+      "inputMapping": "Input Mapping",
+      "inMode": "Input Mode",
+      "inModes": {
+        "oneButton": "One Button",
+        "twoButton": "Two Button"
+      },
+      "swapInputs": "Swap Inputs",
+      "obstacleDetection": "Obstacle Detection",
+      "obstacleDetectionEnable": "Enable Obstacle Detection",
+      "obstacleAction": "Obstacle Action",
+      "obstaclePower": "Obstacle Power (W)",
+      "obstacleDelay": "Obstacle Delay (ms)",
+      "reverse": "Reverse",
+      "safetySwitch": "Safety Switch",
+      "safetySwitchEnable": "Enable Safety Switch",
+      "safetyAction": "Safety Action",
+      "safetyAllowedDp": "Safety Position Delta (%)"
+    },
+    "light": {
+      "advanced": "Advanced",
+      "transitionDuration": "Transition Duration (ms)",
+      "minBrightness": "Min Brightness on Toggle (%)",
+      "nightMode": "Night Mode",
+      "nightBrightness": "Night Brightness (%)"
+    },
+    "rgb": {
+      "defaults": "Defaults",
+      "defaultBrightness": "Default Brightness (%)",
+      "defaultColor": "Default Colour"
+    },
+    "rgbw": {
+      "defaultWhite": "Default White (%)"
+    }
+  },
+  "energy": {
+    "resetTotals": "Reset Totals",
+    "resetConfirm": "Reset all energy totals? This cannot be undone."
   }
 }

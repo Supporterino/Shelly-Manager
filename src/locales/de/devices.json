@@ -2,14 +2,15 @@
   "types": {
     "switch": "Schalter",
     "dimmer": "Dimmer",
-    "cct": "Wei\u00dftonlicht",
+    "cct": "Weißtonlicht",
     "rgb": "RGB-Licht",
     "rgbw": "RGBW-Licht",
     "cover": "Jalousie",
     "sensor": "Sensor",
     "energy": "Energiemonitor",
     "input": "Eingang",
-    "unknown": "Unbekannt"
+    "unknown": "Unbekannt",
+    "rgbcct": "RGBCCT Light"
   },
   "controls": {
     "on": "Ein",
@@ -18,12 +19,12 @@
     "brightness": "Helligkeit",
     "colorTemperature": "Farbtemperatur",
     "warm": "Warm",
-    "cool": "K\u00fchl",
+    "cool": "Kühl",
     "color": "Farbe",
-    "white": "Wei\u00df",
+    "white": "Weiß",
     "colorBrightness": "Farbhelligkeit",
-    "open": "\u00d6ffnen",
-    "close": "Schlie\u00dfen",
+    "open": "Öffnen",
+    "close": "Schließen",
     "stop": "Stop",
     "goToPosition": "Position anfahren",
     "position": "Position",
@@ -35,8 +36,8 @@
     "state": {
       "open": "Offen",
       "closed": "Geschlossen",
-      "opening": "\u00d6ffnet",
-      "closing": "Schlie\u00dft",
+      "opening": "Öffnet",
+      "closing": "Schließt",
       "stopped": "Gestoppt",
       "calibrating": "Kalibrieren"
     },
@@ -112,9 +113,9 @@
     "powerFactor": "Leistungsfaktor",
     "frequency": "Frequenz",
     "totalEnergy": "Gesamtenergie",
-    "returnedEnergy": "R\u00fcckgesp. Energie",
+    "returnedEnergy": "Rückgesp. Energie",
     "energyStats": "Energiewerte",
-    "deviceTemp": "Ger\u00e4tetemperatur",
+    "deviceTemp": "Gerätetemperatur",
     "phaseA": "Phase A",
     "phaseB": "Phase B",
     "total": "Gesamt"
@@ -122,17 +123,17 @@
   "sensors": {
     "temperature": "Temperatur",
     "humidity": "Luftfeuchtigkeit",
-    "flood": "Wasser / \u00dcberschwemmung",
+    "flood": "Wasser / Überschwemmung",
     "floodDetected": "Wasser erkannt!",
     "floodClear": "Trocken",
     "smoke": "Rauch",
     "smokeAlarm": "Rauchalarm!",
     "smokeClear": "Klar",
     "mute": "Stummschalten",
-    "illuminance": "Beleuchtungsst\u00e4rke",
+    "illuminance": "Beleuchtungsstärke",
     "illuminanceLevel": {
       "dark": "Dunkel",
-      "twilight": "D\u00e4mmerung",
+      "twilight": "Dämmerung",
       "bright": "Hell"
     },
     "motion": "Bewegung",
@@ -141,7 +142,23 @@
     "lastMotion": "Letzte Bewegung {{time}}",
     "battery": "Akku",
     "externalPower": "Externes Netzteil",
-    "voltage": "Spannung"
+    "voltage": "Spannung",
+    "presence": "Presence",
+    "presenceDetected": "Present",
+    "presenceClear": "Not present",
+    "presenceZone": "Presence Zone",
+    "zoneActive": "Active",
+    "zoneInactive": "Inactive",
+    "bthome": "BTHome Sensor",
+    "window": "Window",
+    "windowOpen": "Open",
+    "windowClosed": "Closed",
+    "button": "Button",
+    "httpClient": "HTTP Client",
+    "httpConnected": "Connected",
+    "httpYes": "Yes",
+    "httpNo": "No",
+    "noData": "No data available"
   },
   "info": {
     "model": "Modell",
@@ -199,21 +216,215 @@
     "confirmDelete": "Diesen Zeitplan löschen?",
     "time": "Uhrzeit",
     "days": "Tage",
-    "action": "Aktion"
+    "action": "Aktion",
+    "editSchedule": "Edit Schedule",
+    "deleteAll": "Delete All",
+    "deleteAllConfirm": "Delete all {{count}} schedule(s)? This cannot be undone.",
+    "hour": "Hour",
+    "minute": "Minute"
   },
   "dangerZone": {
     "title": "Gefahrenbereich",
-    "reboot": "Ger\u00e4t neu starten",
+    "reboot": "Gerät neu starten",
     "factoryReset": "Werkseinstellungen",
-    "factoryResetConfirm": "Alle Einstellungen werden gel\u00f6scht. Fortfahren?",
-    "rebooting": "Neustart\u2026",
-    "rebootSuccess": "Ger\u00e4t wird neu gestartet."
+    "factoryResetConfirm": "Alle Einstellungen werden gelöscht. Fortfahren?",
+    "rebooting": "Neustart…",
+    "rebootSuccess": "Gerät wird neu gestartet."
   },
   "cover": {
     "setup": "Jalousie-Setup",
     "calibrate": "Kalibrieren",
     "calibrateDescription": "Kalibrierung starten, um den vollen Fahrbereich zu ermitteln.",
-    "calibrateConfirm": "Die Jalousie f\u00e4hrt vollst\u00e4ndig auf und zu. Fortfahren?",
+    "calibrateConfirm": "Die Jalousie fährt vollständig auf und zu. Fortfahren?",
     "calibrateSuccess": "Kalibrierung gestartet."
+  },
+  "settings": {
+    "tabs": {
+      "general": "Allgemein",
+      "network": "Netzwerk",
+      "profile": "Profil",
+      "components": "Komponenten",
+      "firmware": "Firmware",
+      "advanced": "Erweitert",
+      "integrations": "Integrations",
+      "auth": "Authentication",
+      "methods": "Methods"
+    },
+    "system": {
+      "title": "Systemeinstellungen",
+      "name": "Gerätename",
+      "ecoMode": "Eco-Modus",
+      "discoverable": "Im Netzwerk auffindbar",
+      "timezone": "Zeitzone",
+      "detectLocation": "Standort automatisch erkennen",
+      "deviceTime": "Gerätezeit",
+      "syncTime": "Zeit synchronisieren",
+      "restartRequired": "Ein Neustart ist erforderlich, damit die Änderungen wirksam werden."
+    },
+    "wifi": {
+      "title": "WLAN",
+      "connectedTo": "Verbunden mit {{ssid}}",
+      "notConnected": "Nicht verbunden",
+      "scan": "Netzwerke scannen",
+      "scanning": "Scanne…",
+      "connect": "Verbinden",
+      "password": "WLAN-Passwort",
+      "staticIp": "Statische IP-Konfiguration",
+      "ip": "IP-Adresse",
+      "netmask": "Subnetzmaske",
+      "gateway": "Gateway",
+      "dns": "DNS-Server",
+      "sta1": "Fallback-WLAN (STA1)"
+    },
+    "ethernet": {
+      "title": "Ethernet",
+      "enable": "Ethernet aktivieren",
+      "mode": "IP-Modus"
+    },
+    "ap": {
+      "title": "Access Point",
+      "ssid": "AP-SSID",
+      "clients": "Verbundene Clients",
+      "noClients": "Keine Clients verbunden.",
+      "clientMac": "MAC",
+      "clientIp": "IP",
+      "connectedSince": "Verbunden seit"
+    },
+    "profile": {
+      "title": "Geräteprofil",
+      "current": "Aktuell: {{profile}}",
+      "switchTo": "Profil wechseln",
+      "selectProfile": "Profil auswählen",
+      "confirmTitle": "Profil wechseln?",
+      "confirmMessage": "Dies löscht {{webhooks}} Webhook(s) und {{schedules}} Zeitplan(e). Fortfahren?"
+    },
+    "integrations": {
+      "title": "Cloud & Integration Status",
+      "noData": "No integration data available from this device.",
+      "cloud": "Cloud",
+      "mqtt": "MQTT",
+      "ws": "Outbound WebSocket",
+      "ble": "Bluetooth"
+    },
+    "auth": {
+      "title": "Authentication",
+      "enabled": "Authentication enabled",
+      "password": "Password",
+      "passwordPlaceholder": "Enter new password",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "Re-enter password",
+      "enable": "Enable Authentication",
+      "disable": "Disable Authentication",
+      "warnNoPassword": "Warning: enabling authentication without storing a password may lock you out.",
+      "enableConfirmTitle": "Enable Authentication?",
+      "enableConfirmMessage": "This will require a password for all future connections. Make sure you remember it.",
+      "disableConfirmTitle": "Disable Authentication?",
+      "disableConfirmMessage": "This will remove password protection from the device."
+    },
+    "methods": {
+      "title": "Device Methods",
+      "searchPlaceholder": "Search methods...",
+      "count": "{{count}} method(s) available"
+    }
+  },
+  "webhooks": {
+    "title": "Webhooks",
+    "noWebhooks": "No webhooks configured.",
+    "create": "Create Webhook",
+    "edit": "Edit Webhook",
+    "delete": "Delete Webhook",
+    "deleteAll": "Delete All",
+    "deleteAllConfirm": "Delete all {{count}} webhook(s)? This cannot be undone.",
+    "deleteConfirm": "Delete this webhook?",
+    "event": "Event",
+    "name": "Name",
+    "urls": "URLs",
+    "enable": "Enabled",
+    "condition": "Condition (JSON)",
+    "repeatPeriod": "Repeat Period (s)",
+    "windowStart": "Active Window Start",
+    "windowEnd": "Active Window End"
+  },
+  "kvs": {
+    "title": "Key-Value Store",
+    "searchPlaceholder": "Search keys...",
+    "noKeys": "No keys stored.",
+    "addKey": "Add Key",
+    "editKey": "Edit Key",
+    "key": "Key",
+    "value": "Value (JSON)",
+    "etag": "ETag",
+    "deleteKey": "Delete Key",
+    "deleteConfirm": "Delete key \"{{key}}\"?"
+  },
+  "scripts": {
+    "title": "Scripts",
+    "noScripts": "No scripts configured.",
+    "create": "Create Script",
+    "name": "Script Name",
+    "code": "Code",
+    "status": {
+      "label": "Status",
+      "running": "Running",
+      "stopped": "Stopped"
+    },
+    "memory": "Memory",
+    "cpu": "CPU %",
+    "start": "Start",
+    "stop": "Stop",
+    "viewCode": "View Code",
+    "editCode": "Edit Code",
+    "uploadCode": "Upload Code",
+    "eval": "Evaluate Expression",
+    "run": "Run",
+    "evalResult": "Result",
+    "deleteScript": "Delete Script",
+    "deleteConfirm": "Delete this script?"
+  },
+  "config": {
+    "pageTitle": "Configuration",
+    "cover": {
+      "movement": "Movement",
+      "maxtimeOpen": "Max Open Time (s)",
+      "maxtimeClose": "Max Close Time (s)",
+      "initialState": "Initial State",
+      "invertDirections": "Invert Directions",
+      "inputMapping": "Input Mapping",
+      "inMode": "Input Mode",
+      "inModes": {
+        "oneButton": "One Button",
+        "twoButton": "Two Button"
+      },
+      "swapInputs": "Swap Inputs",
+      "obstacleDetection": "Obstacle Detection",
+      "obstacleDetectionEnable": "Enable Obstacle Detection",
+      "obstacleAction": "Obstacle Action",
+      "obstaclePower": "Obstacle Power (W)",
+      "obstacleDelay": "Obstacle Delay (ms)",
+      "reverse": "Reverse",
+      "safetySwitch": "Safety Switch",
+      "safetySwitchEnable": "Enable Safety Switch",
+      "safetyAction": "Safety Action",
+      "safetyAllowedDp": "Safety Position Delta (%)"
+    },
+    "light": {
+      "advanced": "Advanced",
+      "transitionDuration": "Transition Duration (ms)",
+      "minBrightness": "Min Brightness on Toggle (%)",
+      "nightMode": "Night Mode",
+      "nightBrightness": "Night Brightness (%)"
+    },
+    "rgb": {
+      "defaults": "Defaults",
+      "defaultBrightness": "Default Brightness (%)",
+      "defaultColor": "Default Colour"
+    },
+    "rgbw": {
+      "defaultWhite": "Default White (%)"
+    }
+  },
+  "energy": {
+    "resetTotals": "Reset Totals",
+    "resetConfirm": "Reset all energy totals? This cannot be undone."
   }
 }

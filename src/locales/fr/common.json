@@ -14,7 +14,8 @@
     "online": "En ligne",
     "offline": "Hors ligne",
     "connecting": "Connexion en cours",
-    "error": "Erreur"
+    "error": "Erreur",
+    "loading": "Loading…"
   },
   "errors": {
     "networkUnreachable": "Appareil inaccessible. Vérifiez votre réseau.",

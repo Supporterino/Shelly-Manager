@@ -14,7 +14,8 @@
     "online": "En línea",
     "offline": "Sin conexión",
     "connecting": "Conectando",
-    "error": "Error"
+    "error": "Error",
+    "loading": "Loading…"
   },
   "errors": {
     "networkUnreachable": "Dispositivo inaccesible. Comprueba tu red.",
