@@ -1,5 +1,6 @@
 import {
   ActionIcon,
+  Button,
   Divider,
   Group,
   ScrollArea,
@@ -9,7 +10,15 @@ import {
   Title,
   Tooltip,
 } from '@mantine/core';
-import { IconArrowLeft, IconRefresh, IconSettings } from '@tabler/icons-react';
+import {
+  IconArrowLeft,
+  IconCode,
+  IconDatabase,
+  IconRefresh,
+  IconSettings,
+  IconTool,
+  IconWebhook,
+} from '@tabler/icons-react';
 import { createFileRoute, Link, Outlet, useLocation } from '@tanstack/react-router';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -104,8 +113,8 @@ function DeviceDetailPage() {
     };
   }, [deviceId]);
 
-  // When a child route (e.g. /settings) is active, let it render in full
-  if (location.pathname.endsWith('/settings')) {
+  // When a child route (e.g. /settings or /config) is active, let it render in full
+  if (location.pathname.endsWith('/settings') || location.pathname.endsWith('/config')) {
     return <Outlet />;
   }
 
@@ -173,6 +182,30 @@ function DeviceDetailPage() {
               </ActionIcon>
             </Link>
           </Group>
+        </Group>
+
+        {/* Automation quick-links */}
+        <Group gap="xs">
+          <Link to="/devices/$deviceId/config" params={{ deviceId }}>
+            <Button variant="light" size="xs" leftSection={<IconTool size={14} />}>
+              {t('config.pageTitle')}
+            </Button>
+          </Link>
+          <Link to="/devices/$deviceId/webhooks" params={{ deviceId }}>
+            <Button variant="light" size="xs" leftSection={<IconWebhook size={14} />}>
+              Webhooks
+            </Button>
+          </Link>
+          <Link to="/devices/$deviceId/kvs" params={{ deviceId }}>
+            <Button variant="light" size="xs" leftSection={<IconDatabase size={14} />}>
+              KVS
+            </Button>
+          </Link>
+          <Link to="/devices/$deviceId/scripts" params={{ deviceId }}>
+            <Button variant="light" size="xs" leftSection={<IconCode size={14} />}>
+              Scripts
+            </Button>
+          </Link>
         </Group>
 
         <Divider />

@@ -20,7 +20,7 @@ import { IconInfoCircle } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSwitchConfig, useSwitchSetConfig } from '../../../hooks/useDeviceControl';
-import type { SwitchInMode, SwitchInitialState } from '../../../types/shelly';
+import type { SwitchInitialState, SwitchInMode } from '../../../types/shelly';
 
 interface Props {
   opened: boolean;
@@ -71,12 +71,12 @@ export function SwitchConfigPanel({ opened, onClose, deviceId, switchId }: Props
     setAutoOnDelay(config.auto_on_delay);
     setAutoOff(config.auto_off);
     setAutoOffDelay(config.auto_off_delay);
-    setPowerLimit('power_limit' in config ? config.power_limit ?? null : undefined);
-    setVoltageLimit('voltage_limit' in config ? config.voltage_limit ?? null : undefined);
+    setPowerLimit('power_limit' in config ? (config.power_limit ?? null) : undefined);
+    setVoltageLimit('voltage_limit' in config ? (config.voltage_limit ?? null) : undefined);
     setUndervoltageLimit(
-      'undervoltage_limit' in config ? config.undervoltage_limit ?? null : undefined,
+      'undervoltage_limit' in config ? (config.undervoltage_limit ?? null) : undefined,
     );
-    setCurrentLimit('current_limit' in config ? config.current_limit ?? null : undefined);
+    setCurrentLimit('current_limit' in config ? (config.current_limit ?? null) : undefined);
     setRestartNeeded(false);
   }, [config]);
 

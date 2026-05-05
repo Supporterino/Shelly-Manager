@@ -5,6 +5,7 @@ import { CCTControl } from './controls/CCTControl';
 import { CoverControl } from './controls/CoverControl';
 import { DimmerControl } from './controls/DimmerControl';
 import { InputDisplay } from './controls/InputDisplay';
+import { RGBCCTControl } from './controls/RGBCCTControl';
 import { RGBControl } from './controls/RGBControl';
 import { RGBWControl } from './controls/RGBWControl';
 import { SwitchControl } from './controls/SwitchControl';
@@ -12,10 +13,15 @@ import { EM1Display } from './energy/EM1Display';
 import { EMDisplay } from './energy/EMDisplay';
 import { PM1Display } from './energy/PM1Display';
 import { BatteryIndicator } from './sensors/BatteryIndicator';
+import { BTHomeSensor } from './sensors/BTHomeSensor';
 import { FloodSensor } from './sensors/FloodSensor';
+import { GenericComponentDisplay } from './sensors/GenericComponentDisplay';
+import { HttpClientDisplay } from './sensors/HttpClientDisplay';
 import { HumiditySensor } from './sensors/HumiditySensor';
 import { IlluminanceSensor } from './sensors/IlluminanceSensor';
 import { MotionSensor } from './sensors/MotionSensor';
+import { PresenceSensor } from './sensors/PresenceSensor';
+import { PresenceZoneSensor } from './sensors/PresenceZoneSensor';
 import { SmokeSensor } from './sensors/SmokeSensor';
 import { TemperatureSensor } from './sensors/TemperatureSensor';
 import { VoltmeterDisplay } from './sensors/VoltmeterDisplay';
@@ -52,6 +58,8 @@ export function ComponentList({ device, status }: Props) {
             return <RGBControl key={renderKey} {...props} />;
           case 'rgbw':
             return <RGBWControl key={renderKey} {...props} />;
+          case 'rgbcct':
+            return <RGBCCTControl key={renderKey} {...props} />;
           case 'cover':
             return <CoverControl key={renderKey} {...props} />;
           case 'input':
@@ -78,6 +86,21 @@ export function ComponentList({ device, status }: Props) {
             return <EM1Display key={renderKey} {...props} />;
           case 'pm1':
             return <PM1Display key={renderKey} {...props} />;
+          case 'presence':
+            return <PresenceSensor key={renderKey} {...props} />;
+          case 'presence_zone':
+            return <PresenceZoneSensor key={renderKey} {...props} />;
+          case 'bthome':
+            return <BTHomeSensor key={renderKey} {...props} />;
+          case 'http':
+            return <HttpClientDisplay key={renderKey} {...props} />;
+          case 'matter':
+          case 'serial':
+          case 'modbus':
+          case 'dali':
+          case 'xmod':
+          case 'zigbee':
+            return <GenericComponentDisplay key={renderKey} {...props} componentType={comp.type} />;
           default:
             return null;
         }
