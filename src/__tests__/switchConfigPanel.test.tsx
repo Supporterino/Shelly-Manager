@@ -7,8 +7,8 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import '../test/mocks/tauri';
-import { renderWithProviders } from '../test/renderWithProviders';
 import { SwitchConfigPanel } from '../components/devices/controls/SwitchConfigPanel';
+import { renderWithProviders } from '../test/renderWithProviders';
 import type { SwitchConfig } from '../types/shelly';
 
 // ── Mock hooks ────────────────────────────────────────────────────────────────

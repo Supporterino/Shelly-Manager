@@ -7,8 +7,8 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import '../test/mocks/tauri';
-import { renderWithProviders } from '../test/renderWithProviders';
 import { InputConfigPanel } from '../components/devices/controls/InputConfigPanel';
+import { renderWithProviders } from '../test/renderWithProviders';
 import type { InputConfig } from '../types/shelly';
 
 // ── Mock hooks ────────────────────────────────────────────────────────────────
@@ -52,13 +52,7 @@ vi.mock('../hooks/useDeviceControl', () => ({
 
 function renderPanel(props: Partial<React.ComponentProps<typeof InputConfigPanel>> = {}) {
   return renderWithProviders(
-    <InputConfigPanel
-      opened={true}
-      onClose={vi.fn()}
-      deviceId="AABB001"
-      inputId={0}
-      {...props}
-    />,
+    <InputConfigPanel opened={true} onClose={vi.fn()} deviceId="AABB001" inputId={0} {...props} />,
   );
 }
 
@@ -216,9 +210,11 @@ describe('InputConfigPanel', () => {
   // ── Restart required ───────────────────────────────────────────────────────
 
   it('shows yellow restart alert when mutation returns restart_required: true', async () => {
-    mockMutate.mockImplementation((_payload: unknown, options: { onSuccess?: (r: { restart_required: boolean }) => void }) => {
-      options?.onSuccess?.({ restart_required: true });
-    });
+    mockMutate.mockImplementation(
+      (_payload: unknown, options: { onSuccess?: (r: { restart_required: boolean }) => void }) => {
+        options?.onSuccess?.({ restart_required: true });
+      },
+    );
     renderPanel();
     fireEvent.click(screen.getByText('Save'));
     await waitFor(() => {

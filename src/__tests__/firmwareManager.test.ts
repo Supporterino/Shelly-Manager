@@ -38,7 +38,11 @@ vi.mock('../utils/firmware', async (importOriginal) => {
   };
 });
 
-import { extractCurrentVersion, extractTrackVersion, useFirmwareManager } from '../hooks/useFirmwareManager';
+import {
+  extractCurrentVersion,
+  extractTrackVersion,
+  useFirmwareManager,
+} from '../hooks/useFirmwareManager';
 import type { StoredDevice } from '../types/device';
 
 // ── Fixture factory ────────────────────────────────────────────────────────────

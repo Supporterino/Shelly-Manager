@@ -197,9 +197,7 @@ describe('SubnetAutoDetect', () => {
 
   it('prefills CIDR when a single interface with prefix is found', async () => {
     const user = userEvent.setup();
-    mockGetNetworkInterfaces.mockResolvedValue([
-      { name: 'en0', ip: '192.168.1.5', prefix: 24 },
-    ]);
+    mockGetNetworkInterfaces.mockResolvedValue([{ name: 'en0', ip: '192.168.1.5', prefix: 24 }]);
 
     const onCidrChange = vi.fn();
     renderWithProviders(<SubnetAutoDetect onCidrChange={onCidrChange} />);
@@ -214,9 +212,7 @@ describe('SubnetAutoDetect', () => {
 
   it('assumes /24 and shows warning when prefix is null', async () => {
     const user = userEvent.setup();
-    mockGetNetworkInterfaces.mockResolvedValue([
-      { name: 'en0', ip: '10.0.0.5', prefix: null },
-    ]);
+    mockGetNetworkInterfaces.mockResolvedValue([{ name: 'en0', ip: '10.0.0.5', prefix: null }]);
 
     const onCidrChange = vi.fn();
     renderWithProviders(<SubnetAutoDetect onCidrChange={onCidrChange} />);
@@ -242,7 +238,9 @@ describe('SubnetAutoDetect', () => {
     await user.click(screen.getByRole('button', { name: /auto-detect/i }));
 
     await waitFor(() => {
-      expect(screen.getByRole('combobox', { name: /select network interface/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('combobox', { name: /select network interface/i }),
+      ).toBeInTheDocument();
     });
   });
 
@@ -258,7 +256,9 @@ describe('SubnetAutoDetect', () => {
 
     await user.click(screen.getByRole('button', { name: /auto-detect/i }));
     await waitFor(() => {
-      expect(screen.getByRole('combobox', { name: /select network interface/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('combobox', { name: /select network interface/i }),
+      ).toBeInTheDocument();
     });
 
     await user.click(screen.getByRole('combobox', { name: /select network interface/i }));
