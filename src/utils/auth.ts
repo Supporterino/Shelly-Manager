@@ -46,6 +46,15 @@ export async function computeDigestAuth(
 }
 
 /**
+ * Compute the ha1 digest for Shelly.SetAuth.
+ * ha1 = sha256("admin:<realm>:<password>")
+ * This can be stored and reused for auth enable/disable operations.
+ */
+export async function computeHa1(realm: string, password: string): Promise<string> {
+  return sha256Hex(`admin:${realm}:${password}`);
+}
+
+/**
  * Parse the WWW-Authenticate header from a Shelly 401 response.
  * Returns { realm, nonce } extracted from the Digest challenge.
  */

@@ -1,18 +1,52 @@
 import { fetch } from '@tauri-apps/plugin-http';
 import type { StoredDevice } from '../types/device';
 import type {
+  APClient,
+  BTHomeStatus,
+  CoverConfig,
   CoverGoToPositionParams,
+  CoverSetConfigResult,
+  EM1DataStatus,
+  EMDataStatus,
+  EthConfig,
+  EthStatus,
+  HTTPClientStatus,
   InputConfig,
   InputSetConfigResult,
+  KVSKey,
+  KVSValue,
+  LightConfig,
+  LightSetConfigResult,
   LightSetParams,
+  PM1DataStatus,
+  PresenceStatus,
+  PresenceZoneStatus,
+  RGBCCTConfig,
+  RGBCCTSetConfigResult,
+  RGBCCTSetParams,
+  RGBConfig,
+  RGBSetConfigResult,
   RGBSetParams,
+  RGBWConfig,
+  RGBWSetConfigResult,
   RGBWSetParams,
   ScheduleJob,
+  ScriptEntry,
   ShellyGetDeviceInfoResult,
   ShellyGetStatusResult,
+  ShellyListMethodsResult,
+  ShellyProfile,
   SwitchConfig,
   SwitchSetConfigResult,
   SwitchSetParams,
+  SysConfig,
+  TimezoneInfo,
+  WebhookHook,
+  WebhookSupportedEvent,
+  WiFiConfig,
+  WiFiScanResult,
+  WiFiSTA1Config,
+  WiFiStatus,
 } from '../types/shelly';
 import { computeDigestAuth, parseWwwAuthenticate } from '../utils/auth';
 import { buildRpcFrame, parseRpcResponse } from '../utils/rpc';
@@ -150,16 +184,49 @@ export class ShellyClient {
     await this.call('Light.Set', { ...params, id } as Record<string, unknown>);
   }
 
+  async lightGetConfig(id: number): Promise<LightConfig> {
+    return this.call<LightConfig>('Light.GetConfig', { id });
+  }
+
+  async lightSetConfig(
+    id: number,
+    config: Partial<Omit<LightConfig, 'id'>>,
+  ): Promise<LightSetConfigResult> {
+    return this.call<LightSetConfigResult>('Light.SetConfig', { id, config });
+  }
+
   // ── RGB ──────────────────────────────────────────────────────────────────
 
   async rgbSet(id: number, params: RGBSetParams): Promise<void> {
     await this.call('RGB.Set', { ...params, id } as Record<string, unknown>);
   }
 
+  async rgbGetConfig(id: number): Promise<RGBConfig> {
+    return this.call<RGBConfig>('RGB.GetConfig', { id });
+  }
+
+  async rgbSetConfig(
+    id: number,
+    config: Partial<Omit<RGBConfig, 'id'>>,
+  ): Promise<RGBSetConfigResult> {
+    return this.call<RGBSetConfigResult>('RGB.SetConfig', { id, config });
+  }
+
   // ── RGBW ─────────────────────────────────────────────────────────────────
 
   async rgbwSet(id: number, params: RGBWSetParams): Promise<void> {
     await this.call('RGBW.Set', { ...params, id } as Record<string, unknown>);
+  }
+
+  async rgbwGetConfig(id: number): Promise<RGBWConfig> {
+    return this.call<RGBWConfig>('RGBW.GetConfig', { id });
+  }
+
+  async rgbwSetConfig(
+    id: number,
+    config: Partial<Omit<RGBWConfig, 'id'>>,
+  ): Promise<RGBWSetConfigResult> {
+    return this.call<RGBWSetConfigResult>('RGBW.SetConfig', { id, config });
   }
 
   // ── Cover ────────────────────────────────────────────────────────────────
@@ -183,6 +250,17 @@ export class ShellyClient {
 
   async coverCalibrate(id: number): Promise<void> {
     await this.call('Cover.Calibrate', { id });
+  }
+
+  async coverGetConfig(id: number): Promise<CoverConfig> {
+    return this.call<CoverConfig>('Cover.GetConfig', { id });
+  }
+
+  async coverSetConfig(
+    id: number,
+    config: Partial<Omit<CoverConfig, 'id'>>,
+  ): Promise<CoverSetConfigResult> {
+    return this.call<CoverSetConfigResult>('Cover.SetConfig', { id, config });
   }
 
   // ── Input ────────────────────────────────────────────────────────────────
@@ -216,6 +294,263 @@ export class ShellyClient {
 
   async scheduleDelete(id: number): Promise<void> {
     await this.call('Schedule.Delete', { id });
+  }
+
+  async scheduleUpdate(id: number, config: Partial<Omit<ScheduleJob, 'id'>>): Promise<void> {
+    await this.call('Schedule.Update', { id, config } as Record<string, unknown>);
+  }
+
+  async scheduleDeleteAll(): Promise<void> {
+    await this.call('Schedule.DeleteAll');
+  }
+
+  // ── WiFi ─────────────────────────────────────────────────────────────────
+
+  async wifiGetConfig(): Promise<{
+    sta: WiFiConfig;
+    sta1?: WiFiSTA1Config;
+    ap: { ssid: string | null; pass: string | null; enable: boolean };
+  }> {
+    return this.call('WiFi.GetConfig');
+  }
+
+  async wifiSetConfig(config: {
+    sta?: Partial<WiFiConfig>;
+    sta1?: Partial<WiFiSTA1Config>;
+    ap?: Partial<{ ssid: string | null; pass: string | null; enable: boolean }>;
+  }): Promise<void> {
+    await this.call('WiFi.SetConfig', { config });
+  }
+
+  async wifiGetStatus(): Promise<WiFiStatus> {
+    return this.call('WiFi.GetStatus');
+  }
+
+  async wifiScan(): Promise<{ results?: WiFiScanResult[]; start?: boolean }> {
+    return this.call('WiFi.Scan');
+  }
+
+  async wifiListAPClients(): Promise<{ ap_clients: APClient[] }> {
+    return this.call('WiFi.ListAPClients');
+  }
+
+  // ── Ethernet ─────────────────────────────────────────────────────────────
+
+  async ethGetConfig(): Promise<EthConfig> {
+    return this.call('Eth.GetConfig');
+  }
+
+  async ethSetConfig(config: Partial<EthConfig>): Promise<void> {
+    await this.call('Eth.SetConfig', { config });
+  }
+
+  async ethGetStatus(): Promise<EthStatus> {
+    return this.call('Eth.GetStatus');
+  }
+
+  // ── Device Profile ───────────────────────────────────────────────────────
+
+  async listProfiles(): Promise<{ profiles: ShellyProfile[] }> {
+    return this.call('Shelly.ListProfiles');
+  }
+
+  async setProfile(name: string): Promise<void> {
+    await this.call('Shelly.SetProfile', { name });
+  }
+
+  // ── System ───────────────────────────────────────────────────────────────
+
+  async sysGetConfig(): Promise<SysConfig> {
+    return this.call('Sys.GetConfig');
+  }
+
+  async sysSetConfig(config: Partial<SysConfig>): Promise<void> {
+    await this.call('Sys.SetConfig', { config });
+  }
+
+  async sysSetTime(time: string): Promise<void> {
+    await this.call('Sys.SetTime', { time });
+  }
+
+  async detectLocation(): Promise<{ tz: string; lat: number; lon: number }> {
+    return this.call('Shelly.DetectLocation');
+  }
+
+  async listTimezones(): Promise<{ timezones: TimezoneInfo[] }> {
+    return this.call('Shelly.ListTimezones');
+  }
+
+  // ── Webhook ──────────────────────────────────────────────────────────────
+
+  async webhookList(): Promise<{ hooks: WebhookHook[] }> {
+    return this.call('Webhook.List');
+  }
+
+  async webhookListAllSupported(): Promise<{ events: WebhookSupportedEvent[] }> {
+    return this.call('Webhook.ListAllSupported');
+  }
+
+  async webhookCreate(config: Omit<WebhookHook, 'id'>): Promise<{ id: number }> {
+    return this.call('Webhook.Create', config as Record<string, unknown>);
+  }
+
+  async webhookUpdate(id: number, config: Partial<Omit<WebhookHook, 'id'>>): Promise<void> {
+    await this.call('Webhook.Update', { id, config } as Record<string, unknown>);
+  }
+
+  async webhookDelete(id: number): Promise<void> {
+    await this.call('Webhook.Delete', { id });
+  }
+
+  async webhookDeleteAll(): Promise<void> {
+    await this.call('Webhook.DeleteAll');
+  }
+
+  // ── KVS ──────────────────────────────────────────────────────────────────
+
+  async kvsList(): Promise<{ items: KVSKey[] }> {
+    return this.call('KVS.List');
+  }
+
+  async kvsGet(key: string): Promise<KVSValue> {
+    return this.call('KVS.Get', { key });
+  }
+
+  async kvsGetMany(keys: string[]): Promise<{ items: KVSValue[] }> {
+    return this.call('KVS.GetMany', { keys });
+  }
+
+  async kvsSet(key: string, value: unknown, etag?: string): Promise<void> {
+    const params: Record<string, unknown> = { key, value };
+    if (etag !== undefined) params.etag = etag;
+    await this.call('KVS.Set', params);
+  }
+
+  async kvsDelete(key: string): Promise<void> {
+    await this.call('KVS.Delete', { key });
+  }
+
+  // ── Script ───────────────────────────────────────────────────────────────
+
+  async scriptList(): Promise<{ scripts: ScriptEntry[] }> {
+    return this.call('Script.List');
+  }
+
+  async scriptCreate(name: string): Promise<{ id: number }> {
+    return this.call('Script.Create', { name });
+  }
+
+  async scriptDelete(id: number): Promise<void> {
+    await this.call('Script.Delete', { id });
+  }
+
+  async scriptStart(id: number): Promise<void> {
+    await this.call('Script.Start', { id });
+  }
+
+  async scriptStop(id: number): Promise<void> {
+    await this.call('Script.Stop', { id });
+  }
+
+  async scriptGetCode(id: number): Promise<{ data: string }> {
+    return this.call('Script.GetCode', { id });
+  }
+
+  async scriptPutCode(id: number, code: string, chunkSize = 4096): Promise<void> {
+    const chunks: string[] = [];
+    for (let i = 0; i < code.length; i += chunkSize) {
+      chunks.push(code.slice(i, i + chunkSize));
+    }
+    for (let i = 0; i < chunks.length; i++) {
+      await this.call('Script.PutCode', {
+        id,
+        code: chunks[i],
+        append: i > 0,
+      });
+    }
+  }
+
+  async scriptEval(id: number, code: string): Promise<{ result?: unknown; error?: string }> {
+    return this.call('Script.Eval', { id, code });
+  }
+
+  // ── Energy Data ──────────────────────────────────────────────────────────
+
+  async emDataGetStatus(id: number): Promise<EMDataStatus> {
+    return this.call<EMDataStatus>('EMData.GetStatus', { id });
+  }
+
+  async emDataResetTotals(id: number): Promise<void> {
+    await this.call('EMData.ResetTotals', { id });
+  }
+
+  async em1DataGetStatus(id: number): Promise<EM1DataStatus> {
+    return this.call<EM1DataStatus>('EM1Data.GetStatus', { id });
+  }
+
+  async em1DataResetTotals(id: number): Promise<void> {
+    await this.call('EM1Data.ResetTotals', { id });
+  }
+
+  async pm1DataGetStatus(id: number): Promise<PM1DataStatus> {
+    return this.call<PM1DataStatus>('PM1Data.GetStatus', { id });
+  }
+
+  async pm1DataResetTotals(id: number): Promise<void> {
+    await this.call('PM1Data.ResetTotals', { id });
+  }
+
+  // ── RGBCCT ───────────────────────────────────────────────────────────────
+
+  async rgbccctSet(id: number, params: RGBCCTSetParams): Promise<void> {
+    await this.call('RGBCCT.Set', { ...params, id } as Record<string, unknown>);
+  }
+
+  async rgbccctGetConfig(id: number): Promise<RGBCCTConfig> {
+    return this.call<RGBCCTConfig>('RGBCCT.GetConfig', { id });
+  }
+
+  async rgbccctSetConfig(
+    id: number,
+    config: Partial<Omit<RGBCCTConfig, 'id'>>,
+  ): Promise<RGBCCTSetConfigResult> {
+    return this.call<RGBCCTSetConfigResult>('RGBCCT.SetConfig', { id, config });
+  }
+
+  // ── Presence ─────────────────────────────────────────────────────────────
+
+  async presenceGetStatus(id: number): Promise<PresenceStatus> {
+    return this.call<PresenceStatus>('Presence.GetStatus', { id });
+  }
+
+  // ── PresenceZone ─────────────────────────────────────────────────────────
+
+  async presenceZoneGetStatus(id: number): Promise<PresenceZoneStatus> {
+    return this.call<PresenceZoneStatus>('PresenceZone.GetStatus', { id });
+  }
+
+  // ── BTHome ───────────────────────────────────────────────────────────────
+
+  async bthomeGetStatus(id: number): Promise<BTHomeStatus> {
+    return this.call<BTHomeStatus>('BTHome.GetStatus', { id });
+  }
+
+  // ── HTTP Client ──────────────────────────────────────────────────────────
+
+  async httpGetStatus(id: number): Promise<HTTPClientStatus> {
+    return this.call<HTTPClientStatus>('HTTP.GetStatus', { id });
+  }
+
+  // ── Generic component helpers ────────────────────────────────────────────
+
+  async genericGetStatus(component: string, id: number): Promise<Record<string, unknown>> {
+    return this.call<Record<string, unknown>>(`${component}.GetStatus`, { id });
+  }
+
+  // ── Method Discovery ─────────────────────────────────────────────────────
+
+  async listMethods(): Promise<ShellyListMethodsResult> {
+    return this.call<ShellyListMethodsResult>('Shelly.ListMethods');
   }
 }
 

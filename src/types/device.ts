@@ -12,6 +12,7 @@ export type DeviceType =
   | 'cct' // Light.* with brightness + colour temperature
   | 'rgb' // Light.* in RGB mode (RGB.*)
   | 'rgbw' // Light.* in RGBW mode (RGBW.*)
+  | 'rgbcct' // RGBCCT.* — 5-channel light
   | 'cover' // Cover.* — blinds, shutters, garage doors
   | 'sensor' // Read-only: temperature, humidity, flood, smoke, motion…
   | 'energy' // EM.* / EM1.* / PM1.* — energy monitoring only, no relay
@@ -31,6 +32,9 @@ export interface StoredDevice {
   type: DeviceType; // Derived once at add-time — see deviceTypeMap.ts
   components: ShellyComponentSummary[];
   auth?: { username: string; password: string };
+  /** Pre-computed ha1 digest for Shelly.SetAuth (avoids re-entering password). */
+  authHa1?: { realm: string; ha1: string };
+  discoverable?: boolean;
   /** Preferred firmware update track. Undefined = use app default ('stable'). */
   updateTrack?: 'stable' | 'beta';
   addedAt: number; // unix ms
@@ -53,6 +57,7 @@ export type ShellyComponentType =
   | 'light_cct'
   | 'rgb'
   | 'rgbw'
+  | 'rgbcct'
   | 'cover'
   | 'input'
   | 'temperature'
@@ -65,7 +70,17 @@ export type ShellyComponentType =
   | 'voltmeter'
   | 'em'
   | 'em1'
-  | 'pm1';
+  | 'pm1'
+  | 'presence'
+  | 'presence_zone'
+  | 'bthome'
+  | 'http'
+  | 'matter'
+  | 'serial'
+  | 'modbus'
+  | 'dali'
+  | 'xmod'
+  | 'zigbee';
 
 // Note: 'light_cct' is an internal sub-type — Shelly's GetStatus key is always 'light:N'
 // for both plain dimmers and CCT devices. The distinction is stored in

@@ -7,6 +7,7 @@ const NS_TO_COMPONENT_TYPE: Record<string, ShellyComponentType> = {
   light: 'light',
   rgb: 'rgb',
   rgbw: 'rgbw',
+  rgbcct: 'rgbcct',
   cover: 'cover',
   input: 'input',
   temperature: 'temperature',
@@ -20,6 +21,10 @@ const NS_TO_COMPONENT_TYPE: Record<string, ShellyComponentType> = {
   em: 'em',
   em1: 'em1',
   pm1: 'pm1',
+  presence: 'presence',
+  presence_zone: 'presence_zone',
+  bthome: 'bthome',
+  http: 'http',
 };
 
 // Sort priority: actuators first, sensors last, energy in-between
@@ -29,6 +34,7 @@ const COMPONENT_SORT_ORDER: Record<ShellyComponentType, number> = {
   light_cct: 1,
   rgb: 2,
   rgbw: 3,
+  rgbcct: 3,
   cover: 4,
   em: 5,
   em1: 6,
@@ -42,6 +48,16 @@ const COMPONENT_SORT_ORDER: Record<ShellyComponentType, number> = {
   devicepower: 14,
   voltmeter: 15,
   input: 16,
+  presence: 17,
+  presence_zone: 18,
+  bthome: 19,
+  http: 20,
+  matter: 99,
+  serial: 99,
+  modbus: 99,
+  dali: 99,
+  xmod: 99,
+  zigbee: 99,
 };
 
 function componentSortOrder(a: ShellyComponentSummary, b: ShellyComponentSummary): number {

@@ -91,6 +91,27 @@ export interface LightStatus {
   errors?: string[];
 }
 
+export interface LightConfig {
+  id: number;
+  name: string | null;
+  initial_state: 'off' | 'on' | 'restore_last' | 'match_input';
+  auto_on: boolean;
+  auto_on_delay: number;
+  auto_off: boolean;
+  auto_off_delay: number;
+  transition_duration: number;
+  min_brightness_on_toggle: number;
+  night_mode?: {
+    enable: boolean;
+    brightness: number;
+    active_between?: [string, string];
+  };
+}
+
+export interface LightSetConfigResult {
+  restart_required: boolean;
+}
+
 export interface LightSetParams {
   id: number;
   on?: boolean;
@@ -114,6 +135,30 @@ export interface RGBStatus {
   errors?: string[];
 }
 
+export interface RGBConfig {
+  id: number;
+  name: string | null;
+  initial_state: 'off' | 'on' | 'restore_last' | 'match_input';
+  auto_on: boolean;
+  auto_on_delay: number;
+  auto_off: boolean;
+  auto_off_delay: number;
+  transition_duration: number;
+  default: {
+    brightness: number;
+    rgb: [number, number, number];
+  };
+  night_mode?: {
+    enable: boolean;
+    brightness: number;
+    active_between?: [string, string];
+  };
+}
+
+export interface RGBSetConfigResult {
+  restart_required: boolean;
+}
+
 export interface RGBSetParams {
   id: number;
   on?: boolean;
@@ -135,6 +180,31 @@ export interface RGBWStatus {
   current?: number;
   aenergy?: AEnergy;
   errors?: string[];
+}
+
+export interface RGBWConfig {
+  id: number;
+  name: string | null;
+  initial_state: 'off' | 'on' | 'restore_last' | 'match_input';
+  auto_on: boolean;
+  auto_on_delay: number;
+  auto_off: boolean;
+  auto_off_delay: number;
+  transition_duration: number;
+  default: {
+    brightness: number;
+    rgb: [number, number, number];
+    white: number;
+  };
+  night_mode?: {
+    enable: boolean;
+    brightness: number;
+    active_between?: [string, string];
+  };
+}
+
+export interface RGBWSetConfigResult {
+  restart_required: boolean;
 }
 
 export interface RGBWSetParams {
@@ -167,6 +237,38 @@ export interface CoverStatus {
   errors?: string[];
 }
 
+export interface CoverMotorConfig {
+  idle_power_thr?: number;
+  idle_confirm_period?: number;
+}
+
+export interface CoverConfig {
+  id: number;
+  name: string | null;
+  motor?: CoverMotorConfig;
+  maxtime_open: number;
+  maxtime_close: number;
+  initial_state: 'open' | 'closed' | 'stopped';
+  invert_directions: boolean;
+  in_mode: 'one_button' | 'two_button' | 'detached';
+  swap_inputs: boolean;
+  obstacle_detection: boolean;
+  obstacle_action: 'stop' | 'reverse';
+  obstacle_power: number;
+  obstacle_delay: number;
+  safety_switch: boolean;
+  safety_action: 'stop' | 'reverse' | 'open';
+  safety_allowed_dp: number;
+  power_limit?: number | null;
+  voltage_limit?: number | null;
+  current_limit?: number | null;
+  slew_rate?: number | null;
+}
+
+export interface CoverSetConfigResult {
+  restart_required: boolean;
+}
+
 export interface CoverGoToPositionParams {
   id: number;
   pos: number;
@@ -196,13 +298,13 @@ export interface InputConfig {
   invert?: boolean;
   factory_reset?: boolean;
   // analog only
-  report_thr?: number;                 // 1.0–50.0 %
+  report_thr?: number; // 1.0–50.0 %
   range_map?: [number, number] | null; // [min, max]
   xpercent?: InputXTransform;
   // count only
-  count_rep_thr?: number;              // 1–2147483647
-  freq_window?: number;                // 1–3600 s
-  freq_rep_thr?: number;               // 0–10000 %
+  count_rep_thr?: number; // 1–2147483647
+  freq_window?: number; // 1–3600 s
+  freq_rep_thr?: number; // 0–10000 %
   xcounts?: InputXTransform;
   xfreq?: InputXTransform;
 }
@@ -291,6 +393,18 @@ export interface EMStatus {
   errors?: string[];
 }
 
+export interface EMDataStatus {
+  id: number;
+  total_act: number;
+  total_aprt: number;
+  a_total_act: number;
+  a_total_aprt: number;
+  b_total_act: number;
+  b_total_aprt: number;
+  period: number;
+  errors?: string[];
+}
+
 // ── Energy monitor — single clamp (EM1) ──────────────────────────────────
 export interface EM1Status {
   id: number;
@@ -300,6 +414,14 @@ export interface EM1Status {
   aprt_power: number;
   pf: number;
   freq: number;
+  errors?: string[];
+}
+
+export interface EM1DataStatus {
+  id: number;
+  total_act: number;
+  total_aprt: number;
+  period: number;
   errors?: string[];
 }
 
@@ -313,6 +435,13 @@ export interface PM1Status {
   freq: number;
   aenergy: AEnergy;
   ret_aenergy?: AEnergy;
+  errors?: string[];
+}
+
+export interface PM1DataStatus {
+  id: number;
+  total_act: number;
+  period: number;
   errors?: string[];
 }
 
@@ -331,7 +460,265 @@ export interface ScheduleJob {
   calls: Array<{ method: string; params?: Record<string, unknown> }>;
 }
 
+// ── WiFi ──────────────────────────────────────────────────────────────────
+export interface WiFiConfig {
+  ssid: string | null;
+  pass: string | null;
+  ip: string | null;
+  netmask: string | null;
+  gw: string | null;
+  nameserver: string | null;
+  enable: boolean;
+}
+
+export interface WiFiSTA1Config {
+  ssid: string | null;
+  pass: string | null;
+  ip: string | null;
+  netmask: string | null;
+  gw: string | null;
+  nameserver: string | null;
+  enable: boolean;
+}
+
+export interface WiFiStatus {
+  ssid: string | null;
+  ip: string | null;
+  rssi: number;
+}
+
+export interface WiFiScanResult {
+  ssid: string;
+  bssid: string;
+  auth: number;
+  rssi: number;
+  channel: number;
+}
+
+export interface APClient {
+  mac: string;
+  ip: string;
+  ip_static: boolean;
+  mport: number;
+  since: number;
+}
+
+// ── Ethernet ──────────────────────────────────────────────────────────────
+export interface EthConfig {
+  enable: boolean;
+  ipv4mode: 'dhcp' | 'static';
+  ip: string | null;
+  netmask: string | null;
+  gw: string | null;
+  nameserver: string | null;
+}
+
+export interface EthStatus {
+  ip: string | null;
+}
+
+// ── Device Profile ────────────────────────────────────────────────────────
+export interface ShellyProfile {
+  name: string;
+  current: boolean;
+}
+
+// ── System ────────────────────────────────────────────────────────────────
+export interface SysConfig {
+  device: { name: string };
+  location?: { tz: string; lat?: number; lon?: number };
+  eco_mode?: boolean;
+}
+
+export interface SysStatus {
+  mac: string;
+  ram_free: number;
+  uptime: number;
+  time: string | null;
+}
+
+export interface TimezoneInfo {
+  name: string;
+  offset: number;
+}
+
+// ── RGBCCT (5-channel light: RGB + Warm White + Cold White) ───────────────
+export interface RGBCCTStatus {
+  id: number;
+  source: string;
+  output: boolean;
+  brightness: number;
+  rgb: [number, number, number];
+  white: number;
+  temp: number;
+  apower?: number;
+  voltage?: number;
+  current?: number;
+  aenergy?: AEnergy;
+  errors?: string[];
+}
+
+export interface RGBCCTConfig {
+  id: number;
+  name: string | null;
+  initial_state: 'off' | 'on' | 'restore_last' | 'match_input';
+  auto_on: boolean;
+  auto_on_delay: number;
+  auto_off: boolean;
+  auto_off_delay: number;
+  transition_duration: number;
+  default: {
+    brightness: number;
+    rgb: [number, number, number];
+    white: number;
+    temp: number;
+  };
+  night_mode?: {
+    enable: boolean;
+    brightness: number;
+    active_between?: [string, string];
+  };
+}
+
+export interface RGBCCTSetConfigResult {
+  restart_required: boolean;
+}
+
+export interface RGBCCTSetParams {
+  id: number;
+  on?: boolean;
+  brightness?: number;
+  rgb?: [number, number, number];
+  white?: number;
+  temp?: number;
+  transition_duration?: number;
+}
+
+// ── Presence sensor ────────────────────────────────────────────────────────
+export interface PresenceStatus {
+  id: number;
+  presence: boolean;
+  motion?: boolean;
+  timestamp?: number;
+  errors?: string[];
+}
+
+// ── PresenceZone sensor ────────────────────────────────────────────────────
+export interface PresenceZoneStatus {
+  id: number;
+  presence: boolean;
+  zones?: Record<string, boolean>;
+  errors?: string[];
+}
+
+// ── BTHome sensor (BLE-bridged) ────────────────────────────────────────────
+export interface BTHomeStatus {
+  id: number;
+  rssi?: number;
+  packet_id?: number;
+  battery?: number;
+  temperature?: number;
+  humidity?: number;
+  illuminance?: number;
+  motion?: boolean;
+  window?: boolean;
+  button?: number;
+  errors?: string[];
+}
+
+// ── HTTP client ────────────────────────────────────────────────────────────
+export interface HTTPClientStatus {
+  id: number;
+  connected: boolean;
+  errors?: string[];
+}
+
+// ── Generic component placeholders (Matter, Serial, Modbus, DALI, XMOD, Zigbee)
+export interface GenericComponentStatus {
+  id: number;
+  [key: string]: unknown;
+  errors?: string[];
+}
+
+// ── Integration status sub-types ───────────────────────────────────────────
+export interface CloudStatus {
+  connected: boolean;
+  enabled: boolean;
+}
+
+export interface MQTTStatus {
+  connected: boolean;
+  enabled: boolean;
+}
+
+export interface OutboundWsStatus {
+  connected: boolean;
+  enabled: boolean;
+}
+
+export interface BLEStatus {
+  enabled: boolean;
+}
+
 // ── Aggregate status ──────────────────────────────────────────────────────
 // Shelly.GetStatus returns an object whose keys are component namespaces:
 //   { "switch:0": SwitchStatus, "switch:1": SwitchStatus, ... }
 export type ShellyGetStatusResult = Record<string, unknown>;
+
+// ── Method Discovery ───────────────────────────────────────────────────────
+export interface ShellyMethodInfo {
+  name: string;
+}
+
+export interface ShellyListMethodsResult {
+  methods: ShellyMethodInfo[];
+}
+
+// ── Webhook ───────────────────────────────────────────────────────────────
+export interface WebhookHook {
+  id: number;
+  enable: boolean;
+  event: string;
+  name?: string;
+  urls?: string[];
+  active?: boolean;
+  condition?: Record<string, unknown>;
+  repeat_period?: number;
+  window_start?: string;
+  window_end?: string;
+}
+
+export interface WebhookSupportedEvent {
+  event: string;
+  name?: string;
+  description?: string;
+}
+
+// ── KVS ───────────────────────────────────────────────────────────────────
+export interface KVSKey {
+  key: string;
+  etag: string;
+}
+
+export interface KVSValue {
+  key: string;
+  value: unknown;
+  etag: string;
+}
+
+// ── Script ────────────────────────────────────────────────────────────────
+export interface ScriptEntry {
+  id: number;
+  name: string;
+  enable: boolean;
+  running: boolean;
+  mem_used?: number;
+  mem_size?: number;
+  cpu_avg?: number;
+}
+
+export interface ScriptCodeChunk {
+  id: number;
+  data: string;
+  append: boolean;
+}
