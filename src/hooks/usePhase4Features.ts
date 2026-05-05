@@ -26,7 +26,7 @@ export function useSetAuth(deviceId: string) {
       if (!enabled) {
         // Disable auth: send empty ha1
         await client.setAuth('admin', device.id, '');
-        updateDevice(deviceId, { authHa1: undefined });
+        updateDevice(deviceId, { authHa1: undefined, auth: undefined });
         return { enabled: false };
       }
 
@@ -43,7 +43,7 @@ export function useSetAuth(deviceId: string) {
       const realm = device.id;
       const ha1 = await computeHa1(realm, password);
       await client.setAuth('admin', realm, ha1);
-      updateDevice(deviceId, { authHa1: { realm, ha1 } });
+      updateDevice(deviceId, { authHa1: { realm, ha1 }, auth: { username: 'admin', password } });
       return { enabled: true };
     },
     onSuccess: () => {
