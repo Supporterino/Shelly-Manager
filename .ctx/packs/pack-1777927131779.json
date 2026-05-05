@@ -1,0 +1,20 @@
+{
+  "original_estimated_tokens": 3587,
+  "packed_tokens": 114,
+  "reduction_pct": 96.82185670476721,
+  "included": [
+    "query included: priority=Query tokens=6 ref=",
+    "symbols included: priority=Symbol tokens=9 ref=src/components/devices/energy/EMDisplay.tsx",
+    "recent_diff included: priority=RecentDiff tokens=10 ref=",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "docs included: priority=Docs tokens=13 ref=//",
+    "docs included: priority=Docs tokens=13 ref=//",
+    "docs included: priority=Docs tokens=12 ref=//",
+    "docs included: priority=Docs tokens=16 ref='20240601/1.4.2'",
+    "docs included: priority=Docs tokens=15 ref='20240601-090000/1.5.0'"
+  ],
+  "excluded": [],
+  "pack_path": "/Users/supporterino/WebstormProjects/Shelly-Manager/.ctx/packs/pack-1777927131779.json",
+  "compact_context": "query: Phase 2 implementation planning\nsymbols: PhaseRow lines:unknown imports:n/a relationships:1 @src/components/devices/energy/EMDisplay.tsx\nrecent_diff: diff_files:src/__tests__/inputConfigPanel.test.tsx changed_symbols:}) changes:+5/-3\nmemory: implementation:plan:subnet-scan-to-slash-16] COMPLETED. Implementation delivered across 10 ... @project\nmemory: implementation:analysis:subnet-scan-limit] COMPLETED. Subnet scan was hard-capped ... @project\ndocs: function FirmwareCard({ device, currentVersion }: Props) ... @//\ndocs: function useFirmwareManager( devices: StoredDevice[], liveStatuses: Record<string, ... @//\ndocs: it('sets failed when device never goes ... @//\ndocs: describe('useFirmwareManager', () => { beforeEach(() => ... @'20240601/1.4.2'\ndocs: describe('updateDevice', () => { it('transitions to ... @'20240601-090000/1.5.0'"
+}

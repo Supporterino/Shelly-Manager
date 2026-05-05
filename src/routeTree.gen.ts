@@ -14,7 +14,11 @@ import { Route as FirmwareRouteImport } from './routes/firmware'
 import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DevicesDeviceIdRouteImport } from './routes/devices/$deviceId'
+import { Route as DevicesDeviceIdWebhooksRouteImport } from './routes/devices/$deviceId.webhooks'
 import { Route as DevicesDeviceIdSettingsRouteImport } from './routes/devices/$deviceId.settings'
+import { Route as DevicesDeviceIdScriptsRouteImport } from './routes/devices/$deviceId.scripts'
+import { Route as DevicesDeviceIdKvsRouteImport } from './routes/devices/$deviceId.kvs'
+import { Route as DevicesDeviceIdConfigRouteImport } from './routes/devices/$deviceId.config'
 
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
@@ -41,9 +45,29 @@ const DevicesDeviceIdRoute = DevicesDeviceIdRouteImport.update({
   path: '/devices/$deviceId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevicesDeviceIdWebhooksRoute = DevicesDeviceIdWebhooksRouteImport.update({
+  id: '/webhooks',
+  path: '/webhooks',
+  getParentRoute: () => DevicesDeviceIdRoute,
+} as any)
 const DevicesDeviceIdSettingsRoute = DevicesDeviceIdSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => DevicesDeviceIdRoute,
+} as any)
+const DevicesDeviceIdScriptsRoute = DevicesDeviceIdScriptsRouteImport.update({
+  id: '/scripts',
+  path: '/scripts',
+  getParentRoute: () => DevicesDeviceIdRoute,
+} as any)
+const DevicesDeviceIdKvsRoute = DevicesDeviceIdKvsRouteImport.update({
+  id: '/kvs',
+  path: '/kvs',
+  getParentRoute: () => DevicesDeviceIdRoute,
+} as any)
+const DevicesDeviceIdConfigRoute = DevicesDeviceIdConfigRouteImport.update({
+  id: '/config',
+  path: '/config',
   getParentRoute: () => DevicesDeviceIdRoute,
 } as any)
 
@@ -53,7 +77,11 @@ export interface FileRoutesByFullPath {
   '/firmware': typeof FirmwareRoute
   '/settings': typeof SettingsRoute
   '/devices/$deviceId': typeof DevicesDeviceIdRouteWithChildren
+  '/devices/$deviceId/config': typeof DevicesDeviceIdConfigRoute
+  '/devices/$deviceId/kvs': typeof DevicesDeviceIdKvsRoute
+  '/devices/$deviceId/scripts': typeof DevicesDeviceIdScriptsRoute
   '/devices/$deviceId/settings': typeof DevicesDeviceIdSettingsRoute
+  '/devices/$deviceId/webhooks': typeof DevicesDeviceIdWebhooksRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -61,7 +89,11 @@ export interface FileRoutesByTo {
   '/firmware': typeof FirmwareRoute
   '/settings': typeof SettingsRoute
   '/devices/$deviceId': typeof DevicesDeviceIdRouteWithChildren
+  '/devices/$deviceId/config': typeof DevicesDeviceIdConfigRoute
+  '/devices/$deviceId/kvs': typeof DevicesDeviceIdKvsRoute
+  '/devices/$deviceId/scripts': typeof DevicesDeviceIdScriptsRoute
   '/devices/$deviceId/settings': typeof DevicesDeviceIdSettingsRoute
+  '/devices/$deviceId/webhooks': typeof DevicesDeviceIdWebhooksRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -70,7 +102,11 @@ export interface FileRoutesById {
   '/firmware': typeof FirmwareRoute
   '/settings': typeof SettingsRoute
   '/devices/$deviceId': typeof DevicesDeviceIdRouteWithChildren
+  '/devices/$deviceId/config': typeof DevicesDeviceIdConfigRoute
+  '/devices/$deviceId/kvs': typeof DevicesDeviceIdKvsRoute
+  '/devices/$deviceId/scripts': typeof DevicesDeviceIdScriptsRoute
   '/devices/$deviceId/settings': typeof DevicesDeviceIdSettingsRoute
+  '/devices/$deviceId/webhooks': typeof DevicesDeviceIdWebhooksRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -80,7 +116,11 @@ export interface FileRouteTypes {
     | '/firmware'
     | '/settings'
     | '/devices/$deviceId'
+    | '/devices/$deviceId/config'
+    | '/devices/$deviceId/kvs'
+    | '/devices/$deviceId/scripts'
     | '/devices/$deviceId/settings'
+    | '/devices/$deviceId/webhooks'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -88,7 +128,11 @@ export interface FileRouteTypes {
     | '/firmware'
     | '/settings'
     | '/devices/$deviceId'
+    | '/devices/$deviceId/config'
+    | '/devices/$deviceId/kvs'
+    | '/devices/$deviceId/scripts'
     | '/devices/$deviceId/settings'
+    | '/devices/$deviceId/webhooks'
   id:
     | '__root__'
     | '/'
@@ -96,7 +140,11 @@ export interface FileRouteTypes {
     | '/firmware'
     | '/settings'
     | '/devices/$deviceId'
+    | '/devices/$deviceId/config'
+    | '/devices/$deviceId/kvs'
+    | '/devices/$deviceId/scripts'
     | '/devices/$deviceId/settings'
+    | '/devices/$deviceId/webhooks'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -144,6 +192,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DevicesDeviceIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/devices/$deviceId/webhooks': {
+      id: '/devices/$deviceId/webhooks'
+      path: '/webhooks'
+      fullPath: '/devices/$deviceId/webhooks'
+      preLoaderRoute: typeof DevicesDeviceIdWebhooksRouteImport
+      parentRoute: typeof DevicesDeviceIdRoute
+    }
     '/devices/$deviceId/settings': {
       id: '/devices/$deviceId/settings'
       path: '/settings'
@@ -151,15 +206,44 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DevicesDeviceIdSettingsRouteImport
       parentRoute: typeof DevicesDeviceIdRoute
     }
+    '/devices/$deviceId/scripts': {
+      id: '/devices/$deviceId/scripts'
+      path: '/scripts'
+      fullPath: '/devices/$deviceId/scripts'
+      preLoaderRoute: typeof DevicesDeviceIdScriptsRouteImport
+      parentRoute: typeof DevicesDeviceIdRoute
+    }
+    '/devices/$deviceId/kvs': {
+      id: '/devices/$deviceId/kvs'
+      path: '/kvs'
+      fullPath: '/devices/$deviceId/kvs'
+      preLoaderRoute: typeof DevicesDeviceIdKvsRouteImport
+      parentRoute: typeof DevicesDeviceIdRoute
+    }
+    '/devices/$deviceId/config': {
+      id: '/devices/$deviceId/config'
+      path: '/config'
+      fullPath: '/devices/$deviceId/config'
+      preLoaderRoute: typeof DevicesDeviceIdConfigRouteImport
+      parentRoute: typeof DevicesDeviceIdRoute
+    }
   }
 }
 
 interface DevicesDeviceIdRouteChildren {
+  DevicesDeviceIdConfigRoute: typeof DevicesDeviceIdConfigRoute
+  DevicesDeviceIdKvsRoute: typeof DevicesDeviceIdKvsRoute
+  DevicesDeviceIdScriptsRoute: typeof DevicesDeviceIdScriptsRoute
   DevicesDeviceIdSettingsRoute: typeof DevicesDeviceIdSettingsRoute
+  DevicesDeviceIdWebhooksRoute: typeof DevicesDeviceIdWebhooksRoute
 }
 
 const DevicesDeviceIdRouteChildren: DevicesDeviceIdRouteChildren = {
+  DevicesDeviceIdConfigRoute: DevicesDeviceIdConfigRoute,
+  DevicesDeviceIdKvsRoute: DevicesDeviceIdKvsRoute,
+  DevicesDeviceIdScriptsRoute: DevicesDeviceIdScriptsRoute,
   DevicesDeviceIdSettingsRoute: DevicesDeviceIdSettingsRoute,
+  DevicesDeviceIdWebhooksRoute: DevicesDeviceIdWebhooksRoute,
 }
 
 const DevicesDeviceIdRouteWithChildren = DevicesDeviceIdRoute._addFileChildren(

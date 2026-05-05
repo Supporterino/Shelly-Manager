@@ -1,0 +1,24 @@
+{
+  "original_estimated_tokens": 1560,
+  "packed_tokens": 155,
+  "reduction_pct": 90.06410256410257,
+  "included": [
+    "query included: priority=Query tokens=3 ref=",
+    "recent_diff included: priority=RecentDiff tokens=8 ref=",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "memory included: priority=DirectiveMemory tokens=14 ref=project",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "memory included: priority=DirectiveMemory tokens=12 ref=project",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "memory included: priority=DirectiveMemory tokens=12 ref=project",
+    "memory included: priority=DirectiveMemory tokens=12 ref=project",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "memory included: priority=DirectiveMemory tokens=12 ref=project",
+    "memory included: priority=DirectiveMemory tokens=12 ref=project"
+  ],
+  "excluded": [],
+  "pack_path": "/Users/supporterino/WebstormProjects/Shelly-Manager/.ctx/packs/pack-1777980394020.json",
+  "compact_context": "query: phase4\nrecent_diff: diff_files:.ctx/stats/latest.json changed_symbols:n/a changes:+4/-4\nmemory: implementation:plan:subnet-scan-to-slash-16] COMPLETED. Implementation delivered across 10 ... @project\nmemory: implementation:analysis:subnet-scan-limit] COMPLETED. Subnet scan was hard-capped ... @project\nmemory: manual:rust:commands:discovery] Discovery-related Rust commands in `src-tauri/src/lib.rs`: ... @project\nmemory: manual:feature:subnet-auto-detect] Discovery page (/discover) has a ... @project\nmemory: AGENTS.md:pitfalls] HTTP request fails on mobile: ... @project\nmemory: AGENTS.md:i18n:guide] Library: react-i18next (i18next v26). Translation ... @project\nmemory: AGENTS.md:test:conventions] Run tests: bun run test ... @project\nmemory: AGENTS.md:rust:commands] All Rust logic lives in ... @project\nmemory: AGENTS.md:router:tanstack] All routes live in src/routes/. ... @project\nmemory: AGENTS.md:query:tanstack] Query key hierarchy: ['device', deviceId, ... @project\nmemory: AGENTS.md:store:zustand] Access pattern: always use selectors, ... @project\nmemory: AGENTS.md:ui:mantine] Always use Mantine components — ... @project"
+}
