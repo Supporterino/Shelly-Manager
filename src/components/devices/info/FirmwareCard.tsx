@@ -1,19 +1,29 @@
-import { Badge, Button, Card, Group, Loader, Progress, SegmentedControl, Stack, Text } from '@mantine/core';
+import {
+  Badge,
+  Button,
+  Card,
+  Group,
+  Loader,
+  Progress,
+  SegmentedControl,
+  Stack,
+  Text,
+} from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ShellyClient } from '../../../services/shellyClient';
-import type { StoredDevice } from '../../../types/device';
-import { useDeviceStore } from '../../../store/deviceStore';
-import { useAppStore } from '../../../store/appStore';
 import { extractTrackVersion } from '../../../hooks/useFirmwareManager';
+import { ShellyClient } from '../../../services/shellyClient';
+import { useAppStore } from '../../../store/appStore';
+import { useDeviceStore } from '../../../store/deviceStore';
+import type { StoredDevice } from '../../../types/device';
 import { pollProgress, pollUntilOffline, pollUntilOnline } from '../../../utils/firmware';
 import { ConfirmModal } from '../../common/ConfirmModal';
 
 interface Props {
   device: StoredDevice;
-  currentVersion: string;
+  currentVersion?: string;
 }
 
 export function FirmwareCard({ device, currentVersion }: Props) {
@@ -94,7 +104,7 @@ export function FirmwareCard({ device, currentVersion }: Props) {
           <Text size="sm" c="dimmed">
             {t('info.firmware')}
           </Text>
-          <Badge variant="light">{currentVersion}</Badge>
+          {currentVersion && <Badge variant="light">{currentVersion}</Badge>}
         </Group>
 
         {/* Track selector */}
@@ -147,7 +157,12 @@ export function FirmwareCard({ device, currentVersion }: Props) {
           </Button>
 
           {newVersion && (
-            <Button size="xs" color={effectiveTrack === 'beta' ? 'orange' : 'blue'} disabled={busy} onClick={() => setConfirmOpen(true)}>
+            <Button
+              size="xs"
+              color={effectiveTrack === 'beta' ? 'orange' : 'blue'}
+              disabled={busy}
+              onClick={() => setConfirmOpen(true)}
+            >
               {effectiveTrack === 'beta'
                 ? t('firmware.updateAvailableBeta', { version: newVersion })
                 : t('firmware.updateAvailable', { version: newVersion })}

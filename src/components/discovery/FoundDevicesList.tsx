@@ -15,6 +15,7 @@ import {
   IconDevices,
   IconDroplet,
   IconFlame,
+  IconLayersUnion,
   IconShield,
   IconSun,
 } from '@tabler/icons-react';
@@ -33,6 +34,7 @@ const TYPE_ICON: Record<DeviceType, React.ComponentType<{ size?: number }>> = {
   cct: IconSun,
   rgb: IconFlame,
   rgbw: IconFlame,
+  rgbcct: IconLayersUnion,
   cover: IconShield,
   sensor: IconDroplet,
   energy: IconBolt,

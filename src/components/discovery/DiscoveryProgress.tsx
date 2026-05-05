@@ -30,7 +30,7 @@ export function DiscoveryProgress({
 
   const showProgress = status === 'running' && scanProgress && scanProgress.total > 0;
   const progressValue = showProgress
-    ? Math.min(100, (scanProgress!.scanned / scanProgress!.total) * 100)
+    ? Math.min(100, (scanProgress?.scanned / scanProgress?.total) * 100)
     : 0;
 
   return (
@@ -48,12 +48,12 @@ export function DiscoveryProgress({
           <Group justify="space-between">
             <Text size="sm" c="dimmed">
               {t('scanningProgress', {
-                scanned: scanProgress!.scanned.toLocaleString(),
-                total: scanProgress!.total.toLocaleString(),
+                scanned: scanProgress?.scanned.toLocaleString(),
+                total: scanProgress?.total.toLocaleString(),
               })}
             </Text>
             <Text size="sm" c="dimmed">
-              {t('found', { count: scanProgress!.found })}
+              {t('found', { count: scanProgress?.found })}
             </Text>
           </Group>
           {onCancel && (

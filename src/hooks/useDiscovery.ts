@@ -1,7 +1,12 @@
 import { useCallback, useState } from 'react';
 import { cancelScan, runDiscovery } from '../services/discovery';
 import type { StoredDevice } from '../types/device';
-import type { DiscoveredHost, DiscoveryMethod, DiscoveryOptions, ScanProgress } from '../types/discovery';
+import type {
+  DiscoveredHost,
+  DiscoveryMethod,
+  DiscoveryOptions,
+  ScanProgress,
+} from '../types/discovery';
 
 export type DiscoveryStatus = 'idle' | 'running' | 'done' | 'error';
 

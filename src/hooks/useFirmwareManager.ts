@@ -67,9 +67,7 @@ export function extractTrackVersion(
     return direct.version;
   }
   const wrapped =
-    track === 'beta'
-      ? result.available_updates?.beta
-      : result.available_updates?.stable;
+    track === 'beta' ? result.available_updates?.beta : result.available_updates?.stable;
   if (wrapped && typeof wrapped === 'object' && wrapped.version) {
     return wrapped.version;
   }
@@ -167,7 +165,12 @@ export function useFirmwareManager(
 
   const updateDevice = useCallback(
     async (device: StoredDevice, track: 'stable' | 'beta' = 'stable') => {
-      patchState(device.id, { status: 'updating', pollStep: 0, error: undefined, updateTrack: track });
+      patchState(device.id, {
+        status: 'updating',
+        pollStep: 0,
+        error: undefined,
+        updateTrack: track,
+      });
       try {
         await new ShellyClient(device).triggerUpdate(track);
 

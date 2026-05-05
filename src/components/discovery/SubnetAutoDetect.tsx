@@ -14,7 +14,11 @@ function toNetworkCidr(ip: string, prefix: number): string {
   const parts = ip.split('.').map((p) => parseInt(p, 10));
   if (parts.length !== 4 || parts.some((n) => Number.isNaN(n))) return '';
 
-  const ipInt = (BigInt(parts[0]) << 24n) | (BigInt(parts[1]) << 16n) | (BigInt(parts[2]) << 8n) | BigInt(parts[3]);
+  const ipInt =
+    (BigInt(parts[0]) << 24n) |
+    (BigInt(parts[1]) << 16n) |
+    (BigInt(parts[2]) << 8n) |
+    BigInt(parts[3]);
   const mask = prefix === 0 ? 0n : ~((1n << (32n - BigInt(prefix))) - 1n);
   const net = ipInt & mask;
 
