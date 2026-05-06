@@ -1,4 +1,4 @@
-import { Button, Group, Loader, Stack, Title } from '@mantine/core';
+import { Box, Button, Group, Loader, Stack, Title } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +14,7 @@ import {
 import { ConfirmModal } from '../../common/ConfirmModal';
 import { ErrorAlert } from '../../common/ErrorAlert';
 import { CreateScriptModal } from './CreateScriptModal';
+import { ScriptCardList } from './ScriptCardList';
 import { ScriptCodeModal } from './ScriptCodeModal';
 import { ScriptEvalModal } from './ScriptEvalModal';
 import { ScriptTable } from './ScriptTable';
@@ -69,15 +70,30 @@ export function ScriptManager({ deviceId }: Props) {
       {error && <ErrorAlert message={(error as Error).message} onRetry={() => void refetch()} />}
 
       {!isLoading && !error && (
-        <ScriptTable
-          scripts={scripts}
-          onStart={(id) => startMutation.mutate(id)}
-          onStop={(id) => stopMutation.mutate(id)}
-          onViewCode={setCodeModalId}
-          onEval={setEvalModalId}
-          onDelete={setDeleteTarget}
-          isUpdating={isUpdating}
-        />
+        <>
+          <Box hiddenFrom="sm">
+            <ScriptCardList
+              scripts={scripts}
+              onStart={(id) => startMutation.mutate(id)}
+              onStop={(id) => stopMutation.mutate(id)}
+              onViewCode={setCodeModalId}
+              onEval={setEvalModalId}
+              onDelete={setDeleteTarget}
+              isUpdating={isUpdating}
+            />
+          </Box>
+          <Box visibleFrom="sm">
+            <ScriptTable
+              scripts={scripts}
+              onStart={(id) => startMutation.mutate(id)}
+              onStop={(id) => stopMutation.mutate(id)}
+              onViewCode={setCodeModalId}
+              onEval={setEvalModalId}
+              onDelete={setDeleteTarget}
+              isUpdating={isUpdating}
+            />
+          </Box>
+        </>
       )}
 
       <CreateScriptModal

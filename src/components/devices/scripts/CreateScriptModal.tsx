@@ -23,7 +23,7 @@ export function CreateScriptModal({ opened, onClose, onSubmit, isLoading }: Prop
   };
 
   return (
-    <Modal opened={opened} onClose={onClose} title={t('scripts.create')} centered size="md">
+    <Modal opened={opened} onClose={onClose} title={t('scripts.create')} centered       size={{ base: 'sm', sm: 'md' }}>
       <Stack gap="sm">
         <TextInput
           label={t('scripts.name')}

@@ -6,6 +6,7 @@ import {
   Group,
   ScrollArea,
   SegmentedControl,
+  Select,
   Stack,
   Text,
   Title,
@@ -202,7 +203,19 @@ function FirmwarePage() {
 
       {/* Toolbar: track switch + actions */}
       <Group justify="space-between" align="center" wrap="wrap" gap="xs">
+        <Select
+          hiddenFrom="sm"
+          size="sm"
+          value={defaultUpdateTrack}
+          onChange={(value) => setDefaultUpdateTrack((value as 'stable' | 'beta') ?? 'stable')}
+          data={[
+            { label: t('firmware.trackStable'), value: 'stable' },
+            { label: t('firmware.trackBeta'), value: 'beta' },
+          ]}
+          allowDeselect={false}
+        />
         <SegmentedControl
+          visibleFrom="sm"
           size="sm"
           value={defaultUpdateTrack}
           onChange={(value) => setDefaultUpdateTrack(value as 'stable' | 'beta')}

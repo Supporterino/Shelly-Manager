@@ -11,7 +11,6 @@ import { SystemSettingsSection } from '../components/devices/settings/SystemSett
 import { renderWithProviders } from '../test/renderWithProviders';
 
 const mockMutate = vi.fn();
-const mockSetTimeMutate = vi.fn();
 
 let mockConfig: Record<string, unknown> = {
   device: { name: 'Living Room' },
@@ -21,7 +20,6 @@ let mockConfig: Record<string, unknown> = {
 vi.mock('../hooks/useDeviceSettings', () => ({
   useSysConfig: () => ({ data: mockConfig, isLoading: false }),
   useSysSetConfig: () => ({ mutate: mockMutate, isPending: false }),
-  useSetTime: () => ({ mutate: mockSetTimeMutate, isPending: false }),
 }));
 
 vi.mock('../store/deviceStore', () => ({
@@ -34,7 +32,6 @@ vi.mock('../store/deviceStore', () => ({
 describe('SystemSettingsSection', () => {
   beforeEach(() => {
     mockMutate.mockReset();
-    mockSetTimeMutate.mockReset();
     mockConfig = {
       device: { name: 'Living Room' },
       eco_mode: false,
@@ -88,9 +85,4 @@ describe('SystemSettingsSection', () => {
     });
   });
 
-  it('calls sync time mutation on button click', () => {
-    renderWithProviders(<SystemSettingsSection deviceId="AABB001" />);
-    fireEvent.click(screen.getByText('Sync Time'));
-    expect(mockSetTimeMutate).toHaveBeenCalledWith(expect.any(String));
-  });
 });

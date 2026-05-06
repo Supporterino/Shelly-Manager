@@ -338,6 +338,7 @@
   },
   "kvs": {
     "title": "Key-Value Store",
+    "shortTitle": "KVS",
     "searchPlaceholder": "Search keys...",
     "noKeys": "No keys stored.",
     "addKey": "Add Key",
@@ -371,6 +372,9 @@
     "evalResult": "Result",
     "deleteScript": "Delete Script",
     "deleteConfirm": "Delete this script?"
+  },
+  "automation": {
+    "title": "Automatización"
   },
   "config": {
     "pageTitle": "Configuration",

@@ -1,0 +1,33 @@
+{
+  "original_estimated_tokens": 1742,
+  "packed_tokens": 280,
+  "reduction_pct": 83.92652123995407,
+  "included": [
+    "query included: priority=Query tokens=7 ref=",
+    "tests included: priority=Test tokens=14 ref=",
+    "tests included: priority=Test tokens=15 ref=",
+    "tests included: priority=Test tokens=15 ref=",
+    "tests included: priority=Test tokens=13 ref=",
+    "tests included: priority=Test tokens=13 ref=",
+    "tests included: priority=Test tokens=11 ref=",
+    "tests included: priority=Test tokens=12 ref=",
+    "tests included: priority=Test tokens=11 ref=",
+    "dependencies included: priority=Dependency tokens=18 ref=",
+    "dependencies included: priority=Dependency tokens=18 ref=",
+    "dependencies included: priority=Dependency tokens=7 ref=",
+    "memory included: priority=DirectiveMemory tokens=14 ref=project",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "memory included: priority=DirectiveMemory tokens=12 ref=project",
+    "memory included: priority=DirectiveMemory tokens=12 ref=project",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "memory included: priority=DirectiveMemory tokens=12 ref=project",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "memory included: priority=DirectiveMemory tokens=12 ref=project",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "memory included: priority=DirectiveMemory tokens=12 ref=project"
+  ],
+  "excluded": [],
+  "pack_path": "/Users/supporterino/WebstormProjects/Shelly-Manager/.ctx/packs/pack-1778084239981.json",
+  "compact_context": "query: analyze UI/UX for mobile optimization\ntests: src/__tests__/firmware.test.ts::returns a positive value less than 100 for intermediate steps\ntests: src/__tests__/switchConfigPanel.test.tsx::import { fireEvent, screen, waitFor } from '@testing-library/react';\ntests: src/__tests__/inputConfigPanel.test.tsx::import { fireEvent, screen, waitFor } from '@testing-library/react';\ntests: src/__tests__/formatters.test.ts::shows minutes and seconds for < 1 hour\ntests: src/__tests__/formatters.test.ts::shows hours and minutes for < 1 day\ntests: src/__tests__/formatters.test.ts::shows days for >= 1 day\ntests: src/__tests__/formatters.test.ts::shows seconds only for < 1 minute\ntests: src/__tests__/auth.test.ts::returns null for a non-Digest header\ndependencies: src/__tests__/inputConfigPanel.test.tsx::shows yellow restart alert when mutation returns restart_required: true->src/__tests__/switchConfigPanel.test.tsx::renderPanel (function)\ndependencies: src/__tests__/inputConfigPanel.test.tsx::shows yellow restart alert when mutation returns restart_required: true->src/__tests__/inputConfigPanel.test.tsx::renderPanel (function)\ndependencies: src/services/shellyClient.ts::checkForUpdate->src/services/shellyClient.ts::call (function)\nmemory: manual:rust:commands:discovery] Discovery-related Rust commands in `src-tauri/src/lib.rs`: ... @project\nmemory: manual:feature:subnet-auto-detect] Discovery page (/discover) has a ... @project\nmemory: AGENTS.md:pitfalls] HTTP request fails on mobile: ... @project\nmemory: AGENTS.md:ui:mantine] Always use Mantine components — ... @project\nmemory: AGENTS.md:dir:map] src/routes/ = TanStack Router file-based ... @project\nmemory: AGENTS.md:rule:absolute] 1. Never use window.fetch or ... @project\nmemory: implementation:plan:subnet-scan-to-slash-16] COMPLETED. Implementation delivered across 10 ... @project\nmemory: AGENTS.md:i18n:guide] Library: react-i18next (i18next v26). Translation ... @project\nmemory: AGENTS.md:test:conventions] Run tests: bun run test ... @project\nmemory: AGENTS.md:query:tanstack] Query key hierarchy: ['device', deviceId, ... @project\nmemory: AGENTS.md:api:shelly] Only Gen 2, Gen 3, ... @project"
+}

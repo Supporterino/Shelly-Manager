@@ -238,6 +238,9 @@
     "calibrateConfirm": "The cover will open and close completely to determine its range. Continue?",
     "calibrateSuccess": "Calibration started."
   },
+  "automation": {
+    "title": "Automation"
+  },
   "config": {
     "pageTitle": "Configuration",
     "cover": {
@@ -384,6 +387,7 @@
   },
   "kvs": {
     "title": "Key-Value Store",
+    "shortTitle": "KVS",
     "searchPlaceholder": "Search keys...",
     "noKeys": "No keys stored.",
     "addKey": "Add Key",

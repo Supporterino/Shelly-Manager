@@ -69,20 +69,20 @@ export function WebhookTable({ hooks, onToggle, onEdit, onDelete, isUpdating }: 
                 <Group gap={4} justify="flex-end">
                   <ActionIcon
                     variant="subtle"
-                    size="sm"
+                    size="md"
                     onClick={() => onEdit(hook)}
                     aria-label={t('webhooks.edit')}
                   >
-                    <IconPencil size={14} />
+                    <IconPencil size={18} />
                   </ActionIcon>
                   <ActionIcon
                     color="red"
                     variant="subtle"
-                    size="sm"
+                    size="md"
                     onClick={() => onDelete(hook.id)}
                     aria-label={t('webhooks.delete')}
                   >
-                    <IconTrash size={14} />
+                    <IconTrash size={18} />
                   </ActionIcon>
                 </Group>
               </Table.Td>

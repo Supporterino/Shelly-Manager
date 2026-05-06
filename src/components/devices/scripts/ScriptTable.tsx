@@ -82,50 +82,50 @@ export function ScriptTable({
                   {script.running ? (
                     <ActionIcon
                       variant="subtle"
-                      size="sm"
+                      size="md"
                       color="orange"
                       onClick={() => onStop(script.id)}
                       disabled={isUpdating}
                       aria-label={t('scripts.stop')}
                     >
-                      <IconPlayerStop size={14} />
+                      <IconPlayerStop size={18} />
                     </ActionIcon>
                   ) : (
                     <ActionIcon
                       variant="subtle"
-                      size="sm"
+                      size="md"
                       color="green"
                       onClick={() => onStart(script.id)}
                       disabled={isUpdating}
                       aria-label={t('scripts.start')}
                     >
-                      <IconPlayerPlay size={14} />
+                      <IconPlayerPlay size={18} />
                     </ActionIcon>
                   )}
                   <ActionIcon
                     variant="subtle"
-                    size="sm"
+                    size="md"
                     onClick={() => onViewCode(script.id)}
                     aria-label={t('scripts.viewCode')}
                   >
-                    <IconCode size={14} />
+                    <IconCode size={18} />
                   </ActionIcon>
                   <ActionIcon
                     variant="subtle"
-                    size="sm"
+                    size="md"
                     onClick={() => onEval(script.id)}
                     aria-label={t('scripts.eval')}
                   >
-                    <span style={{ fontSize: 10, fontWeight: 700 }}>JS</span>
+                    <span style={{ fontSize: 12, fontWeight: 700 }}>JS</span>
                   </ActionIcon>
                   <ActionIcon
                     color="red"
                     variant="subtle"
-                    size="sm"
+                    size="md"
                     onClick={() => onDelete(script.id)}
                     aria-label={t('scripts.deleteScript')}
                   >
-                    <IconTrash size={14} />
+                    <IconTrash size={18} />
                   </ActionIcon>
                 </Group>
               </Table.Td>

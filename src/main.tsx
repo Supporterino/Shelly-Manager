@@ -43,7 +43,7 @@ const theme = createTheme({
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <I18nextProvider i18n={i18next}>
     <MantineProvider theme={theme}>
-      <Notifications />
+      <Notifications position="top-center" />
       <QueryClientProvider client={queryClient}>
         {/*
           Suspense is required: the first locale chunk loads asynchronously.

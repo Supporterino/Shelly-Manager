@@ -80,7 +80,7 @@ export function CoverControl({ deviceId, componentId, status, device }: Props) {
 
       <Group gap="xs" grow>
         <Button
-          size="xs"
+          size="sm"
           variant="light"
           color="green"
           disabled={isMoving}
@@ -90,7 +90,7 @@ export function CoverControl({ deviceId, componentId, status, device }: Props) {
           {t('controls.open')}
         </Button>
         <Button
-          size="xs"
+          size="sm"
           variant="light"
           color="red"
           loading={stop.isPending}
@@ -99,7 +99,7 @@ export function CoverControl({ deviceId, componentId, status, device }: Props) {
           {t('controls.stop')}
         </Button>
         <Button
-          size="xs"
+          size="sm"
           variant="light"
           color="blue"
           disabled={isMoving}
@@ -111,7 +111,7 @@ export function CoverControl({ deviceId, componentId, status, device }: Props) {
       </Group>
 
       {cover?.pos_control && (
-        <Stack gap="xs">
+        <Stack gap="xs" py="xs">
           <Group gap="sm" align="center">
             <Text size="xs" c="dimmed" style={{ minWidth: 28 }}>
               {cover.current_pos ?? 0}%
@@ -125,7 +125,7 @@ export function CoverControl({ deviceId, componentId, status, device }: Props) {
             />
           </Group>
           <Button
-            size="xs"
+            size="sm"
             variant="outline"
             loading={goTo.isPending}
             onClick={() => goTo.mutate({ pos: targetPos })}

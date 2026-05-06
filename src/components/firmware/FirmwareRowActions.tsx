@@ -101,13 +101,13 @@ export function FirmwareRowActions({ state, onCheck, onUpdate, globalBusy }: Pro
         <Tooltip label={t('firmware.checkForUpdate')} withArrow>
           <ActionIcon
             variant="subtle"
-            size="sm"
+            size="md"
             aria-label={t('firmware.checkForUpdate')}
             loading={state.status === 'checking'}
             disabled={globalBusy || isUpdating}
             onClick={onCheck}
           >
-            <IconRefresh size={14} stroke={1.5} />
+            <IconRefresh size={18} stroke={1.5} />
           </ActionIcon>
         </Tooltip>
 
@@ -122,12 +122,12 @@ export function FirmwareRowActions({ state, onCheck, onUpdate, globalBusy }: Pro
             <ActionIcon
               variant="light"
               color="blue"
-              size="sm"
+              size="md"
               aria-label={t('firmware.updateNow')}
               disabled={globalBusy}
               onClick={onUpdate}
             >
-              <IconCloudDownload size={14} stroke={1.5} />
+              <IconCloudDownload size={18} stroke={1.5} />
             </ActionIcon>
           </Tooltip>
         )}

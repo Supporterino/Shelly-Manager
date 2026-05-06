@@ -1,4 +1,4 @@
-import { Button, Group, Loader, Stack, TextInput, Title } from '@mantine/core';
+import { Box, Button, Group, Loader, Stack, TextInput, Title } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -6,6 +6,7 @@ import { useKVSDelete, useKVSGet, useKVSList, useKVSSet } from '../../../hooks/u
 import type { KVSKey } from '../../../types/shelly';
 import { ConfirmModal } from '../../common/ConfirmModal';
 import { ErrorAlert } from '../../common/ErrorAlert';
+import { KVSCardList } from './KVSCardList';
 import { KVSKeyTable } from './KVSKeyTable';
 import { KVSModal } from './KVSModal';
 
@@ -72,7 +73,14 @@ export function KVSEditor({ deviceId }: Props) {
       {error && <ErrorAlert message={(error as Error).message} onRetry={() => void refetch()} />}
 
       {!isLoading && !error && (
-        <KVSKeyTable items={filtered} onEdit={handleEdit} onDelete={setDeleteTarget} />
+        <>
+          <Box hiddenFrom="sm">
+            <KVSCardList items={filtered} onEdit={handleEdit} onDelete={setDeleteTarget} />
+          </Box>
+          <Box visibleFrom="sm">
+            <KVSKeyTable items={filtered} onEdit={handleEdit} onDelete={setDeleteTarget} />
+          </Box>
+        </>
       )}
 
       <KVSModal

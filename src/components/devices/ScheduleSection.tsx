@@ -164,20 +164,20 @@ export function ScheduleSection({ device }: Props) {
               <Group gap={4}>
                 <ActionIcon
                   variant="subtle"
-                  size="sm"
+                  size="md"
                   aria-label={t('schedule.editSchedule')}
                   onClick={() => setEditJob(job)}
                 >
-                  <IconPencil size={14} />
+                  <IconPencil size={18} />
                 </ActionIcon>
                 <ActionIcon
                   color="red"
                   variant="subtle"
-                  size="sm"
+                  size="md"
                   aria-label={t('schedule.deleteSchedule')}
                   onClick={() => setDeleteTarget(job.id)}
                 >
-                  <IconTrash size={14} />
+                  <IconTrash size={18} />
                 </ActionIcon>
               </Group>
             </Group>

@@ -119,7 +119,7 @@ export function SwitchConfigPanel({ opened, onClose, deviceId, switchId }: Props
       opened={opened}
       onClose={onClose}
       title={t('controls.switch.configTitle')}
-      size="md"
+      size={{ base: 'sm', sm: 'md' }}
       scrollAreaComponent={ScrollArea.Autosize}
     >
       {isLoading && (

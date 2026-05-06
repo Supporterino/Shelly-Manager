@@ -48,7 +48,7 @@ export function SettingsTabs({ deviceId }: Props) {
 
   return (
     <Tabs defaultValue="general" keepMounted={false}>
-      <Tabs.List>
+      <Tabs.List style={{ flexWrap: 'nowrap', overflowX: 'auto' }}>
         <Tabs.Tab value="general">{t('settings.tabs.general')}</Tabs.Tab>
         <Tabs.Tab value="network">{t('settings.tabs.network')}</Tabs.Tab>
         <Tabs.Tab value="system">{t('settings.tabs.system')}</Tabs.Tab>

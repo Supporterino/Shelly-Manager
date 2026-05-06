@@ -12,7 +12,7 @@ import {
 import { IconInfoCircle } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSetTime, useSysConfig, useSysSetConfig } from '../../../hooks/useDeviceSettings';
+import { useSysConfig, useSysSetConfig } from '../../../hooks/useDeviceSettings';
 import { useDeviceStore } from '../../../store/deviceStore';
 
 interface Props {
@@ -26,7 +26,6 @@ export function SystemSettingsSection({ deviceId }: Props) {
   const updateDevice = useDeviceStore((s) => s.updateDevice);
   const { data: config, isLoading } = useSysConfig(deviceId);
   const sysMutation = useSysSetConfig(deviceId);
-  const setTimeMutation = useSetTime(deviceId);
 
   const [name, setName] = useState('');
   const [ecoMode, setEcoMode] = useState(false);
@@ -63,10 +62,6 @@ export function SystemSettingsSection({ deviceId }: Props) {
         setIsDirty(false);
       },
     });
-  };
-
-  const handleSyncTime = () => {
-    setTimeMutation.mutate(new Date().toISOString());
   };
 
   if (isLoading) {
@@ -110,20 +105,6 @@ export function SystemSettingsSection({ deviceId }: Props) {
           updateDevice(deviceId, { discoverable: e.currentTarget.checked });
         }}
       />
-
-      <Group justify="space-between" align="center">
-        <Text size="sm">
-          {t('settings.system.deviceTime')}: {new Date().toLocaleString()}
-        </Text>
-        <Button
-          size="sm"
-          variant="light"
-          onClick={handleSyncTime}
-          loading={setTimeMutation.isPending}
-        >
-          {t('settings.system.syncTime')}
-        </Button>
-      </Group>
 
       {restartNeeded && (
         <Alert color="yellow" icon={<IconInfoCircle size={16} />}>

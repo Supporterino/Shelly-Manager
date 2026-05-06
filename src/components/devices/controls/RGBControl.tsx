@@ -1,4 +1,4 @@
-import { ColorPicker, Group, Slider, Stack, Switch, Text } from '@mantine/core';
+import { ColorInput, Group, Slider, Stack, Switch, Text } from '@mantine/core';
 import { useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRGBControl } from '../../../hooks/useDeviceControl';
@@ -85,12 +85,11 @@ export function RGBControl({ deviceId, componentId, status, device }: Props) {
         />
       </Group>
 
-      <ColorPicker
+      <ColorInput
         format="hex"
         value={currentHex}
         onChange={handleColorChange}
-        size="sm"
-        fullWidth
+        size="md"
         swatches={[
           '#ff0000',
           '#ff8000',

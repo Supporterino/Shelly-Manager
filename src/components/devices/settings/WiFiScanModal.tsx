@@ -75,7 +75,7 @@ export function WiFiScanModal({ deviceId, opened, onClose }: Props) {
         opened={opened}
         onClose={onClose}
         title={t('settings.wifi.scan')}
-        size="lg"
+        size={{ base: 'sm', sm: 'lg' }}
         scrollAreaComponent={ScrollArea.Autosize}
       >
         <Stack gap="md">

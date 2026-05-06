@@ -155,7 +155,7 @@ export function ScheduleForm({ device, initialJob, onDone, onCancel }: Props) {
         <Chip.Group multiple value={days} onChange={setDays}>
           <Group gap={4}>
             {[0, 1, 2, 3, 4, 5, 6].map((dow) => (
-              <Chip key={dow} value={String(dow)} size="xs">
+              <Chip key={dow} value={String(dow)} size="sm">
                 {getWeekdayLabel(dow, i18n.language)}
               </Chip>
             ))}
@@ -164,11 +164,11 @@ export function ScheduleForm({ device, initialJob, onDone, onCancel }: Props) {
       </Stack>
 
       <Group gap="xs" justify="flex-end">
-        <Button variant="subtle" size="xs" onClick={onCancel}>
+        <Button variant="subtle" size="sm" onClick={onCancel}>
           {tc('actions.cancel')}
         </Button>
         <Button
-          size="xs"
+          size="sm"
           color="blue"
           loading={loading}
           onClick={() => (isEdit ? updateMutation.mutate() : createMutation.mutate())}

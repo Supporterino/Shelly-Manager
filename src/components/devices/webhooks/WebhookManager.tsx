@@ -1,4 +1,4 @@
-import { Button, Group, Loader, Stack, Title } from '@mantine/core';
+import { Box, Button, Group, Loader, Stack, Title } from '@mantine/core';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +15,7 @@ import { ConfirmModal } from '../../common/ConfirmModal';
 import { ErrorAlert } from '../../common/ErrorAlert';
 import { CreateWebhookModal } from './CreateWebhookModal';
 import { EditWebhookModal } from './EditWebhookModal';
+import { WebhookCardList } from './WebhookCardList';
 import { WebhookTable } from './WebhookTable';
 
 interface Props {
@@ -82,13 +83,26 @@ export function WebhookManager({ deviceId }: Props) {
       {error && <ErrorAlert message={(error as Error).message} onRetry={() => void refetch()} />}
 
       {!isLoading && !error && (
-        <WebhookTable
-          hooks={hooks}
-          onToggle={(id, enable) => updateMutation.mutate({ id, config: { enable } })}
-          onEdit={setEditHook}
-          onDelete={setDeleteTarget}
-          isUpdating={isUpdating}
-        />
+        <>
+          <Box hiddenFrom="sm">
+            <WebhookCardList
+              hooks={hooks}
+              onToggle={(id, enable) => updateMutation.mutate({ id, config: { enable } })}
+              onEdit={setEditHook}
+              onDelete={setDeleteTarget}
+              isUpdating={isUpdating}
+            />
+          </Box>
+          <Box visibleFrom="sm">
+            <WebhookTable
+              hooks={hooks}
+              onToggle={(id, enable) => updateMutation.mutate({ id, config: { enable } })}
+              onEdit={setEditHook}
+              onDelete={setDeleteTarget}
+              isUpdating={isUpdating}
+            />
+          </Box>
+        </>
       )}
 
       <CreateWebhookModal

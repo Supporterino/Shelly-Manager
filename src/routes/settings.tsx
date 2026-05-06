@@ -4,6 +4,7 @@ import {
   Group,
   ScrollArea,
   SegmentedControl,
+  Select,
   Slider,
   Stack,
   Text,
@@ -60,7 +61,20 @@ function SettingsPage() {
             </Text>
             <Group justify="space-between" align="center">
               <Text>{t('theme.label')}</Text>
+              <Select
+                hiddenFrom="sm"
+                value={preferences.theme}
+                onChange={(v) => handleThemeChange(v ?? 'system')}
+                data={[
+                  { label: t('theme.light'), value: 'light' },
+                  { label: t('theme.dark'), value: 'dark' },
+                  { label: t('theme.system'), value: 'system' },
+                ]}
+                size="sm"
+                allowDeselect={false}
+              />
               <SegmentedControl
+                visibleFrom="sm"
                 value={preferences.theme}
                 onChange={handleThemeChange}
                 data={[
@@ -73,7 +87,19 @@ function SettingsPage() {
             </Group>
             <Group justify="space-between" align="center">
               <Text>{t('temperatureUnit.label')}</Text>
+              <Select
+                hiddenFrom="sm"
+                value={preferences.temperatureUnit}
+                onChange={(v) => void setTemperatureUnit((v as 'C' | 'F') ?? 'C')}
+                data={[
+                  { label: t('temperatureUnit.celsius'), value: 'C' },
+                  { label: t('temperatureUnit.fahrenheit'), value: 'F' },
+                ]}
+                size="sm"
+                allowDeselect={false}
+              />
               <SegmentedControl
+                visibleFrom="sm"
                 value={preferences.temperatureUnit}
                 onChange={(v) => void setTemperatureUnit(v as 'C' | 'F')}
                 data={[

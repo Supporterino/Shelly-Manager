@@ -127,7 +127,41 @@ function DashboardPage() {
       </Group>
 
       {/* Filter / sort toolbar */}
-      <Group gap="sm" wrap="wrap">
+      <Stack gap="sm" hiddenFrom="sm">
+        <TextInput
+          placeholder={t('filter.searchPlaceholder')}
+          leftSection={<IconSearch size={14} />}
+          value={search}
+          onChange={(e) => setSearch(e.currentTarget.value)}
+          size="sm"
+        />
+        <Group gap="sm" wrap="nowrap" justify="space-between">
+          <Select
+            value={statusFilter}
+            onChange={(v) => setStatusFilter((v as StatusFilter) ?? 'all')}
+            size="sm"
+            data={[
+              { value: 'all', label: t('filter.all') },
+              { value: 'online', label: t('filter.online') },
+              { value: 'offline', label: t('filter.offline') },
+            ]}
+            allowDeselect={false}
+          />
+          <Select
+            data={[
+              { value: 'name', label: t('sort.name') },
+              { value: 'status', label: t('sort.status') },
+              { value: 'lastSeen', label: t('sort.lastSeen') },
+            ]}
+            value={sortKey}
+            onChange={(v) => setSortKey((v as SortKey) ?? 'name')}
+            allowDeselect={false}
+            size="sm"
+            w={130}
+          />
+        </Group>
+      </Stack>
+      <Group gap="sm" wrap="wrap" visibleFrom="sm">
         <TextInput
           placeholder={t('filter.searchPlaceholder')}
           leftSection={<IconSearch size={14} />}

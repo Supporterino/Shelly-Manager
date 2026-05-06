@@ -65,15 +65,6 @@ export function CCTControl({ deviceId, componentId, status, device }: Props) {
         <Text size="xs" c="dimmed" style={{ minWidth: 28 }}>
           {light?.temp ?? MIN_TEMP} K
         </Text>
-        <Box
-          style={{
-            flex: 1,
-            height: 4,
-            borderRadius: 2,
-            background: `linear-gradient(to right, #ffd27f, #e8f4ff)`,
-            marginBottom: 4,
-          }}
-        />
         <Slider
           value={light?.temp ?? MIN_TEMP}
           min={MIN_TEMP}

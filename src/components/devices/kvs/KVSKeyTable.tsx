@@ -47,20 +47,20 @@ export function KVSKeyTable({ items, onEdit, onDelete }: Props) {
                 <Group gap={4} justify="flex-end">
                   <ActionIcon
                     variant="subtle"
-                    size="sm"
+                    size="md"
                     onClick={() => onEdit(item)}
                     aria-label={t('kvs.editKey')}
                   >
-                    <IconPencil size={14} />
+                    <IconPencil size={18} />
                   </ActionIcon>
                   <ActionIcon
                     color="red"
                     variant="subtle"
-                    size="sm"
+                    size="md"
                     onClick={() => onDelete(item.key)}
                     aria-label={t('kvs.deleteKey')}
                   >
-                    <IconTrash size={14} />
+                    <IconTrash size={18} />
                   </ActionIcon>
                 </Group>
               </Table.Td>

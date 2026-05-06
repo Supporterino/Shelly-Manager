@@ -1,0 +1,33 @@
+{
+  "original_estimated_tokens": 5528,
+  "packed_tokens": 273,
+  "reduction_pct": 95.06150506512301,
+  "included": [
+    "query included: priority=Query tokens=19 ref=",
+    "symbols included: priority=Symbol tokens=9 ref=scripts/generate_promo.py",
+    "symbols included: priority=Symbol tokens=9 ref=src/services/devicePersistence.ts",
+    "recent_diff included: priority=RecentDiff tokens=12 ref=",
+    "dependencies included: priority=Dependency tokens=7 ref=",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "memory included: priority=DirectiveMemory tokens=12 ref=project",
+    "memory included: priority=DirectiveMemory tokens=12 ref=project",
+    "memory included: priority=DirectiveMemory tokens=12 ref=project",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "memory included: priority=DirectiveMemory tokens=12 ref=project",
+    "memory included: priority=DirectiveMemory tokens=12 ref=project",
+    "memory included: priority=DirectiveMemory tokens=12 ref=project",
+    "memory included: priority=DirectiveMemory tokens=14 ref=project",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "docs included: priority=Docs tokens=13 ref=//",
+    "docs included: priority=Docs tokens=13 ref=unknown",
+    "docs included: priority=Docs tokens=13 ref=//",
+    "docs included: priority=Docs tokens=12 ref=//",
+    "docs included: priority=Docs tokens=13 ref=</Badge>",
+    "docs included: priority=Docs tokens=13 ref={/*"
+  ],
+  "excluded": [],
+  "pack_path": "/Users/supporterino/WebstormProjects/Shelly-Manager/.ctx/packs/pack-1778092094346.json",
+  "compact_context": "query: Improve UX for configuration KVS and other buttons that can be present but don't have to be\nsymbols: draw_tag_pill lines:unknown imports:n/a relationships:1 @scripts/generate_promo.py\nsymbols: getStore lines:unknown imports:n/a relationships:1 @src/services/devicePersistence.ts\nrecent_diff: diff_files:.ctx/stats/latest.json,src/__tests__/systemSettingsSection.test.tsx,... changed_symbols:{(v) changes:+40/-44\ndependencies: src/services/shellyClient.ts::checkForUpdate->src/services/shellyClient.ts::call (function)\nmemory: manual:feature:subnet-auto-detect] Discovery page (/discover) has a ... @project\nmemory: AGENTS.md:pitfalls] HTTP request fails on mobile: ... @project\nmemory: AGENTS.md:rule:absolute] 1. Never use window.fetch or ... @project\nmemory: AGENTS.md:ui:mantine] Always use Mantine components — ... @project\nmemory: implementation:plan:subnet-scan-to-slash-16] COMPLETED. Implementation delivered across 10 ... @project\nmemory: implementation:analysis:subnet-scan-limit] COMPLETED. Subnet scan was hard-capped ... @project\nmemory: AGENTS.md:i18n:guide] Library: react-i18next (i18next v26). Translation ... @project\nmemory: AGENTS.md:rust:commands] All Rust logic lives in ... @project\nmemory: AGENTS.md:store:zustand] Access pattern: always use selectors, ... @project\nmemory: AGENTS.md:api:shelly] Only Gen 2, Gen 3, ... @project\nmemory: manual:rust:commands:discovery] Discovery-related Rust commands in `src-tauri/src/lib.rs`: ... @project\nmemory: AGENTS.md:dir:map] src/routes/ = TanStack Router file-based ... @project\ndocs: function FirmwareCard({ device, currentVersion }: Props) ... @//\ndocs: def lerp_color(c1, c2, t): return tuple(int(c1[i] ... @unknown\ndocs: function useFirmwareManager( devices: StoredDevice[], liveStatuses: Record<string, ... @//\ndocs: function DeviceDetailPage() { const { deviceId ... @//\ndocs: function FirmwareStatusBadge({ state }: { state: ... @</Badge>\ndocs: function FirmwareDeviceCard({ device, state, globalBusy, selected, ... @{/*"
+}
