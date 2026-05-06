@@ -18,7 +18,7 @@ function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
       <Text size="sm" c="dimmed" style={{ flexShrink: 0 }}>
         {label}
       </Text>
-      <Text size="sm" fw={500} ta="right">
+      <Text size="sm" fw={500} ta="right" span>
         {value}
       </Text>
     </Group>

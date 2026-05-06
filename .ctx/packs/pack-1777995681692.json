@@ -1,0 +1,22 @@
+{
+  "original_estimated_tokens": 528,
+  "packed_tokens": 116,
+  "reduction_pct": 78.03030303030303,
+  "included": [
+    "query included: priority=Query tokens=8 ref=",
+    "symbols included: priority=Symbol tokens=9 ref=src/routes/settings.tsx",
+    "symbols included: priority=Symbol tokens=9 ref=src/components/settings/LanguageSelect.tsx",
+    "symbols included: priority=Symbol tokens=9 ref=src/components/settings/ClearAllDevicesButton.tsx",
+    "tests included: priority=Test tokens=13 ref=",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "docs included: priority=Docs tokens=12 ref=/settings'",
+    "docs included: priority=Docs tokens=8 ref='../locales/en/settings.json'",
+    "docs included: priority=Docs tokens=8 ref='../locales/en/settings.json'",
+    "docs included: priority=Docs tokens=8 ref='../locales/de/settings.json'"
+  ],
+  "excluded": [],
+  "pack_path": "/Users/supporterino/WebstormProjects/Shelly-Manager/.ctx/packs/pack-1777995681692.json",
+  "compact_context": "query: settings deprecated duplicates 4 phases features\nsymbols: import lines:unknown imports:n/a relationships:1 @src/routes/settings.tsx\nsymbols: import lines:unknown imports:n/a relationships:1 @src/components/settings/LanguageSelect.tsx\nsymbols: import lines:unknown imports:n/a relationships:1 @src/components/settings/ClearAllDevicesButton.tsx\ntests: src/__tests__/navComponents.test.tsx::highlights the Settings tab when pathname is /settings\nmemory: AGENTS.md:i18n:guide] Library: react-i18next (i18next v26). Translation ... @project\nmemory: AGENTS.md:router:tanstack] All routes live in src/routes/. ... @project\nmemory: AGENTS.md:dir:map] src/routes/ = TanStack Router file-based ... @project\ndocs: it('highlights the Settings tab when pathname ... @/settings'\ndocs: import enSettings from '../locales/en/settings.json';\ndocs: import en_settings from '../locales/en/settings.json';\ndocs: import de_settings from '../locales/de/settings.json';"
+}
