@@ -11,27 +11,16 @@ import { SystemSettingsSection } from '../components/devices/settings/SystemSett
 import { renderWithProviders } from '../test/renderWithProviders';
 
 const mockMutate = vi.fn();
-const mockDetectMutate = vi.fn();
 const mockSetTimeMutate = vi.fn();
 
-let mockConfig = {
+let mockConfig: Record<string, unknown> = {
   device: { name: 'Living Room' },
   eco_mode: false,
-  location: { tz: 'Europe/Berlin' },
 };
 
 vi.mock('../hooks/useDeviceSettings', () => ({
   useSysConfig: () => ({ data: mockConfig, isLoading: false }),
   useSysSetConfig: () => ({ mutate: mockMutate, isPending: false }),
-  useDetectLocation: () => ({ mutate: mockDetectMutate, isPending: false }),
-  useListTimezones: () => ({
-    data: {
-      timezones: [
-        { name: 'Europe/Berlin', offset: 1 },
-        { name: 'UTC', offset: 0 },
-      ],
-    },
-  }),
   useSetTime: () => ({ mutate: mockSetTimeMutate, isPending: false }),
 }));
 
@@ -45,12 +34,10 @@ vi.mock('../store/deviceStore', () => ({
 describe('SystemSettingsSection', () => {
   beforeEach(() => {
     mockMutate.mockReset();
-    mockDetectMutate.mockReset();
     mockSetTimeMutate.mockReset();
     mockConfig = {
       device: { name: 'Living Room' },
       eco_mode: false,
-      location: { tz: 'Europe/Berlin' },
     };
   });
 
@@ -60,13 +47,21 @@ describe('SystemSettingsSection', () => {
     expect(input.value).toBe('Living Room');
   });
 
-  it('toggles eco mode switch', async () => {
+  it('toggles eco mode switch when device supports it', async () => {
     const user = userEvent.setup();
     renderWithProviders(<SystemSettingsSection deviceId="AABB001" />);
     const ecoSwitch = screen.getByLabelText('Eco Mode');
     expect(ecoSwitch).not.toBeChecked();
     await user.click(ecoSwitch);
     expect(ecoSwitch).toBeChecked();
+  });
+
+  it('hides eco mode switch when device does not support it', () => {
+    mockConfig = {
+      device: { name: 'Living Room' },
+    };
+    renderWithProviders(<SystemSettingsSection deviceId="AABB001" />);
+    expect(screen.queryByLabelText('Eco Mode')).not.toBeInTheDocument();
   });
 
   it('calls save mutation with correct payload when name changes', async () => {
@@ -91,12 +86,6 @@ describe('SystemSettingsSection', () => {
     await waitFor(() => {
       expect(screen.getByText(/restart/i)).toBeInTheDocument();
     });
-  });
-
-  it('calls detect location mutation on button click', () => {
-    renderWithProviders(<SystemSettingsSection deviceId="AABB001" />);
-    fireEvent.click(screen.getByText('Auto-detect Location'));
-    expect(mockDetectMutate).toHaveBeenCalled();
   });
 
   it('calls sync time mutation on button click', () => {

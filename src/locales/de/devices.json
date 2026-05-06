@@ -242,21 +242,14 @@
     "tabs": {
       "general": "Allgemein",
       "network": "Netzwerk",
-      "profile": "Profil",
-      "components": "Komponenten",
-      "firmware": "Firmware",
-      "advanced": "Erweitert",
-      "integrations": "Integrations",
-      "auth": "Authentication",
-      "methods": "Methods"
+      "system": "System",
+      "advanced": "Erweitert"
     },
     "system": {
       "title": "Systemeinstellungen",
       "name": "Gerätename",
       "ecoMode": "Eco-Modus",
       "discoverable": "Im Netzwerk auffindbar",
-      "timezone": "Zeitzone",
-      "detectLocation": "Standort automatisch erkennen",
       "deviceTime": "Gerätezeit",
       "syncTime": "Zeit synchronisieren",
       "restartRequired": "Ein Neustart ist erforderlich, damit die Änderungen wirksam werden."
@@ -288,7 +281,10 @@
       "noClients": "Keine Clients verbunden.",
       "clientMac": "MAC",
       "clientIp": "IP",
-      "connectedSince": "Verbunden seit"
+      "connectedSince": "Verbunden seit",
+      "editTitle": "Access Point bearbeiten",
+      "enable": "Access Point aktivieren",
+      "password": "Access Point-Passwort"
     },
     "profile": {
       "title": "Geräteprofil",
@@ -320,11 +316,6 @@
       "enableConfirmMessage": "This will require a password for all future connections. Make sure you remember it.",
       "disableConfirmTitle": "Disable Authentication?",
       "disableConfirmMessage": "This will remove password protection from the device."
-    },
-    "methods": {
-      "title": "Device Methods",
-      "searchPlaceholder": "Search methods...",
-      "count": "{{count}} method(s) available"
     }
   },
   "webhooks": {

@@ -242,21 +242,14 @@
     "tabs": {
       "general": "一般",
       "network": "ネットワーク",
-      "profile": "プロファイル",
-      "components": "コンポーネント",
-      "firmware": "ファームウェア",
-      "advanced": "詳細設定",
-      "integrations": "Integrations",
-      "auth": "Authentication",
-      "methods": "Methods"
+      "system": "システム",
+      "advanced": "詳細設定"
     },
     "system": {
       "title": "システム設定",
       "name": "デバイス名",
       "ecoMode": "エコモード",
       "discoverable": "ネットワークで検出可能",
-      "timezone": "タイムゾーン",
-      "detectLocation": "位置情報を自動検出",
       "deviceTime": "デバイス時刻",
       "syncTime": "時刻を同期",
       "restartRequired": "変更を有効にするには再起動が必要です。"
@@ -288,7 +281,10 @@
       "noClients": "接続中のクライアントはありません。",
       "clientMac": "MAC",
       "clientIp": "IP",
-      "connectedSince": "接続開始時刻"
+      "connectedSince": "接続開始時刻",
+      "editTitle": "アクセスポイントを編集",
+      "enable": "アクセスポイントを有効化",
+      "password": "アクセスポイントのパスワード"
     },
     "profile": {
       "title": "デバイスプロファイル",
@@ -320,11 +316,6 @@
       "enableConfirmMessage": "This will require a password for all future connections. Make sure you remember it.",
       "disableConfirmTitle": "Disable Authentication?",
       "disableConfirmMessage": "This will remove password protection from the device."
-    },
-    "methods": {
-      "title": "Device Methods",
-      "searchPlaceholder": "Search methods...",
-      "count": "{{count}} method(s) available"
     }
   },
   "webhooks": {

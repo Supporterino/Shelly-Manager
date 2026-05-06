@@ -18,6 +18,7 @@ export function MethodDiscoverySection({ deviceId }: Props) {
     const map: Record<string, string[]> = {};
     for (const m of data.methods) {
       const name = m.name;
+      if (typeof name !== 'string') continue;
       if (filter && !name.toLowerCase().includes(filter.toLowerCase())) continue;
       const prefix = name.includes('.') ? name.split('.')[0] : 'Other';
       if (!map[prefix]) map[prefix] = [];

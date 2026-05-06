@@ -58,12 +58,11 @@ describe('SettingsTabs', () => {
     renderWithProviders(<SettingsTabs deviceId="AABB001" />);
     expect(screen.getByRole('tab', { name: /General/i })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: /Network/i })).toBeInTheDocument();
-    expect(screen.getByRole('tab', { name: /Components/i })).toBeInTheDocument();
-    expect(screen.getByRole('tab', { name: /Firmware/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /System/i })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: /Advanced/i })).toBeInTheDocument();
   });
 
-  it('does not render Profile tab for single-profile devices', () => {
+  it('does not render System tab content for single-profile devices without firmware', () => {
     renderWithProviders(<SettingsTabs deviceId="AABB001" />);
     expect(screen.queryByRole('tab', { name: /Profile/i })).not.toBeInTheDocument();
   });

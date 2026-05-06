@@ -242,21 +242,14 @@
     "tabs": {
       "general": "常规",
       "network": "网络",
-      "profile": "配置文件",
-      "components": "组件",
-      "firmware": "固件",
-      "advanced": "高级",
-      "integrations": "Integrations",
-      "auth": "Authentication",
-      "methods": "Methods"
+      "system": "系统",
+      "advanced": "高级"
     },
     "system": {
       "title": "系统设置",
       "name": "设备名称",
       "ecoMode": "节能模式",
       "discoverable": "在网络上可发现",
-      "timezone": "时区",
-      "detectLocation": "自动检测位置",
       "deviceTime": "设备时间",
       "syncTime": "同步时间",
       "restartRequired": "需要重启才能使更改生效。"
@@ -288,7 +281,10 @@
       "noClients": "没有客户端连接。",
       "clientMac": "MAC",
       "clientIp": "IP",
-      "connectedSince": "连接时间"
+      "connectedSince": "连接时间",
+      "editTitle": "编辑接入点",
+      "enable": "启用接入点",
+      "password": "接入点密码"
     },
     "profile": {
       "title": "设备配置文件",
@@ -320,11 +316,6 @@
       "enableConfirmMessage": "This will require a password for all future connections. Make sure you remember it.",
       "disableConfirmTitle": "Disable Authentication?",
       "disableConfirmMessage": "This will remove password protection from the device."
-    },
-    "methods": {
-      "title": "Device Methods",
-      "searchPlaceholder": "Search methods...",
-      "count": "{{count}} method(s) available"
     }
   },
   "webhooks": {

@@ -1,6 +1,20 @@
-import { Group, Loader, Stack, Table, Text } from '@mantine/core';
+import {
+  Button,
+  Group,
+  Loader,
+  Modal,
+  PasswordInput,
+  Stack,
+  Switch,
+  Table,
+  Text,
+  TextInput,
+} from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { IconPencil } from '@tabler/icons-react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAPClients, useWiFiConfig } from '../../../hooks/useDeviceSettings';
+import { useAPClients, useWiFiConfig, useWiFiSetConfig } from '../../../hooks/useDeviceSettings';
 
 interface Props {
   deviceId: string;
@@ -8,15 +22,49 @@ interface Props {
 
 export function APModeSection({ deviceId }: Props) {
   const { t } = useTranslation('devices');
+  const { t: tc } = useTranslation('common');
   const { data: config, isLoading: configLoading } = useWiFiConfig(deviceId);
   const { data: clientsData, isLoading: clientsLoading } = useAPClients(deviceId);
+  const setConfigMutation = useWiFiSetConfig(deviceId);
+  const [opened, { open, close }] = useDisclosure(false);
 
   const isLoading = configLoading || clientsLoading;
   const clients = clientsData?.ap_clients ?? [];
 
+  const [apEnabled, setApEnabled] = useState(false);
+  const [apSsid, setApSsid] = useState('');
+  const [apPass, setApPass] = useState('');
+
+  useEffect(() => {
+    if (!config) return;
+    setApEnabled(config.ap?.enable ?? false);
+    setApSsid(config.ap?.ssid ?? '');
+    setApPass(config.ap?.pass ?? '');
+  }, [config]);
+
+  const handleSave = () => {
+    setConfigMutation.mutate(
+      {
+        ap: {
+          enable: apEnabled,
+          ssid: apSsid || null,
+          pass: apPass || null,
+        },
+      },
+      {
+        onSuccess: () => close(),
+      },
+    );
+  };
+
   return (
     <Stack gap="md" mt="md">
-      <Text fw={600}>{t('settings.ap.title')}</Text>
+      <Group justify="space-between" align="center">
+        <Text fw={600}>{t('settings.ap.title')}</Text>
+        <Button size="xs" variant="light" leftSection={<IconPencil size={14} />} onClick={open}>
+          {tc('actions.edit')}
+        </Button>
+      </Group>
 
       {isLoading ? (
         <Group justify="center" py="md">
@@ -66,6 +114,36 @@ export function APModeSection({ deviceId }: Props) {
           )}
         </>
       )}
+
+      <Modal opened={opened} onClose={close} title={t('settings.ap.editTitle')}>
+        <Stack gap="md">
+          <Switch
+            label={t('settings.ap.enable')}
+            checked={apEnabled}
+            onChange={(e) => setApEnabled(e.currentTarget.checked)}
+          />
+          <TextInput
+            label={t('settings.ap.ssid')}
+            value={apSsid}
+            onChange={(e) => setApSsid(e.currentTarget.value)}
+            disabled={!apEnabled}
+          />
+          <PasswordInput
+            label={t('settings.ap.password')}
+            value={apPass}
+            onChange={(e) => setApPass(e.currentTarget.value)}
+            disabled={!apEnabled}
+          />
+          <Group justify="flex-end" gap="sm">
+            <Button variant="default" onClick={close}>
+              {tc('actions.cancel')}
+            </Button>
+            <Button loading={setConfigMutation.isPending} onClick={handleSave}>
+              {tc('actions.save')}
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
     </Stack>
   );
 }

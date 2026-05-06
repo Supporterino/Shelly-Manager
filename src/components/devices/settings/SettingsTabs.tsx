@@ -6,13 +6,11 @@ import { useDeviceStore } from '../../../store/deviceStore';
 import type { StoredDevice } from '../../../types/device';
 import { APModeSection } from './APModeSection';
 import { AuthManagementSection } from './AuthManagementSection';
-import { ComponentsTab } from './ComponentsTab';
 import { DangerZoneSection } from './DangerZoneSection';
 import { DeviceProfileSection } from './DeviceProfileSection';
 import { EthernetSection } from './EthernetSection';
 import { FirmwareSection } from './FirmwareSection';
 import { IntegrationStatusSection } from './IntegrationStatusSection';
-import { MethodDiscoverySection } from './MethodDiscoverySection';
 import { SystemSettingsSection } from './SystemSettingsSection';
 import { WiFiSection } from './WiFiSection';
 
@@ -53,12 +51,7 @@ export function SettingsTabs({ deviceId }: Props) {
       <Tabs.List>
         <Tabs.Tab value="general">{t('settings.tabs.general')}</Tabs.Tab>
         <Tabs.Tab value="network">{t('settings.tabs.network')}</Tabs.Tab>
-        {hasMultipleProfiles && <Tabs.Tab value="profile">{t('settings.tabs.profile')}</Tabs.Tab>}
-        <Tabs.Tab value="components">{t('settings.tabs.components')}</Tabs.Tab>
-        <Tabs.Tab value="firmware">{t('settings.tabs.firmware')}</Tabs.Tab>
-        <Tabs.Tab value="integrations">{t('settings.tabs.integrations')}</Tabs.Tab>
-        <Tabs.Tab value="auth">{t('settings.tabs.auth')}</Tabs.Tab>
-        <Tabs.Tab value="methods">{t('settings.tabs.methods')}</Tabs.Tab>
+        <Tabs.Tab value="system">{t('settings.tabs.system')}</Tabs.Tab>
         <Tabs.Tab value="advanced">{t('settings.tabs.advanced')}</Tabs.Tab>
       </Tabs.List>
 
@@ -72,33 +65,14 @@ export function SettingsTabs({ deviceId }: Props) {
         <APModeSection deviceId={deviceId} />
       </Tabs.Panel>
 
-      {hasMultipleProfiles && (
-        <Tabs.Panel value="profile" pt="md">
-          <DeviceProfileSection deviceId={deviceId} />
-        </Tabs.Panel>
-      )}
-
-      <Tabs.Panel value="components" pt="md">
-        <ComponentsTab deviceId={deviceId} />
-      </Tabs.Panel>
-
-      <Tabs.Panel value="firmware" pt="md">
+      <Tabs.Panel value="system" pt="md">
+        {hasMultipleProfiles && <DeviceProfileSection deviceId={deviceId} />}
         {device && <FirmwareSection device={device} currentVersion={currentVersion} />}
-      </Tabs.Panel>
-
-      <Tabs.Panel value="integrations" pt="md">
         <IntegrationStatusSection status={status} />
       </Tabs.Panel>
 
-      <Tabs.Panel value="auth" pt="md">
-        <AuthManagementSection deviceId={deviceId} />
-      </Tabs.Panel>
-
-      <Tabs.Panel value="methods" pt="md">
-        <MethodDiscoverySection deviceId={deviceId} />
-      </Tabs.Panel>
-
       <Tabs.Panel value="advanced" pt="md">
+        <AuthManagementSection deviceId={deviceId} />
         <DangerZoneSection deviceId={deviceId} />
       </Tabs.Panel>
     </Tabs>

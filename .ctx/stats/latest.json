@@ -1,12 +1,12 @@
 {
-  "original_tokens": 528,
-  "packed_tokens": 116,
-  "reduction_pct": 78.03030303030303,
+  "original_tokens": 5452,
+  "packed_tokens": 316,
+  "reduction_pct": 94.2039618488628,
   "latency_ms": 0,
   "agent": null,
   "command": null,
   "status": null,
   "exit_code": null,
   "fallback_used": false,
-  "pack_path": "/Users/supporterino/WebstormProjects/Shelly-Manager/.ctx/packs/pack-1777995681692.json"
+  "pack_path": "/Users/supporterino/WebstormProjects/Shelly-Manager/.ctx/packs/pack-1778082499567.json"
 }

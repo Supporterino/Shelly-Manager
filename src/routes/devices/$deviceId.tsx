@@ -28,6 +28,7 @@ import { DeviceStatusBadge } from '../../components/devices/DeviceStatusBadge';
 import { DeviceInfoPanel } from '../../components/devices/info/DeviceInfoPanel';
 import { useDeviceInfo } from '../../hooks/useDeviceInfo';
 import { useDeviceStatus } from '../../hooks/useDeviceStatus';
+import { useListMethods } from '../../hooks/usePhase4Features';
 import { useWsStatus } from '../../hooks/useWsStatus';
 import { wsManager } from '../../services/wsManager';
 import { useDeviceStore } from '../../store/deviceStore';
@@ -83,6 +84,11 @@ function DeviceDetailPage() {
   );
   const { wsStatus, isConnected } = useWsStatus(deviceId);
   const status = isConnected ? (wsStatus as typeof polledStatus) : polledStatus;
+  const { data: methodsData } = useListMethods(deviceId);
+  const methodNames = methodsData?.methods.map((m) => m.name) ?? [];
+  const hasWebhooks = methodNames.some((n) => n?.startsWith('Webhook.'));
+  const hasKVS = methodNames.some((n) => n?.startsWith('KVS.'));
+  const hasScripts = methodNames.some((n) => n?.startsWith('Script.'));
 
   // Update lastSeenAt when status arrives.
   // `device` is intentionally omitted from deps: including it would cause a loop
@@ -191,21 +197,27 @@ function DeviceDetailPage() {
               {t('config.pageTitle')}
             </Button>
           </Link>
-          <Link to="/devices/$deviceId/webhooks" params={{ deviceId }}>
-            <Button variant="light" size="xs" leftSection={<IconWebhook size={14} />}>
-              Webhooks
-            </Button>
-          </Link>
-          <Link to="/devices/$deviceId/kvs" params={{ deviceId }}>
-            <Button variant="light" size="xs" leftSection={<IconDatabase size={14} />}>
-              KVS
-            </Button>
-          </Link>
-          <Link to="/devices/$deviceId/scripts" params={{ deviceId }}>
-            <Button variant="light" size="xs" leftSection={<IconCode size={14} />}>
-              Scripts
-            </Button>
-          </Link>
+          {hasWebhooks && (
+            <Link to="/devices/$deviceId/webhooks" params={{ deviceId }}>
+              <Button variant="light" size="xs" leftSection={<IconWebhook size={14} />}>
+                Webhooks
+              </Button>
+            </Link>
+          )}
+          {hasKVS && (
+            <Link to="/devices/$deviceId/kvs" params={{ deviceId }}>
+              <Button variant="light" size="xs" leftSection={<IconDatabase size={14} />}>
+                KVS
+              </Button>
+            </Link>
+          )}
+          {hasScripts && (
+            <Link to="/devices/$deviceId/scripts" params={{ deviceId }}>
+              <Button variant="light" size="xs" leftSection={<IconCode size={14} />}>
+                Scripts
+              </Button>
+            </Link>
+          )}
         </Group>
 
         <Divider />

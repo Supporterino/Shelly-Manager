@@ -242,21 +242,14 @@
     "tabs": {
       "general": "General",
       "network": "Red",
-      "profile": "Perfil",
-      "components": "Componentes",
-      "firmware": "Firmware",
-      "advanced": "Avanzado",
-      "integrations": "Integrations",
-      "auth": "Authentication",
-      "methods": "Methods"
+      "system": "Sistema",
+      "advanced": "Avanzado"
     },
     "system": {
       "title": "Ajustes del sistema",
       "name": "Nombre del dispositivo",
       "ecoMode": "Modo Eco",
       "discoverable": "Detectable en la red",
-      "timezone": "Zona horaria",
-      "detectLocation": "Detectar ubicación",
       "deviceTime": "Hora del dispositivo",
       "syncTime": "Sincronizar hora",
       "restartRequired": "Se requiere un reinicio para que los cambios surtan efecto."
@@ -288,7 +281,10 @@
       "noClients": "No hay clientes conectados.",
       "clientMac": "MAC",
       "clientIp": "IP",
-      "connectedSince": "Conectado desde"
+      "connectedSince": "Conectado desde",
+      "editTitle": "Editar punto de acceso",
+      "enable": "Activar punto de acceso",
+      "password": "Contraseña del punto de acceso"
     },
     "profile": {
       "title": "Perfil del dispositivo",
@@ -320,11 +316,6 @@
       "enableConfirmMessage": "This will require a password for all future connections. Make sure you remember it.",
       "disableConfirmTitle": "Disable Authentication?",
       "disableConfirmMessage": "This will remove password protection from the device."
-    },
-    "methods": {
-      "title": "Device Methods",
-      "searchPlaceholder": "Search methods...",
-      "count": "{{count}} method(s) available"
     }
   },
   "webhooks": {
