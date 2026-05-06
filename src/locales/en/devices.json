@@ -365,6 +365,11 @@
       "enableConfirmMessage": "This will require a password for all future connections. Make sure you remember it.",
       "disableConfirmTitle": "Disable Authentication?",
       "disableConfirmMessage": "This will remove password protection from the device."
+    },
+    "methods": {
+      "title": "RPC Methods",
+      "searchPlaceholder": "Search methods...",
+      "count": "{{count}} method(s) found"
     }
   },
   "webhooks": {

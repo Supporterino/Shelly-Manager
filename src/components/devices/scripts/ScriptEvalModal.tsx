@@ -21,7 +21,7 @@ export function ScriptEvalModal({ opened, onClose, onEval, result, isLoading }: 
   };
 
   return (
-    <Modal opened={opened} onClose={onClose} title={t('scripts.eval')} centered       size={{ base: 'sm', sm: 'lg' }}>
+    <Modal opened={opened} onClose={onClose} title={t('scripts.eval')} centered size="lg">
       <Stack gap="sm">
         <Textarea
           value={code}

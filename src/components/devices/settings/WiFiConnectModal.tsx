@@ -53,7 +53,7 @@ export function WiFiConnectModal({ deviceId, ssid, needsPassword, opened, onClos
       opened={opened}
       onClose={onClose}
       title={`${t('settings.wifi.connect')} — ${ssid}`}
-      size={{ base: 'sm', sm: 'md' }}
+      size="md"
     >
       <Stack gap="md">
         {needsPassword && (

@@ -78,7 +78,7 @@ export function CreateWebhookModal({ opened, onClose, onSubmit, events, isLoadin
       }}
       title={t('webhooks.create')}
       centered
-      size={{ base: 'sm', sm: 'md' }}
+      size="md"
     >
       <Stack gap="sm">
         <Select

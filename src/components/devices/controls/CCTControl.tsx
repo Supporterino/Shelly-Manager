@@ -1,4 +1,4 @@
-import { Box, Group, Slider, Stack, Switch, Text } from '@mantine/core';
+import { Group, Slider, Stack, Switch, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useCCTControl } from '../../../hooks/useDeviceControl';
 import type { ShellyComponentSummary, StoredDevice } from '../../../types/device';

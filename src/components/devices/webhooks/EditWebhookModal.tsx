@@ -78,7 +78,7 @@ export function EditWebhookModal({ opened, onClose, onSubmit, hook, events, isLo
   };
 
   return (
-    <Modal opened={opened} onClose={onClose} title={t('webhooks.edit')} centered       size={{ base: 'sm', sm: 'md' }}>
+    <Modal opened={opened} onClose={onClose} title={t('webhooks.edit')} centered size="md">
       <Stack gap="sm">
         <Select
           label={t('webhooks.event')}
