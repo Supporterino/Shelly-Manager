@@ -4,6 +4,7 @@ import {
   Modal,
   NumberInput,
   Select,
+  SimpleGrid,
   Stack,
   Switch,
   TagsInput,
@@ -122,7 +123,7 @@ export function CreateWebhookModal({ opened, onClose, onSubmit, events, isLoadin
           onChange={(v) => setRepeatPeriod(typeof v === 'number' ? v : '')}
           min={0}
         />
-        <Group grow gap="sm">
+        <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
           <TextInput
             label={t('webhooks.windowStart')}
             value={windowStart}
@@ -135,7 +136,7 @@ export function CreateWebhookModal({ opened, onClose, onSubmit, events, isLoadin
             onChange={(e) => setWindowEnd(e.currentTarget.value)}
             placeholder="23:59"
           />
-        </Group>
+        </SimpleGrid>
         <Group justify="flex-end" mt="xs">
           <Button variant="default" onClick={onClose} disabled={isLoading}>
             {tc('actions.cancel')}

@@ -48,7 +48,7 @@ export function ScriptCodeModal({
       }}
       title={editMode ? t('scripts.editCode') : t('scripts.viewCode')}
       centered
-      size="xl"
+      size="100%"
     >
       <Stack gap="sm">
         {isLoading && !editMode && <Progress value={0} striped animated />}

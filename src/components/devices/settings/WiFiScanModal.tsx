@@ -75,7 +75,7 @@ export function WiFiScanModal({ deviceId, opened, onClose }: Props) {
         opened={opened}
         onClose={onClose}
         title={t('settings.wifi.scan')}
-        size="lg"
+        size="100%"
         scrollAreaComponent={ScrollArea.Autosize}
       >
         <Stack gap="md">
@@ -95,18 +95,20 @@ export function WiFiScanModal({ deviceId, opened, onClose }: Props) {
           )}
 
           {results && results.length > 0 && (
-            <Table striped highlightOnHover>
-              <Table.Thead>
-                <Table.Tr>
-                  <Table.Th>SSID</Table.Th>
-                  <Table.Th>Signal</Table.Th>
-                  <Table.Th>Security</Table.Th>
-                  <Table.Th>Channel</Table.Th>
-                  <Table.Th />
-                </Table.Tr>
-              </Table.Thead>
-              <Table.Tbody>{rows}</Table.Tbody>
-            </Table>
+            <Table.ScrollContainer minWidth={500}>
+              <Table striped highlightOnHover>
+                <Table.Thead>
+                  <Table.Tr>
+                    <Table.Th>SSID</Table.Th>
+                    <Table.Th>Signal</Table.Th>
+                    <Table.Th>Security</Table.Th>
+                    <Table.Th>Channel</Table.Th>
+                    <Table.Th />
+                  </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>{rows}</Table.Tbody>
+              </Table>
+            </Table.ScrollContainer>
           )}
 
           {results && results.length === 0 && !isFetching && (

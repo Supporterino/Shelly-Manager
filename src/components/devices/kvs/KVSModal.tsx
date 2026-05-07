@@ -56,7 +56,7 @@ export function KVSModal({ opened, onClose, onSubmit, onDelete, initialData, isL
       onClose={onClose}
       title={isEdit ? t('kvs.editKey') : t('kvs.addKey')}
       centered
-      size="lg"
+      size="100%"
     >
       <Stack gap="sm">
         <TextInput

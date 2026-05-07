@@ -3,7 +3,7 @@
  * Covers rendering, in_mode selection, timer collapse, save payload, restart alert, and error state.
  */
 
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import '../test/mocks/tauri';
@@ -82,11 +82,13 @@ describe('SwitchConfigPanel', () => {
 
   it('renders all 5 in_mode segments', () => {
     renderPanel();
-    expect(screen.getByText('Momentary')).toBeInTheDocument();
-    expect(screen.getByText('Follow')).toBeInTheDocument();
-    expect(screen.getByText('Flip (Edge)')).toBeInTheDocument();
-    expect(screen.getByText('Detached')).toBeInTheDocument();
-    expect(screen.getByText('Activate')).toBeInTheDocument();
+    const segmentedControl = screen.getByRole('radiogroup');
+    expect(segmentedControl).toBeInTheDocument();
+    expect(within(segmentedControl).getByText('Momentary')).toBeInTheDocument();
+    expect(within(segmentedControl).getByText('Follow')).toBeInTheDocument();
+    expect(within(segmentedControl).getByText('Flip (Edge)')).toBeInTheDocument();
+    expect(within(segmentedControl).getByText('Detached')).toBeInTheDocument();
+    expect(within(segmentedControl).getByText('Activate')).toBeInTheDocument();
   });
 
   it('renders channel name pre-filled from config', () => {
@@ -111,9 +113,10 @@ describe('SwitchConfigPanel', () => {
 
   it('pre-selects in_mode from config', () => {
     renderPanel();
+    const segmentedControl = screen.getByRole('radiogroup');
     // SegmentedControl marks the active option; "Flip (Edge)" should be selected
     // We verify the segment is rendered and the mutation will carry the correct value
-    expect(screen.getByText('Flip (Edge)')).toBeInTheDocument();
+    expect(within(segmentedControl).getByText('Flip (Edge)')).toBeInTheDocument();
   });
 
   // ── Timer collapse ─────────────────────────────────────────────────────────
@@ -194,7 +197,8 @@ describe('SwitchConfigPanel', () => {
   it('sends changed in_mode when segment is clicked', async () => {
     const user = userEvent.setup();
     renderPanel();
-    await user.click(screen.getByText('Follow'));
+    const segmentedControl = screen.getByRole('radiogroup');
+    await user.click(within(segmentedControl).getByText('Follow'));
     fireEvent.click(screen.getByText('Save'));
     expect(mockMutate).toHaveBeenCalledWith(
       expect.objectContaining({ in_mode: 'follow' }),

@@ -1,5 +1,5 @@
 import './services/i18n'; // initialize i18next — must be first
-import { createTheme, MantineProvider } from '@mantine/core';
+import { createTheme, MantineProvider, Modal } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createHashHistory, createRouter, RouterProvider } from '@tanstack/react-router';
@@ -39,6 +39,15 @@ const queryClient = new QueryClient({
 const theme = createTheme({
   primaryColor: 'blue',
   defaultRadius: 'md',
+  components: {
+    Modal: Modal.extend({
+      styles: {
+        content: {
+          maxWidth: 'calc(100vw - var(--mantine-spacing-md) * 2)',
+        },
+      },
+    }),
+  },
 });
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(

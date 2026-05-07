@@ -144,7 +144,20 @@ export function SwitchConfigPanel({ opened, onClose, deviceId, switchId }: Props
           {/* ── Input → Output mode ──────────────────────────────────── */}
           <Stack gap={6}>
             <SectionLabel>{t('controls.switch.inMode')}</SectionLabel>
+            <Select
+              hiddenFrom="sm"
+              value={inMode}
+              onChange={(v) => v && setInMode(v as SwitchInMode)}
+              data={[
+                { value: 'momentary', label: t('controls.switch.inModes.momentary') },
+                { value: 'follow', label: t('controls.switch.inModes.follow') },
+                { value: 'flip', label: t('controls.switch.inModes.flip') },
+                { value: 'detached', label: t('controls.switch.inModes.detached') },
+                { value: 'activate', label: t('controls.switch.inModes.activate') },
+              ]}
+            />
             <SegmentedControl
+              visibleFrom="sm"
               fullWidth
               size="xs"
               value={inMode}

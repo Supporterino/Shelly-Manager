@@ -21,7 +21,7 @@ export function ScriptEvalModal({ opened, onClose, onEval, result, isLoading }: 
   };
 
   return (
-    <Modal opened={opened} onClose={onClose} title={t('scripts.eval')} centered size="lg">
+    <Modal opened={opened} onClose={onClose} title={t('scripts.eval')} centered size="100%">
       <Stack gap="sm">
         <Textarea
           value={code}
@@ -45,7 +45,9 @@ export function ScriptEvalModal({ opened, onClose, onEval, result, isLoading }: 
             ) : (
               <>
                 <span style={{ fontSize: 12, fontWeight: 600 }}>{t('scripts.evalResult')}</span>
-                <Code block>{JSON.stringify(result.result, null, 2)}</Code>
+                <Code block style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+                  {JSON.stringify(result.result, null, 2)}
+                </Code>
               </>
             )}
           </Stack>
