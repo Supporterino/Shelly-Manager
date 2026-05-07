@@ -93,20 +93,37 @@ info "Current version: ${BOLD}${CURRENT_VERSION}${RESET}"
 # ─── macOS build ──────────────────────────────────────────────────────────────
 info "Building macOS (universal binary)…"
 
-APPSTORE_CONF="src-tauri/tauri.appstore.conf.json"
-BUNDLE_EXTRA_ARGS=()
-if [[ -f "$APPSTORE_CONF" ]]; then
-  info "Merging App Store config: ${APPSTORE_CONF}"
-  BUNDLE_EXTRA_ARGS=(--config "$APPSTORE_CONF")
-else
-  warn "${APPSTORE_CONF} not found — building without App Sandbox entitlements."
-  warn "The submission may be rejected by Apple. See: https://v2.tauri.app/distribute/app-store/#macos"
-fi
-
-bun run tauri build --target universal-apple-darwin --bundles app "${BUNDLE_EXTRA_ARGS[@]+"${BUNDLE_EXTRA_ARGS[@]}"}"
+bun run tauri build --target universal-apple-darwin --bundles app
 
 APP_PATH="src-tauri/target/universal-apple-darwin/release/bundle/macos/ShellMan.app"
 [[ -d "$APP_PATH" ]] || die ".app bundle not found at: ${APP_PATH}"
+
+# ─── Verify code signing & sandbox entitlements ───────────────────────────────
+info "Verifying app sandbox entitlements…"
+
+# Check that the main executable is signed and has the sandbox entitlement
+BINARY_PATH="${APP_PATH}/Contents/MacOS/shellman"
+[[ -f "$BINARY_PATH" ]] || die "Main executable not found at: ${BINARY_PATH}"
+
+# Verify the app is signed (not ad-hoc)
+SIGNER=$(codesign -dv "$APP_PATH" 2>&1 | grep -E '^Signature=' | cut -d'=' -f2 || true)
+if [[ -z "$SIGNER" || "$SIGNER" == "adhoc" || "$SIGNER" == "AdHoc" ]]; then
+  die "App is not properly code-signed (signature: ${SIGNER:-none}).\n\
+Ensure a valid Mac Distribution certificate is in your keychain and matches the bundle identifier."
+fi
+ok "App is signed by: ${SIGNER}"
+
+# Verify sandbox entitlement is present
+SANDBOX=$(codesign -d --entitlements - "$BINARY_PATH" 2>/dev/null | grep -o 'com.apple.security.app-sandbox' || true)
+if [[ -z "$SANDBOX" ]]; then
+  die "App sandbox entitlement (com.apple.security.app-sandbox) is MISSING from the binary.\n\
+Check that Entitlements.plist is configured correctly in tauri.conf.json."
+fi
+ok "App sandbox entitlement confirmed."
+
+# Verify bundle identifier matches provisioning profile
+BUNDLE_ID=$(codesign -dv "$APP_PATH" 2>&1 | grep -E '^Identifier=' | cut -d'=' -f2 || true)
+info "Bundle identifier: ${BUNDLE_ID:-<unknown>}"
 
 PKG="${ROOT}/ShellMan.pkg"
 

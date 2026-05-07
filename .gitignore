@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 src-tauri/profile.provisionprofile
-/src-tauri/Entitlements.plist
+ShellMan.pkg
