@@ -82,8 +82,7 @@ else
   warn "The submission may be rejected by Apple. See: https://v2.tauri.app/distribute/app-store/#macos"
 fi
 
-bun run tauri build --no-bundle
-bun run tauri bundle --bundles app --target universal-apple-darwin "${BUNDLE_EXTRA_ARGS[@]+"${BUNDLE_EXTRA_ARGS[@]}"}"
+bun run tauri build --target universal-apple-darwin --bundles app "${BUNDLE_EXTRA_ARGS[@]+"${BUNDLE_EXTRA_ARGS[@]}"}"
 
 APP_PATH="src-tauri/target/universal-apple-darwin/release/bundle/macos/ShellMan.app"
 [[ -d "$APP_PATH" ]] || die ".app bundle not found at: ${APP_PATH}"
