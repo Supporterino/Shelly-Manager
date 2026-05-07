@@ -58,6 +58,27 @@ command -v xcrun   >/dev/null 2>&1 || die "'xcrun' is not on PATH"
 command -v python3 >/dev/null 2>&1 || die "'python3' is not on PATH"
 command -v git     >/dev/null 2>&1 || die "'git' is not on PATH"
 
+# ─── Rust targets for universal binary ────────────────────────────────────────
+command -v rustup  >/dev/null 2>&1 || die "'rustup' is not on PATH (required for universal binary)"
+
+INSTALLED_TARGETS=$(rustup target list --installed 2>/dev/null || true)
+MISSING_TARGETS=()
+for target in aarch64-apple-darwin x86_64-apple-darwin; do
+  if ! echo "$INSTALLED_TARGETS" | grep -qx "$target"; then
+    MISSING_TARGETS+=("$target")
+  fi
+done
+
+if [[ ${#MISSING_TARGETS[@]} -gt 0 ]]; then
+  warn "Missing Rust target(s): ${MISSING_TARGETS[*]}"
+  info "Installing missing targets…"
+  for target in "${MISSING_TARGETS[@]}"; do
+    rustup target add "$target" || die "Failed to install Rust target: $target"
+    ok "Installed $target"
+  done
+fi
+ok "All required Rust targets present."
+
 cd "$ROOT"
 
 [[ -z "$(git status --porcelain)" ]] \
