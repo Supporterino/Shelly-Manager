@@ -2,10 +2,13 @@ import { Accordion, Group, Stack, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import type { LightStatus, RGBStatus, RGBWStatus } from '../../../types/shelly';
 import { formatCurrent, formatEnergy, formatPower, formatVoltage } from '../../../utils/formatters';
+import { EnergyHistoryChart } from '../energy/EnergyHistoryChart';
 
 type LightLike = LightStatus | RGBStatus | RGBWStatus;
 
 interface Props {
+  deviceId: string;
+  componentId: number;
   status: LightLike | undefined;
   showTemp?: boolean;
 }
@@ -23,7 +26,7 @@ function Row({ label, value }: { label: string; value: string }) {
   );
 }
 
-export function LightEnergyPanel({ status, showTemp = false }: Props) {
+export function LightEnergyPanel({ deviceId, componentId, status, showTemp = false }: Props) {
   const { t, i18n } = useTranslation('devices');
   const locale = i18n.language;
 
@@ -64,6 +67,11 @@ export function LightEnergyPanel({ status, showTemp = false }: Props) {
             {temp != null && (
               <Row label={t('power.deviceTemp')} value={`${temp.tC.toFixed(1)} °C`} />
             )}
+            <EnergyHistoryChart
+              deviceId={deviceId}
+              componentType="light"
+              componentId={componentId}
+            />
           </Stack>
         </Accordion.Panel>
       </Accordion.Item>

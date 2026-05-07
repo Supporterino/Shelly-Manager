@@ -84,5 +84,4 @@ describe('SystemSettingsSection', () => {
       expect(screen.getByText(/restart/i)).toBeInTheDocument();
     });
   });
-
 });

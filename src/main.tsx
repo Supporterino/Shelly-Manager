@@ -9,6 +9,7 @@ import ReactDOM from 'react-dom/client';
 import { I18nextProvider } from 'react-i18next';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
+import '@mantine/charts/styles.css';
 import './styles/global.css';
 import { AppLoader } from './components/common/AppLoader';
 import { routeTree } from './routeTree.gen';

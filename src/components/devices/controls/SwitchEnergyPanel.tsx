@@ -2,8 +2,11 @@ import { Accordion, Group, Stack, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import type { SwitchStatus } from '../../../types/shelly';
 import { formatCurrent, formatEnergy, formatPower, formatVoltage } from '../../../utils/formatters';
+import { EnergyHistoryChart } from '../energy/EnergyHistoryChart';
 
 interface Props {
+  deviceId: string;
+  componentId: number;
   sw: SwitchStatus | undefined;
 }
 
@@ -20,7 +23,7 @@ function Row({ label, value }: { label: string; value: string }) {
   );
 }
 
-export function SwitchEnergyPanel({ sw }: Props) {
+export function SwitchEnergyPanel({ deviceId, componentId, sw }: Props) {
   const { t, i18n } = useTranslation('devices');
   const locale = i18n.language;
 
@@ -76,6 +79,11 @@ export function SwitchEnergyPanel({ sw }: Props) {
             {remaining != null && remaining > 0 && (
               <Row label={t('controls.autoOffIn', { seconds: remaining })} value="" />
             )}
+            <EnergyHistoryChart
+              deviceId={deviceId}
+              componentType="switch"
+              componentId={componentId}
+            />
           </Stack>
         </Accordion.Panel>
       </Accordion.Item>

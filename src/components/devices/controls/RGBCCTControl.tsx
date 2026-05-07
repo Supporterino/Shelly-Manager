@@ -135,7 +135,7 @@ export function RGBCCTControl({ deviceId, componentId, status, device }: Props) 
       />
 
       <ErrorBadges errors={rgbccct?.errors} />
-      <LightEnergyPanel status={rgbccct} />
+      <LightEnergyPanel deviceId={deviceId} componentId={componentId} status={rgbccct} />
     </Stack>
   );
 }

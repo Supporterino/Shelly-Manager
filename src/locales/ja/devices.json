@@ -115,6 +115,8 @@
     "totalEnergy": "総消費電力量",
     "returnedEnergy": "回生エネルギー",
     "energyStats": "エネルギー統計",
+    "history24h": "電力履歴",
+    "noHistory": "最近のデータがありません",
     "deviceTemp": "デバイス温度",
     "phaseA": "相A",
     "phaseB": "相B",
@@ -316,6 +318,11 @@
       "enableConfirmMessage": "This will require a password for all future connections. Make sure you remember it.",
       "disableConfirmTitle": "Disable Authentication?",
       "disableConfirmMessage": "This will remove password protection from the device."
+    },
+    "methods": {
+      "title": "RPC メソッド",
+      "searchPlaceholder": "メソッドを検索...",
+      "count": "{{count}} 件のメソッドが見つかりました"
     }
   },
   "webhooks": {

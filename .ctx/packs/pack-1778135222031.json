@@ -1,0 +1,32 @@
+{
+  "original_estimated_tokens": 1627,
+  "packed_tokens": 245,
+  "reduction_pct": 84.94161032575292,
+  "included": [
+    "query included: priority=Query tokens=6 ref=",
+    "tests included: priority=Test tokens=8 ref=",
+    "tests included: priority=Test tokens=9 ref=",
+    "tests included: priority=Test tokens=8 ref=",
+    "dependencies included: priority=Dependency tokens=17 ref=",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "memory included: priority=DirectiveMemory tokens=14 ref=project",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "memory included: priority=DirectiveMemory tokens=12 ref=project",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "memory included: priority=DirectiveMemory tokens=12 ref=project",
+    "memory included: priority=DirectiveMemory tokens=12 ref=project",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "memory included: priority=DirectiveMemory tokens=12 ref=project",
+    "memory included: priority=DirectiveMemory tokens=12 ref=project",
+    "memory included: priority=DirectiveMemory tokens=12 ref=project",
+    "memory included: priority=DirectiveMemory tokens=13 ref=project",
+    "docs included: priority=Docs tokens=13 ref=unknown",
+    "docs included: priority=Docs tokens=14 ref=unknown",
+    "docs included: priority=Docs tokens=10 ref='./energy/PM1Display'",
+    "docs included: priority=Docs tokens=10 ref='./energy/EM1Display'",
+    "docs included: priority=Docs tokens=12 ref=unknown"
+  ],
+  "excluded": [],
+  "pack_path": "/Users/supporterino/WebstormProjects/Shelly-Manager/.ctx/packs/pack-1778135222031.json",
+  "compact_context": "query: energy stats with graphs\ntests: src/__tests__/formatters.test.ts::formats amps with suffix\ntests: src/__tests__/formatters.test.ts::formats volts with V suffix\ntests: src/__tests__/formatters.test.ts::formats kWh with suffix\ndependencies: src/__tests__/wsStatusStore.test.ts::adds a new key without disturbing existing keys->src/__tests__/wsStatusStore.test.ts::updateStatus (test)\nmemory: implementation:analysis:subnet-scan-limit] COMPLETED. Subnet scan was hard-capped ... @project\nmemory: manual:rust:commands:discovery] Discovery-related Rust commands in `src-tauri/src/lib.rs`: ... @project\nmemory: manual:feature:subnet-auto-detect] Discovery page (/discover) has a ... @project\nmemory: AGENTS.md:pitfalls] HTTP request fails on mobile: ... @project\nmemory: AGENTS.md:i18n:guide] Library: react-i18next (i18next v26). Translation ... @project\nmemory: AGENTS.md:test:conventions] Run tests: bun run test ... @project\nmemory: AGENTS.md:rust:commands] All Rust logic lives in ... @project\nmemory: AGENTS.md:query:tanstack] Query key hierarchy: ['device', deviceId, ... @project\nmemory: AGENTS.md:store:zustand] Access pattern: always use selectors, ... @project\nmemory: AGENTS.md:ui:mantine] Always use Mantine components — ... @project\nmemory: AGENTS.md:api:shelly] Only Gen 2, Gen 3, ... @project\nmemory: AGENTS.md:dir:map] src/routes/ = TanStack Router file-based ... @project\ndocs: it('formats amps with suffix', () => ... @unknown\ndocs: describe('formatCurrent', () => { it('formats amps ... @unknown\ndocs: import { PM1Display } from './energy/PM1Display';\ndocs: import { EM1Display } from './energy/EM1Display';\ndocs: it('initialises all devices with idle status', ... @unknown"
+}

@@ -117,7 +117,7 @@ export function RGBWControl({ deviceId, componentId, status, device }: Props) {
       />
 
       <ErrorBadges errors={rgbw?.errors} />
-      <LightEnergyPanel status={rgbw} />
+      <LightEnergyPanel deviceId={deviceId} componentId={componentId} status={rgbw} />
     </Stack>
   );
 }

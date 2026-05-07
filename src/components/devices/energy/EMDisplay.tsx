@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import type { StoredDevice } from '../../../types/device';
 import type { EMStatus } from '../../../types/shelly';
 import { formatCurrent, formatPower, formatVoltage } from '../../../utils/formatters';
+import { EnergyHistoryChart } from './EnergyHistoryChart';
 
 interface Props {
   deviceId: string;
@@ -24,7 +25,7 @@ function PhaseRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-export function EMDisplay({ componentId: _c, status, device: _d }: Props) {
+export function EMDisplay({ deviceId, componentId, status, device: _d }: Props) {
   const { t, i18n } = useTranslation('devices');
   const em = status as EMStatus | undefined;
   const locale = i18n.language;
@@ -52,7 +53,7 @@ export function EMDisplay({ componentId: _c, status, device: _d }: Props) {
         </Group>
       </Stack>
 
-      <Accordion variant="contained">
+      <Accordion variant="contained" multiple>
         <Accordion.Item value="phaseA">
           <Accordion.Control>
             <Text size="sm">{t('power.phaseA')}</Text>
@@ -118,6 +119,15 @@ export function EMDisplay({ componentId: _c, status, device: _d }: Props) {
                 value={em != null ? `${em.b_freq.toFixed(1)} Hz` : '—'}
               />
             </Stack>
+          </Accordion.Panel>
+        </Accordion.Item>
+
+        <Accordion.Item value="history">
+          <Accordion.Control>
+            <Text size="sm">{t('power.history24h')}</Text>
+          </Accordion.Control>
+          <Accordion.Panel>
+            <EnergyHistoryChart deviceId={deviceId} componentType="em" componentId={componentId} />
           </Accordion.Panel>
         </Accordion.Item>
       </Accordion>

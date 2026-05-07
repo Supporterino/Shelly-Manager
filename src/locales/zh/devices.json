@@ -115,6 +115,8 @@
     "totalEnergy": "总能耗",
     "returnedEnergy": "回馈电能",
     "energyStats": "能耗统计",
+    "history24h": "功率历史",
+    "noHistory": "无近期数据",
     "deviceTemp": "设备温度",
     "phaseA": "A相",
     "phaseB": "B相",
@@ -316,6 +318,11 @@
       "enableConfirmMessage": "This will require a password for all future connections. Make sure you remember it.",
       "disableConfirmTitle": "Disable Authentication?",
       "disableConfirmMessage": "This will remove password protection from the device."
+    },
+    "methods": {
+      "title": "RPC 方法",
+      "searchPlaceholder": "搜索方法...",
+      "count": "找到 {{count}} 个方法"
     }
   },
   "webhooks": {

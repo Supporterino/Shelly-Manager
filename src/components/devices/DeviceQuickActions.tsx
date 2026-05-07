@@ -1,11 +1,5 @@
 import { ActionIcon, Button, Group, Menu, Tooltip } from '@mantine/core';
-import {
-  IconCode,
-  IconDatabase,
-  IconDots,
-  IconTool,
-  IconWebhook,
-} from '@tabler/icons-react';
+import { IconCode, IconDatabase, IconDots, IconTool, IconWebhook } from '@tabler/icons-react';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { useListMethods } from '../../hooks/usePhase4Features';
@@ -29,24 +23,14 @@ export function DeviceQuickActions({ deviceId }: Props) {
       {/* Config — always visible, primary action */}
       <Tooltip label={t('config.pageTitle')}>
         <Link to="/devices/$deviceId/config" params={{ deviceId }}>
-          <ActionIcon
-            variant="light"
-            size="lg"
-            hiddenFrom="sm"
-            aria-label={t('config.pageTitle')}
-          >
+          <ActionIcon variant="light" size="lg" hiddenFrom="sm" aria-label={t('config.pageTitle')}>
             <IconTool size={18} />
           </ActionIcon>
         </Link>
       </Tooltip>
 
       <Link to="/devices/$deviceId/config" params={{ deviceId }}>
-        <Button
-          variant="light"
-          size="xs"
-          leftSection={<IconTool size={14} />}
-          visibleFrom="sm"
-        >
+        <Button variant="light" size="xs" leftSection={<IconTool size={14} />} visibleFrom="sm">
           {t('config.pageTitle')}
         </Button>
       </Link>
@@ -137,12 +121,7 @@ export function DeviceQuickActions({ deviceId }: Props) {
       )}
       {hasScripts && (
         <Link to="/devices/$deviceId/scripts" params={{ deviceId }}>
-          <Button
-            variant="light"
-            size="xs"
-            leftSection={<IconCode size={14} />}
-            visibleFrom="sm"
-          >
+          <Button variant="light" size="xs" leftSection={<IconCode size={14} />} visibleFrom="sm">
             {t('scripts.title')}
           </Button>
         </Link>

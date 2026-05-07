@@ -9,11 +9,7 @@ import {
   Title,
   Tooltip,
 } from '@mantine/core';
-import {
-  IconArrowLeft,
-  IconRefresh,
-  IconSettings,
-} from '@tabler/icons-react';
+import { IconArrowLeft, IconRefresh, IconSettings } from '@tabler/icons-react';
 import { createFileRoute, Link, Outlet, useLocation } from '@tanstack/react-router';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';

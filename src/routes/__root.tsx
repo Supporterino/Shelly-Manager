@@ -2,8 +2,10 @@ import { useMantineColorScheme } from '@mantine/core';
 import { createRootRoute, Outlet } from '@tanstack/react-router';
 import { useEffect } from 'react';
 import { AppShellLayout } from '../components/layout/AppShellLayout';
+import { EnergyCollector } from '../hooks/useEnergyCollector';
 import { useAppStore } from '../store/appStore';
 import { useDeviceStore } from '../store/deviceStore';
+import { useEnergyHistoryStore } from '../store/energyHistoryStore';
 
 export const Route = createRootRoute({
   component: RootLayout,
@@ -12,15 +14,17 @@ export const Route = createRootRoute({
 function RootLayout() {
   const hydrateDevices = useDeviceStore((s) => s.hydrate);
   const hydrateApp = useAppStore((s) => s.hydrate);
+  const hydrateEnergy = useEnergyHistoryStore((s) => s.hydrate);
   const isHydrated = useAppStore((s) => s.isHydrated);
   const theme = useAppStore((s) => s.preferences.theme);
   const { setColorScheme } = useMantineColorScheme();
 
   useEffect(() => {
-    // Hydrate both stores on mount — runs once
+    // Hydrate stores on mount — runs once
     hydrateDevices().catch(console.error);
     hydrateApp().catch(console.error);
-  }, [hydrateDevices, hydrateApp]);
+    hydrateEnergy().catch(console.error);
+  }, [hydrateDevices, hydrateApp, hydrateEnergy]);
 
   // Apply stored color scheme as soon as the app store is hydrated from disk.
   // This ensures the correct theme is visible on first render, not only when
@@ -33,6 +37,7 @@ function RootLayout() {
 
   return (
     <AppShellLayout>
+      <EnergyCollector />
       <Outlet />
     </AppShellLayout>
   );

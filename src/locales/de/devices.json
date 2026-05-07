@@ -115,6 +115,8 @@
     "totalEnergy": "Gesamtenergie",
     "returnedEnergy": "Rückgesp. Energie",
     "energyStats": "Energiewerte",
+    "history24h": "Leistungsverlauf",
+    "noHistory": "Keine aktuellen Daten",
     "deviceTemp": "Gerätetemperatur",
     "phaseA": "Phase A",
     "phaseB": "Phase B",
@@ -316,6 +318,11 @@
       "enableConfirmMessage": "This will require a password for all future connections. Make sure you remember it.",
       "disableConfirmTitle": "Disable Authentication?",
       "disableConfirmMessage": "This will remove password protection from the device."
+    },
+    "methods": {
+      "title": "RPC-Methoden",
+      "searchPlaceholder": "Methoden suchen...",
+      "count": "{{count}} Methode(n) gefunden"
     }
   },
   "webhooks": {

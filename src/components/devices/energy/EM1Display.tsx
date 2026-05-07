@@ -1,8 +1,9 @@
-import { Group, Stack, Text } from '@mantine/core';
+import { Accordion, Group, Stack, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import type { StoredDevice } from '../../../types/device';
 import type { EM1Status } from '../../../types/shelly';
 import { formatCurrent, formatPower, formatVoltage } from '../../../utils/formatters';
+import { EnergyHistoryChart } from './EnergyHistoryChart';
 
 interface Props {
   deviceId: string;
@@ -24,31 +25,54 @@ function Row({ label, value }: { label: string; value: string }) {
   );
 }
 
-export function EM1Display({ componentId: _c, status, device: _d }: Props) {
+export function EM1Display({ deviceId, componentId, status, device: _d }: Props) {
   const { t, i18n } = useTranslation('devices');
   const em1 = status as EM1Status | undefined;
   const locale = i18n.language;
 
   return (
-    <Stack gap={4}>
-      <Row
-        label={t('power.activePower')}
-        value={em1 != null ? formatPower(em1.act_power, locale) : '—'}
-      />
-      <Row
-        label={t('power.apparentPower')}
-        value={em1 != null ? `${em1.aprt_power.toFixed(1)} VA` : '—'}
-      />
-      <Row
-        label={t('power.voltage')}
-        value={em1 != null ? formatVoltage(em1.voltage, locale) : '—'}
-      />
-      <Row
-        label={t('power.current')}
-        value={em1 != null ? formatCurrent(em1.current, locale) : '—'}
-      />
-      <Row label={t('power.powerFactor')} value={em1 != null ? em1.pf.toFixed(2) : '—'} />
-      <Row label={t('power.frequency')} value={em1 != null ? `${em1.freq.toFixed(1)} Hz` : '—'} />
+    <Stack gap="xs">
+      <Accordion variant="contained" multiple>
+        <Accordion.Item value="stats">
+          <Accordion.Control>
+            <Text size="sm">{t('power.energyStats')}</Text>
+          </Accordion.Control>
+          <Accordion.Panel>
+            <Stack gap={4}>
+              <Row
+                label={t('power.activePower')}
+                value={em1 != null ? formatPower(em1.act_power, locale) : '—'}
+              />
+              <Row
+                label={t('power.apparentPower')}
+                value={em1 != null ? `${em1.aprt_power.toFixed(1)} VA` : '—'}
+              />
+              <Row
+                label={t('power.voltage')}
+                value={em1 != null ? formatVoltage(em1.voltage, locale) : '—'}
+              />
+              <Row
+                label={t('power.current')}
+                value={em1 != null ? formatCurrent(em1.current, locale) : '—'}
+              />
+              <Row label={t('power.powerFactor')} value={em1 != null ? em1.pf.toFixed(2) : '—'} />
+              <Row
+                label={t('power.frequency')}
+                value={em1 != null ? `${em1.freq.toFixed(1)} Hz` : '—'}
+              />
+            </Stack>
+          </Accordion.Panel>
+        </Accordion.Item>
+
+        <Accordion.Item value="history">
+          <Accordion.Control>
+            <Text size="sm">{t('power.history24h')}</Text>
+          </Accordion.Control>
+          <Accordion.Panel>
+            <EnergyHistoryChart deviceId={deviceId} componentType="em1" componentId={componentId} />
+          </Accordion.Panel>
+        </Accordion.Item>
+      </Accordion>
     </Stack>
   );
 }

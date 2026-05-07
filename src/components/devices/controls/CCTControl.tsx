@@ -85,7 +85,7 @@ export function CCTControl({ deviceId, componentId, status, device }: Props) {
       </Group>
 
       <ErrorBadges errors={light?.errors} />
-      <LightEnergyPanel status={light} showTemp />
+      <LightEnergyPanel deviceId={deviceId} componentId={componentId} status={light} showTemp />
     </Stack>
   );
 }

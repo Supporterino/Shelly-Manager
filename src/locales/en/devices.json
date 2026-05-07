@@ -115,6 +115,8 @@
     "totalEnergy": "Total Energy",
     "returnedEnergy": "Returned Energy",
     "energyStats": "Energy Stats",
+    "history24h": "Power History",
+    "noHistory": "No recent data",
     "deviceTemp": "Device Temperature",
     "phaseA": "Phase A",
     "phaseB": "Phase B",

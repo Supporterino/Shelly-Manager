@@ -46,7 +46,7 @@ export function SwitchControl({ deviceId, componentId, status, device }: Props) 
       </Group>
 
       <ErrorBadges errors={sw?.errors} />
-      <SwitchEnergyPanel sw={sw} />
+      <SwitchEnergyPanel deviceId={deviceId} componentId={componentId} sw={sw} />
     </Stack>
   );
 }
