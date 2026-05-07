@@ -51,8 +51,8 @@ targets:
           - UIInterfaceOrientationPortraitUpsideDown
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
-        CFBundleShortVersionString: 2.1.1
-        CFBundleVersion: "2.1.1"
+        CFBundleShortVersionString: 2.1.2
+        CFBundleVersion: "2.1.2"
     entitlements:
       path: shelly-manager_iOS/shelly-manager_iOS.entitlements
     scheme:
