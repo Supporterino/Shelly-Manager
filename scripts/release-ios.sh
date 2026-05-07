@@ -1,15 +1,13 @@
 #!/usr/bin/env bash
-# release.sh — Bump version, build iOS + macOS, upload to App Store Connect.
+# release-ios.sh — Bump version, build iOS, upload to App Store Connect.
 #
 # Usage:
-#   ./scripts/release.sh [--major | --minor | --patch] --mac-cert "<identity>"
+#   ./scripts/release-ios.sh [--major | --minor | --patch]
 #
 # Flags:
 #   --patch          Bump the patch component (default)
 #   --minor          Bump the minor component, reset patch to 0
 #   --major          Bump the major component, reset minor and patch to 0
-#   --mac-cert <id>  Mac Installer Distribution signing identity (required)
-#                    Find yours: security find-identity -v -p basic
 #
 # Required env vars:
 #   APPLE_API_KEY     App Store Connect API Key ID  (e.g. ABC1234567)
@@ -20,37 +18,6 @@
 #   ~/private_keys/
 #   ~/.private_keys/
 #   ~/.appstoreconnect/private_keys/
-#
-# ─── App Store Disclaimers ────────────────────────────────────────────────────
-#
-# ENGLISH:
-#   Disclaimer: This app is an independent, unofficial third-party tool and is
-#   not affiliated with, endorsed by, sponsored by, or in any way connected to
-#   Allterco Robotics Ltd. or its subsidiaries. "Shelly®" is a registered
-#   trademark of Allterco Robotics Ltd. All product names, logos, and brands
-#   mentioned are property of their respective owners and are used solely for
-#   identification purposes. This app communicates with devices using their
-#   publicly documented, open JSON-RPC 2.0 API.
-#
-# DEUTSCH:
-#   Haftungsausschluss: Diese App ist ein unabhängiges, inoffizielles
-#   Drittanbieter-Werkzeug und steht in keiner Verbindung zu Allterco Robotics
-#   Ltd. oder dessen Tochtergesellschaften. Sie wird von Allterco Robotics Ltd.
-#   weder unterstützt noch gesponsert oder anderweitig autorisiert. „Shelly®"
-#   ist eine eingetragene Marke der Allterco Robotics Ltd. Alle genannten
-#   Produktnamen, Logos und Marken sind Eigentum ihrer jeweiligen Inhaber und
-#   werden ausschließlich zur Identifikation verwendet. Diese App kommuniziert
-#   mit Geräten über deren öffentlich dokumentierte, offene JSON-RPC 2.0 API.
-#
-# FRANÇAIS:
-#   Avertissement : Cette application est un outil tiers indépendant et non
-#   officiel, sans aucune affiliation avec Allterco Robotics Ltd. ou ses
-#   filiales. Elle n'est ni approuvée, ni sponsorisée, ni autorisée par
-#   Allterco Robotics Ltd. « Shelly® » est une marque déposée d'Allterco
-#   Robotics Ltd. Tous les noms de produits, logos et marques mentionnés sont
-#   la propriété de leurs détenteurs respectifs et sont utilisés uniquement à
-#   des fins d'identification. Cette application communique avec les appareils
-#   via leur API JSON-RPC 2.0 ouverte et publiquement documentée.
 
 set -euo pipefail
 
@@ -69,16 +36,12 @@ ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # ─── Parse flags ──────────────────────────────────────────────────────────────
 BUMP="patch"
-MAC_CERT=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --major) BUMP="major" ;;
     --minor) BUMP="minor" ;;
     --patch) BUMP="patch" ;;
-    --mac-cert)
-      [[ -z "${2:-}" ]] && die "--mac-cert requires a value"
-      MAC_CERT="$2"; shift ;;
     *) die "Unknown argument: $1" ;;
   esac
   shift
@@ -86,8 +49,6 @@ done
 
 # ─── Preflight checks ─────────────────────────────────────────────────────────
 info "Running preflight checks…"
-
-[[ -n "$MAC_CERT" ]]             || die "--mac-cert is required (Mac Installer Distribution identity)"
 [[ -n "${APPLE_API_KEY:-}" ]]    || die "APPLE_API_KEY environment variable is not set"
 [[ -n "${APPLE_API_ISSUER:-}" ]] || die "APPLE_API_ISSUER environment variable is not set"
 
@@ -204,35 +165,6 @@ ok "iOS build complete."
 IPA="src-tauri/gen/apple/build/arm64/ShellMan.ipa"
 [[ -f "$IPA" ]] || die "IPA not found at expected path: ${IPA}"
 
-# ─── macOS build ──────────────────────────────────────────────────────────────
-#info "Building macOS (universal binary)…"
-#
-#APPSTORE_CONF="src-tauri/tauri.appstore.conf.json"
-#BUNDLE_EXTRA_ARGS=()
-#if [[ -f "$APPSTORE_CONF" ]]; then
-#  info "Merging App Store config: ${APPSTORE_CONF}"
-#  BUNDLE_EXTRA_ARGS=(--config "$APPSTORE_CONF")
-#else
-#  warn "${APPSTORE_CONF} not found — building without App Sandbox entitlements."
-#  warn "The submission may be rejected by Apple. See: https://v2.tauri.app/distribute/app-store/#macos"
-#fi
-#
-#bun run tauri build --no-bundle
-#bun run tauri bundle --bundles app --target universal-apple-darwin "${BUNDLE_EXTRA_ARGS[@]+"${BUNDLE_EXTRA_ARGS[@]}"}"
-#
-#APP_PATH="src-tauri/target/universal-apple-darwin/release/bundle/macos/ShellMan.app"
-#[[ -d "$APP_PATH" ]] || die ".app bundle not found at: ${APP_PATH}"
-#
-#PKG="${ROOT}/ShellMan.pkg"
-#
-#info "Signing and packaging .pkg…"
-#xcrun productbuild \
-#  --sign "$MAC_CERT" \
-#  --component "$APP_PATH" \
-#  /Applications \
-#  "$PKG"
-#ok "macOS .pkg created."
-
 # ─── Upload iOS ───────────────────────────────────────────────────────────────
 info "Uploading iOS IPA to App Store Connect…"
 xcrun altool \
@@ -243,20 +175,6 @@ xcrun altool \
   --apiIssuer "$APPLE_API_ISSUER"
 ok "iOS upload complete."
 
-# ─── Upload macOS ─────────────────────────────────────────────────────────────
-#info "Uploading macOS PKG to App Store Connect…"
-#xcrun altool \
-#  --upload-app \
-#  --type macos \
-#  --file "$PKG" \
-#  --apiKey    "$APPLE_API_KEY" \
-#  --apiIssuer "$APPLE_API_ISSUER"
-#ok "macOS upload complete."
-
-# ─── Cleanup ──────────────────────────────────────────────────────────────────
-#rm -f "$PKG"
-#ok "Cleaned up temporary .pkg."
-
 echo ""
-echo -e "${GREEN}${BOLD}Release v${NEW_VERSION} submitted successfully.${RESET}"
-echo "Both builds are now processing in App Store Connect / TestFlight."
+echo -e "${GREEN}${BOLD}iOS release v${NEW_VERSION} submitted successfully.${RESET}"
+echo "Build is now processing in App Store Connect / TestFlight."
