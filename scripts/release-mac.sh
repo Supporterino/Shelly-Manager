@@ -123,10 +123,10 @@ ENTITLEMENTS="src-tauri/Entitlements.plist"
 # Clear any quarantine / extended attributes that can interfere with signing
 xattr -cr "$APP_PATH" 2>/dev/null || true
 
-# Sign the main binary with entitlements (required for App Sandbox)
 BINARY_PATH="${APP_PATH}/Contents/MacOS/shellman"
 [[ -f "$BINARY_PATH" ]] || die "Main executable not found at: ${BINARY_PATH}"
 
+# Sign the main binary with entitlements (required for App Sandbox)
 codesign \
   --sign "$APP_CERT" \
   --entitlements "$ENTITLEMENTS" \
@@ -136,26 +136,29 @@ codesign \
   "$BINARY_PATH"
 ok "Signed main binary."
 
-# Deep-sign the entire .app bundle
+# Sign the entire .app bundle (preserves inner binary entitlements)
 codesign \
   --sign "$APP_CERT" \
-  --deep \
+  --entitlements "$ENTITLEMENTS" \
   --force \
   --timestamp \
   --options runtime \
   "$APP_PATH"
-ok "Deep-signed .app bundle."
+ok "Signed .app bundle."
 
 # ─── Verify code signing & sandbox entitlements ───────────────────────────────
 info "Verifying app sandbox entitlements…"
 
-# Verify the app is signed (not ad-hoc)
-SIGNER=$(codesign -dv "$APP_PATH" 2>&1 | grep -E '^Signature=' | cut -d'=' -f2 || true)
-if [[ -z "$SIGNER" || "$SIGNER" == "adhoc" || "$SIGNER" == "AdHoc" ]]; then
-  die "App is not properly code-signed (signature: ${SIGNER:-none}).\n\
+# Verify the app is signed (not ad-hoc) — check for TeamIdentifier or Signature size
+CODESIGN_INFO=$(codesign -dv "$APP_PATH" 2>&1)
+TEAM_ID=$(echo "$CODESIGN_INFO" | grep -E '^TeamIdentifier=' | cut -d'=' -f2 || true)
+SIGNATURE_SIZE=$(echo "$CODESIGN_INFO" | grep -E '^Signature size=' | cut -d'=' -f2 || true)
+
+if [[ -z "$TEAM_ID" && -z "$SIGNATURE_SIZE" ]]; then
+  die "App is not properly code-signed.\n\
 Ensure a valid Mac Distribution certificate is in your keychain and matches the bundle identifier."
 fi
-ok "App is signed by: ${SIGNER}"
+ok "App is properly code-signed (Team ID: ${TEAM_ID:-unknown})."
 
 # Verify sandbox entitlement is present
 SANDBOX=$(codesign -d --entitlements - "$BINARY_PATH" 2>/dev/null | grep -o 'com.apple.security.app-sandbox' || true)
@@ -166,7 +169,7 @@ fi
 ok "App sandbox entitlement confirmed."
 
 # Verify bundle identifier matches provisioning profile
-BUNDLE_ID=$(codesign -dv "$APP_PATH" 2>&1 | grep -E '^Identifier=' | cut -d'=' -f2 || true)
+BUNDLE_ID=$(echo "$CODESIGN_INFO" | grep -E '^Identifier=' | cut -d'=' -f2 || true)
 info "Bundle identifier: ${BUNDLE_ID:-<unknown>}"
 
 PKG="${ROOT}/ShellMan.pkg"
