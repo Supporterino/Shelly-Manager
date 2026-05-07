@@ -108,19 +108,46 @@ info "Current version: ${BOLD}${CURRENT_VERSION}${RESET}"
 
 # ─── macOS build ──────────────────────────────────────────────────────────────
 info "Building macOS (universal binary)…"
-export CODESIGN_IDENTITY="$APP_CERT"
 
 bun run tauri build --target universal-apple-darwin --bundles app
 
 APP_PATH="src-tauri/target/universal-apple-darwin/release/bundle/macos/ShellMan.app"
 [[ -d "$APP_PATH" ]] || die ".app bundle not found at: ${APP_PATH}"
 
-# ─── Verify code signing & sandbox entitlements ───────────────────────────────
-info "Verifying app sandbox entitlements…"
+# ─── Manual code-signing (Tauri may not sign universal binaries) ──────────────
+info "Code-signing .app bundle…"
 
-# Check that the main executable is signed and has the sandbox entitlement
+ENTITLEMENTS="src-tauri/Entitlements.plist"
+[[ -f "$ENTITLEMENTS" ]] || die "Entitlements.plist not found at: ${ENTITLEMENTS}"
+
+# Clear any quarantine / extended attributes that can interfere with signing
+xattr -cr "$APP_PATH" 2>/dev/null || true
+
+# Sign the main binary with entitlements (required for App Sandbox)
 BINARY_PATH="${APP_PATH}/Contents/MacOS/shellman"
 [[ -f "$BINARY_PATH" ]] || die "Main executable not found at: ${BINARY_PATH}"
+
+codesign \
+  --sign "$APP_CERT" \
+  --entitlements "$ENTITLEMENTS" \
+  --force \
+  --timestamp \
+  --options runtime \
+  "$BINARY_PATH"
+ok "Signed main binary."
+
+# Deep-sign the entire .app bundle
+codesign \
+  --sign "$APP_CERT" \
+  --deep \
+  --force \
+  --timestamp \
+  --options runtime \
+  "$APP_PATH"
+ok "Deep-signed .app bundle."
+
+# ─── Verify code signing & sandbox entitlements ───────────────────────────────
+info "Verifying app sandbox entitlements…"
 
 # Verify the app is signed (not ad-hoc)
 SIGNER=$(codesign -dv "$APP_PATH" 2>&1 | grep -E '^Signature=' | cut -d'=' -f2 || true)
