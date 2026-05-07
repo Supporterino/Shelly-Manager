@@ -79,6 +79,22 @@ if [[ ${#MISSING_TARGETS[@]} -gt 0 ]]; then
 fi
 ok "All required Rust targets present."
 
+# ─── Auto-detect Mac App Distribution certificate ─────────────────────────────
+info "Locating Mac App Distribution certificate…"
+APP_CERT=$(security find-identity -v -p codesigning 2>/dev/null \
+  | grep -E "Mac App Distribution|3rd Party Mac Developer Application" \
+  | head -1 \
+  | sed -E 's/.*\"([^\"]+)\".*/\1/' \
+  || true)
+
+if [[ -z "$APP_CERT" ]]; then
+  die "No Mac App Distribution certificate found in your keychain.\n\
+This is required to sign the .app bundle for Mac App Store.\n\
+To list available identities:\n  security find-identity -v -p codesigning\n\
+You need a certificate named like '3rd Party Mac Developer Application: ...'"
+fi
+ok "Found app signing identity: ${APP_CERT}"
+
 cd "$ROOT"
 
 [[ -z "$(git status --porcelain)" ]] \
@@ -92,6 +108,7 @@ info "Current version: ${BOLD}${CURRENT_VERSION}${RESET}"
 
 # ─── macOS build ──────────────────────────────────────────────────────────────
 info "Building macOS (universal binary)…"
+export CODESIGN_IDENTITY="$APP_CERT"
 
 bun run tauri build --target universal-apple-darwin --bundles app
 
