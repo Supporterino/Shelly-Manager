@@ -12,6 +12,10 @@
     "unknown": "Unbekannt",
     "rgbcct": "RGBCCT Light"
   },
+  "filter": {
+    "allTypes": "Alle Typen",
+    "byType": "Gerätetyp"
+  },
   "controls": {
     "on": "Ein",
     "off": "Aus",

@@ -12,6 +12,10 @@
     "input": "Input",
     "unknown": "Unknown"
   },
+  "filter": {
+    "allTypes": "All Types",
+    "byType": "Device Type"
+  },
   "controls": {
     "on": "On",
     "off": "Off",

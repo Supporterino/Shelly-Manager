@@ -21,18 +21,20 @@ import { DeviceGrid } from '../components/devices/DeviceGrid';
 import { useAppStore } from '../store/appStore';
 import { useDeviceStore } from '../store/deviceStore';
 import { useWsStatusStore } from '../store/wsStatusStore';
-import type { StoredDevice } from '../types/device';
+import type { DeviceType, StoredDevice } from '../types/device';
 
 export const Route = createFileRoute('/')({
   component: DashboardPage,
 });
 
 type StatusFilter = 'all' | 'online' | 'offline';
+type TypeFilter = 'all' | DeviceType;
 type SortKey = 'name' | 'status' | 'lastSeen';
 
 function DashboardPage() {
   const { t } = useTranslation('common');
-  const { t: td } = useTranslation('discovery');
+  const { t: tDiscovery } = useTranslation('discovery');
+  const { t: tDevices } = useTranslation('devices');
   const devicesRecord = useDeviceStore((s) => s.devices);
   const devices = useMemo(() => Object.values(devicesRecord), [devicesRecord]);
   const locale = useAppStore((s) => s.preferences.locale || 'en');
@@ -42,6 +44,7 @@ function DashboardPage() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const [typeFilter, setTypeFilter] = useState<TypeFilter>('all');
   const [sortKey, setSortKey] = useState<SortKey>('name');
 
   async function handleRefresh() {
@@ -60,9 +63,14 @@ function DashboardPage() {
     // Status filter
     if (statusFilter !== 'all') {
       result = result.filter((d) => {
-        const isOnline = wsConnected[d.id] === true || httpConnected[d.id] === true;
+        const isOnline = wsConnected[d.id] || httpConnected[d.id];
         return statusFilter === 'online' ? isOnline : !isOnline;
       });
+    }
+
+    // Device type filter
+    if (typeFilter !== 'all') {
+      result = result.filter((d) => d.type.toLowerCase() === typeFilter.toLowerCase());
     }
 
     // Sort
@@ -70,15 +78,15 @@ function DashboardPage() {
       if (sortKey === 'name') return a.name.localeCompare(b.name);
       if (sortKey === 'lastSeen') return b.lastSeenAt - a.lastSeenAt;
       if (sortKey === 'status') {
-        const aOn = wsConnected[a.id] === true || httpConnected[a.id] === true ? 1 : 0;
-        const bOn = wsConnected[b.id] === true || httpConnected[b.id] === true ? 1 : 0;
+        const aOn = wsConnected[a.id] || httpConnected[a.id] ? 1 : 0;
+        const bOn = wsConnected[b.id] || httpConnected[b.id] ? 1 : 0;
         return bOn - aOn;
       }
       return 0;
     });
 
     return result;
-  }, [devices, search, statusFilter, sortKey, wsConnected, httpConnected]);
+  }, [devices, search, statusFilter, typeFilter, sortKey, wsConnected, httpConnected]);
 
   if (devices.length === 0) {
     return (
@@ -87,9 +95,9 @@ function DashboardPage() {
           <Title order={3} c="dimmed">
             {t('appName')}
           </Title>
-          <Text c="dimmed">{td('noDevicesFound')}</Text>
+          <Text c="dimmed">{tDiscovery('noDevicesFound')}</Text>
           <Button component={Link} to="/discover" leftSection={<IconPlus size={16} />}>
-            {td('addSelected')}
+            {tDiscovery('addSelected')}
           </Button>
         </Stack>
       </Center>
@@ -112,13 +120,13 @@ function DashboardPage() {
               <IconRefresh size={18} />
             </ActionIcon>
           </Tooltip>
-          <Tooltip label={td('addSelected')}>
+          <Tooltip label={tDiscovery('addSelected')}>
             <ActionIcon
               component={Link}
               to="/discover"
               variant="light"
               size="lg"
-              aria-label={td('addSelected')}
+              aria-label={tDiscovery('addSelected')}
             >
               <IconPlus size={18} />
             </ActionIcon>
@@ -144,6 +152,25 @@ function DashboardPage() {
               { value: 'all', label: t('filter.all') },
               { value: 'online', label: t('filter.online') },
               { value: 'offline', label: t('filter.offline') },
+            ]}
+            allowDeselect={false}
+          />
+          <Select
+            value={typeFilter}
+            onChange={(v) => setTypeFilter((v as TypeFilter) ?? 'all')}
+            size="sm"
+            data={[
+              { value: 'all', label: tDevices('filter.allTypes') },
+              { value: 'switch', label: tDevices('types.switch') },
+              { value: 'dimmer', label: tDevices('types.dimmer') },
+              { value: 'cct', label: tDevices('types.cct') },
+              { value: 'rgb', label: tDevices('types.rgb') },
+              { value: 'rgbw', label: tDevices('types.rgbw') },
+              { value: 'rgbcct', label: tDevices('types.rgbcct') },
+              { value: 'cover', label: tDevices('types.cover') },
+              { value: 'sensor', label: tDevices('types.sensor') },
+              { value: 'energy', label: tDevices('types.energy') },
+              { value: 'input', label: tDevices('types.input') },
             ]}
             allowDeselect={false}
           />
@@ -180,6 +207,25 @@ function DashboardPage() {
               { value: 'online', label: t('filter.online') },
               { value: 'offline', label: t('filter.offline') },
             ]}
+          />
+          <Select
+            value={typeFilter}
+            onChange={(v) => setTypeFilter((v as TypeFilter) ?? 'all')}
+            size="sm"
+            data={[
+              { value: 'all', label: tDevices('filter.allTypes') },
+              { value: 'switch', label: tDevices('types.switch') },
+              { value: 'dimmer', label: tDevices('types.dimmer') },
+              { value: 'cct', label: tDevices('types.cct') },
+              { value: 'rgb', label: tDevices('types.rgb') },
+              { value: 'rgbw', label: tDevices('types.rgbw') },
+              { value: 'rgbcct', label: tDevices('types.rgbcct') },
+              { value: 'cover', label: tDevices('types.cover') },
+              { value: 'sensor', label: tDevices('types.sensor') },
+              { value: 'energy', label: tDevices('types.energy') },
+              { value: 'input', label: tDevices('types.input') },
+            ]}
+            allowDeselect={false}
           />
           <Select
             data={[

@@ -12,6 +12,10 @@
     "unknown": "未知",
     "rgbcct": "RGBCCT Light"
   },
+  "filter": {
+    "allTypes": "所有类型",
+    "byType": "设备类型"
+  },
   "controls": {
     "on": "开",
     "off": "关",

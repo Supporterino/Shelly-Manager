@@ -15,6 +15,7 @@ import type {
   TemperatureStatus,
 } from '../../types/shelly';
 import { formatPower } from '../../utils/formatters';
+import { CoverControlsInline } from './controls/CoverControlsInline';
 
 interface Props {
   device: StoredDevice;
@@ -148,12 +149,7 @@ export function DeviceCardInlineControl({ device, status, locale }: Props) {
 
   // Single cover
   if (covers.length === 1) {
-    const cs = status[`cover:${covers[0].id}`] as CoverStatus | undefined;
-    return (
-      <Badge variant="light" color="blue">
-        {cs?.state ? t(`controls.state.${cs.state}`) : '—'}
-      </Badge>
-    );
+    return <CoverControlsInline deviceId={device.id} coverId={covers[0].id} />;
   }
 
   // Multiple covers — state badges

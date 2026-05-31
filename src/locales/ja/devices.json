@@ -12,6 +12,10 @@
     "unknown": "不明",
     "rgbcct": "RGBCCT Light"
   },
+  "filter": {
+    "allTypes": "すべてのタイプ",
+    "byType": "デバイスタイプ"
+  },
   "controls": {
     "on": "オン",
     "off": "オフ",

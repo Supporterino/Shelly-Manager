@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import { loadDevices, saveDevices } from '../services/devicePersistence';
 import type { StoredDevice } from '../types/device';
+import { deriveDeviceType } from '../utils/deviceTypeMap';
 
 interface DeviceStore {
   devices: Record<string, StoredDevice>;
@@ -51,7 +52,18 @@ export const useDeviceStore = create<DeviceStore>()(
 
     hydrate: async () => {
       const devices = await loadDevices();
+      let needsPersist = false;
+      for (const dev of Object.values(devices)) {
+        const corrected = deriveDeviceType(dev.app, dev.components);
+        if (dev.type !== corrected) {
+          dev.type = corrected;
+          needsPersist = true;
+        }
+      }
       set({ devices, isHydrated: true });
+      if (needsPersist) {
+        saveDevices(devices).catch(console.error);
+      }
     },
 
     persist: async () => {

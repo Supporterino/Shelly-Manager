@@ -119,7 +119,7 @@ export function deriveDeviceType(app: string, components: ShellyComponentSummary
     return hasCCT ? 'cct' : 'dimmer';
   }
   if (appLower.includes('switch') || appLower.includes('plug')) return 'switch';
-  if (appLower.includes('em') || appLower.includes('pm')) return 'energy';
+  if (appLower.includes('em')) return 'energy';
   if (
     appLower.includes('sensor') ||
     appLower.includes('ht') ||
