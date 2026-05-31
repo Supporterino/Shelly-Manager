@@ -10,7 +10,7 @@ Arguments:
 - `$3`: optional JSON report path
 
 Run:
-- `'/usr/local/bin/ctx' --repo-root '/Users/supporterino/WebstormProjects/Shelly-Manager' benchmark memory-suite --spec <spec> --report-out <report>`
+- `'/opt/homebrew/bin/ctx' --repo-root '/Users/supporterino/WebstormProjects/Shelly-Manager' benchmark memory-suite --spec <spec> --report-out <report>`
 - include `--json-out <json>` when structured output is also needed
 
 Rules:

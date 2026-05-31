@@ -11,6 +11,6 @@ Arguments:
 Do not treat `$ARGUMENTS` as a topic, label, or search phrase.
 If `$ARGUMENTS` does not look runnable, stop and tell the user to provide the exact shell command to execute.
 
-Run the provided shell command in the current repository and pipe its combined output into `'/usr/local/bin/ctx' --repo-root '/Users/supporterino/WebstormProjects/Shelly-Manager' prune logs --max-lines 50`.
+Run the provided shell command in the current repository and pipe its combined output into `'/opt/homebrew/bin/ctx' --repo-root '/Users/supporterino/WebstormProjects/Shelly-Manager' prune logs --max-lines 50`.
 Show the pruned output first.
 Keep any root-cause explanation to one short sentence.

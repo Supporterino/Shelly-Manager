@@ -12,5 +12,5 @@ Arguments:
 - `$5`: optional markdown answer path
 - `$6`: optional graph answer path
 
-Run the matching `'/usr/local/bin/ctx' --repo-root '/Users/supporterino/WebstormProjects/Shelly-Manager' benchmark memory-ab` command.
+Run the matching `'/opt/homebrew/bin/ctx' --repo-root '/Users/supporterino/WebstormProjects/Shelly-Manager' benchmark memory-ab` command.
 Then explain the token delta and which side won on quality if that data is present.

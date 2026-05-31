@@ -8,7 +8,7 @@
   "mcp": {
     "ctx": {
       "command": [
-        "/usr/local/bin/ctx",
+        "/opt/homebrew/bin/ctx",
         "--repo-root",
         "/Users/supporterino/WebstormProjects/Shelly-Manager",
         "mcp",

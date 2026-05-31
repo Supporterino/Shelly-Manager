@@ -7,7 +7,7 @@ Bootstrap CTX graph memory from conventional markdown rule files.
 Arguments:
 - `$ARGUMENTS`: optional explicit file paths
 
-If no arguments are provided, run `'/usr/local/bin/ctx' --repo-root '/Users/supporterino/WebstormProjects/Shelly-Manager' memory bootstrap` so CTX scans common files such as:
+If no arguments are provided, run `'/opt/homebrew/bin/ctx' --repo-root '/Users/supporterino/WebstormProjects/Shelly-Manager' memory bootstrap` so CTX scans common files such as:
 - `AGENTS.md`
 - `CLAUDE.md`
 - `CODEX.md`

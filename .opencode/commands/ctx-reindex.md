@@ -7,6 +7,6 @@ Reindex selected paths in the current repository.
 Arguments:
 - `$ARGUMENTS`: optional path arguments
 
-!`'/usr/local/bin/ctx' --repo-root '/Users/supporterino/WebstormProjects/Shelly-Manager' reindex $ARGUMENTS`
+!`'/opt/homebrew/bin/ctx' --repo-root '/Users/supporterino/WebstormProjects/Shelly-Manager' reindex $ARGUMENTS`
 
 Then show the output and explain what changed.

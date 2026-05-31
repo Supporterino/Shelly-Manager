@@ -9,6 +9,6 @@ Arguments:
 - `$2`: optional scope
 - `$3`: optional limit
 
-Run the matching `'/usr/local/bin/ctx' --repo-root '/Users/supporterino/WebstormProjects/Shelly-Manager' memory search "$1" --json` command, adding scope and limit only when they were provided.
+Run the matching `'/opt/homebrew/bin/ctx' --repo-root '/Users/supporterino/WebstormProjects/Shelly-Manager' memory search "$1" --json` command, adding scope and limit only when they were provided.
 Show only the matching directives in a compact, predictable format.
 Do not add extra commentary beyond one short sentence if needed.

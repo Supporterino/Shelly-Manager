@@ -11,5 +11,5 @@ Arguments:
 - `$4`: optional source, default `manual`
 
 Run the matching `ctx memory set` command.
-Use `'/usr/local/bin/ctx' --repo-root '/Users/supporterino/WebstormProjects/Shelly-Manager' memory set ...` as the command prefix.
+Use `'/opt/homebrew/bin/ctx' --repo-root '/Users/supporterino/WebstormProjects/Shelly-Manager' memory set ...` as the command prefix.
 Then confirm what was stored and show the exact command used.

@@ -7,7 +7,7 @@ Index this repository into CTX.
 Arguments:
 - `$ARGUMENTS`: optional path arguments
 
-!`'/usr/local/bin/ctx' --repo-root '/Users/supporterino/WebstormProjects/Shelly-Manager' index $ARGUMENTS`
+!`'/opt/homebrew/bin/ctx' --repo-root '/Users/supporterino/WebstormProjects/Shelly-Manager' index $ARGUMENTS`
 
 Rules:
 - run only the exact CTX command above

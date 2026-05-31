@@ -4,7 +4,7 @@ description: Setup | Check CTX repo health and next steps
 
 Current CTX doctor report:
 
-!`'/usr/local/bin/ctx' --repo-root '/Users/supporterino/WebstormProjects/Shelly-Manager' doctor`
+!`'/opt/homebrew/bin/ctx' --repo-root '/Users/supporterino/WebstormProjects/Shelly-Manager' doctor`
 
 Interpret the report deterministically:
 - if `ready: true`, say CTX is ready; treat `next:` as the recommended workflow step, not missing setup

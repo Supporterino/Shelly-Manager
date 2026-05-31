@@ -10,5 +10,5 @@ Arguments:
 - `$3`: optional limit
 - `$4`: optional title
 
-Run the matching `'/usr/local/bin/ctx' --repo-root '/Users/supporterino/WebstormProjects/Shelly-Manager' memory export` command.
+Run the matching `'/opt/homebrew/bin/ctx' --repo-root '/Users/supporterino/WebstormProjects/Shelly-Manager' memory export` command.
 Then confirm the output file path and the number of exported directives.

@@ -1,0 +1,1032 @@
+{
+  "files": {
+    ".github/workflows/release.yml": {
+      "fingerprint": "954e07f9bc8b9290",
+      "bytes": 6028
+    },
+    ".opencode/commands/ctx-ask.md": {
+      "fingerprint": "9141d61fbf791eb4",
+      "bytes": 372
+    },
+    ".opencode/commands/ctx-benchmark-memory-ab.md": {
+      "fingerprint": "87f97da4a2b718ce",
+      "bytes": 544
+    },
+    ".opencode/commands/ctx-benchmark-memory-suite.md": {
+      "fingerprint": "ab9c8ab73f4aa961",
+      "bytes": 674
+    },
+    ".opencode/commands/ctx-doctor.md": {
+      "fingerprint": "54fb8ebcbce5f6ef",
+      "bytes": 528
+    },
+    ".opencode/commands/ctx-explain.md": {
+      "fingerprint": "78c180d2168ea156",
+      "bytes": 353
+    },
+    ".opencode/commands/ctx-graph-build.md": {
+      "fingerprint": "4036c9831ba1d85f",
+      "bytes": 268
+    },
+    ".opencode/commands/ctx-graph-query.md": {
+      "fingerprint": "55b29d43101251cc",
+      "bytes": 296
+    },
+    ".opencode/commands/ctx-graph-rebuild.md": {
+      "fingerprint": "6c5abc68705c20b4",
+      "bytes": 264
+    },
+    ".opencode/commands/ctx-help.md": {
+      "fingerprint": "21fb5d846546924f",
+      "bytes": 257
+    },
+    ".opencode/commands/ctx-hook.md": {
+      "fingerprint": "d8710392d66d8993",
+      "bytes": 443
+    },
+    ".opencode/commands/ctx-index.md": {
+      "fingerprint": "935bb18758dbb8e8",
+      "bytes": 535
+    },
+    ".opencode/commands/ctx-init.md": {
+      "fingerprint": "477d1727671e5364",
+      "bytes": 281
+    },
+    ".opencode/commands/ctx-mcp-config-opencode.md": {
+      "fingerprint": "224552827ebbb8c5",
+      "bytes": 275
+    },
+    ".opencode/commands/ctx-mcp-serve.md": {
+      "fingerprint": "0340202262e48834",
+      "bytes": 436
+    },
+    ".opencode/commands/ctx-mcp-stdio.md": {
+      "fingerprint": "310bc52a2c7a4434",
+      "bytes": 311
+    },
+    ".opencode/commands/ctx-memory-bootstrap.md": {
+      "fingerprint": "295bd06f78c65c79",
+      "bytes": 621
+    },
+    ".opencode/commands/ctx-memory-delete.md": {
+      "fingerprint": "821bbcbe328b1305",
+      "bytes": 337
+    },
+    ".opencode/commands/ctx-memory-export.md": {
+      "fingerprint": "5fd87919a560a478",
+      "bytes": 425
+    },
+    ".opencode/commands/ctx-memory-get.md": {
+      "fingerprint": "5241c72d24af4b83",
+      "bytes": 360
+    },
+    ".opencode/commands/ctx-memory-import.md": {
+      "fingerprint": "4ee9c85373db5b7a",
+      "bytes": 470
+    },
+    ".opencode/commands/ctx-memory-list.md": {
+      "fingerprint": "a521bd1b4ebf6b74",
+      "bytes": 390
+    },
+    ".opencode/commands/ctx-memory-search.md": {
+      "fingerprint": "f1d188d54e66af32",
+      "bytes": 531
+    },
+    ".opencode/commands/ctx-memory-set.md": {
+      "fingerprint": "7ce494ae9e2d3f30",
+      "bytes": 516
+    },
+    ".opencode/commands/ctx-opencode-install.md": {
+      "fingerprint": "b563920a82770e61",
+      "bytes": 309
+    },
+    ".opencode/commands/ctx-pack.md": {
+      "fingerprint": "c19dce37caeb6554",
+      "bytes": 430
+    },
+    ".opencode/commands/ctx-prune-diff.md": {
+      "fingerprint": "f56c79ea3cba3961",
+      "bytes": 414
+    },
+    ".opencode/commands/ctx-prune-logs.md": {
+      "fingerprint": "a886b218e4189231",
+      "bytes": 744
+    },
+    ".opencode/commands/ctx-reindex.md": {
+      "fingerprint": "026d9cc4323575a6",
+      "bytes": 322
+    },
+    ".opencode/commands/ctx-retrieve.md": {
+      "fingerprint": "8a35d64e97c26d3c",
+      "bytes": 449
+    },
+    ".opencode/commands/ctx-stats.md": {
+      "fingerprint": "adc7ec0be94b9995",
+      "bytes": 322
+    },
+    ".opencode/commands/ctx.md": {
+      "fingerprint": "9e21ce330c546e2c",
+      "bytes": 431
+    },
+    ".opencode/instructions/ctx-host-first.md": {
+      "fingerprint": "fe98b047bf46b4ae",
+      "bytes": 2238
+    },
+    ".opencode/package.json": {
+      "fingerprint": "bebd9f351e460623",
+      "bytes": 65
+    },
+    ".vscode/extensions.json": {
+      "fingerprint": "55ff9bc0d8570506",
+      "bytes": 80
+    },
+    "AGENTS.md": {
+      "fingerprint": "fd10b49e1e32baf6",
+      "bytes": 17597
+    },
+    "README.md": {
+      "fingerprint": "8eb4bf4f53647228",
+      "bytes": 6403
+    },
+    "biome.json": {
+      "fingerprint": "1c8197f88bc05ca5",
+      "bytes": 910
+    },
+    "icon-design/ShellyManager.icon/icon.json": {
+      "fingerprint": "fc57491c5e645060",
+      "bytes": 716
+    },
+    "opencode.json": {
+      "fingerprint": "c07de1f0a55a6bf5",
+      "bytes": 811
+    },
+    "package.json": {
+      "fingerprint": "58e2329cb92074f6",
+      "bytes": 1805
+    },
+    "scripts/release-ios.sh": {
+      "fingerprint": "0ffcd7461039a095",
+      "bytes": 8375
+    },
+    "scripts/release-mac.sh": {
+      "fingerprint": "78f4cb7e81e3f06b",
+      "bytes": 8724
+    },
+    "src-tauri/Cargo.toml": {
+      "fingerprint": "65d8158896994491",
+      "bytes": 932
+    },
+    "src-tauri/build.rs": {
+      "fingerprint": "e6151d73f1840117",
+      "bytes": 39
+    },
+    "src-tauri/capabilities/default.json": {
+      "fingerprint": "4896a9b869296ee3",
+      "bytes": 328
+    },
+    "src-tauri/capabilities/mobile.json": {
+      "fingerprint": "bd3d5e5a4ce9c22c",
+      "bytes": 315
+    },
+    "src-tauri/gen/android/app/src/main/java/com/shellymanager/app/MainActivity.kt": {
+      "fingerprint": "648503f508e0f987",
+      "bytes": 264
+    },
+    "src-tauri/gen/android/buildSrc/src/main/java/com/shellymanager/app/kotlin/BuildTask.kt": {
+      "fingerprint": "58b03b829bde8ebd",
+      "bytes": 2218
+    },
+    "src-tauri/gen/android/buildSrc/src/main/java/com/shellymanager/app/kotlin/RustPlugin.kt": {
+      "fingerprint": "e649537486a3e4a7",
+      "bytes": 3336
+    },
+    "src-tauri/gen/apple/Assets.xcassets/AppIcon.appiconset/Contents.json": {
+      "fingerprint": "0ffcc746025a118e",
+      "bytes": 2372
+    },
+    "src-tauri/gen/apple/Assets.xcassets/Contents.json": {
+      "fingerprint": "bfec441ace993a5e",
+      "bytes": 62
+    },
+    "src-tauri/gen/apple/Sources/shelly-manager/bindings/bindings.h": {
+      "fingerprint": "c5d1ff91b1fad9fa",
+      "bytes": 82
+    },
+    "src-tauri/gen/apple/project.yml": {
+      "fingerprint": "b521afcf96e43f51",
+      "bytes": 3221
+    },
+    "src-tauri/gen/schemas/acl-manifests.json": {
+      "fingerprint": "12f02962fa368f0c",
+      "bytes": 79191
+    },
+    "src-tauri/gen/schemas/capabilities.json": {
+      "fingerprint": "bd1eb5efbb980eae",
+      "bytes": 545
+    },
+    "src-tauri/gen/schemas/desktop-schema.json": {
+      "fingerprint": "3cce51034ef0b521",
+      "bytes": 152896
+    },
+    "src-tauri/gen/schemas/iOS-schema.json": {
+      "fingerprint": "3cce51034ef0b521",
+      "bytes": 152896
+    },
+    "src-tauri/gen/schemas/macOS-schema.json": {
+      "fingerprint": "3cce51034ef0b521",
+      "bytes": 152896
+    },
+    "src-tauri/gen/schemas/mobile-schema.json": {
+      "fingerprint": "3cce51034ef0b521",
+      "bytes": 152896
+    },
+    "src-tauri/src/lib.rs": {
+      "fingerprint": "9a2ac04c2734624d",
+      "bytes": 10124
+    },
+    "src-tauri/src/main.rs": {
+      "fingerprint": "991bf40046e3b7ec",
+      "bytes": 184
+    },
+    "src-tauri/tauri.conf.json": {
+      "fingerprint": "a19dc12b144e37a5",
+      "bytes": 921
+    },
+    "src/__tests__/auth.test.ts": {
+      "fingerprint": "b52d862cedb09f0a",
+      "bytes": 2308
+    },
+    "src/__tests__/clearAllDevicesButton.test.tsx": {
+      "fingerprint": "5cc3bc4a7beb8803",
+      "bytes": 3480
+    },
+    "src/__tests__/deviceCard.test.tsx": {
+      "fingerprint": "1c6d2dd8a00ee0b2",
+      "bytes": 3191
+    },
+    "src/__tests__/deviceControls.test.tsx": {
+      "fingerprint": "014d39d6e9075fed",
+      "bytes": 5622
+    },
+    "src/__tests__/deviceProfileSection.test.tsx": {
+      "fingerprint": "18970caec17d9272",
+      "bytes": 1875
+    },
+    "src/__tests__/deviceStore.test.ts": {
+      "fingerprint": "401c293e7a1727a5",
+      "bytes": 2471
+    },
+    "src/__tests__/discoveryComponents.test.tsx": {
+      "fingerprint": "c7692bf9357fc038",
+      "bytes": 10306
+    },
+    "src/__tests__/firmware.test.ts": {
+      "fingerprint": "22f38a6ae586adf8",
+      "bytes": 8650
+    },
+    "src/__tests__/firmwareManager.test.ts": {
+      "fingerprint": "d844ed02c3ae638d",
+      "bytes": 23011
+    },
+    "src/__tests__/formatters.test.ts": {
+      "fingerprint": "d735317d2271ea27",
+      "bytes": 1948
+    },
+    "src/__tests__/inputConfigPanel.test.tsx": {
+      "fingerprint": "9a38c4e9c9ea7dde",
+      "bytes": 9884
+    },
+    "src/__tests__/locales.test.ts": {
+      "fingerprint": "22af5ba9f49ae80a",
+      "bytes": 3109
+    },
+    "src/__tests__/navComponents.test.tsx": {
+      "fingerprint": "34d26c89bd2846e9",
+      "bytes": 4610
+    },
+    "src/__tests__/rpc.test.ts": {
+      "fingerprint": "5e9fc37151442e15",
+      "bytes": 2155
+    },
+    "src/__tests__/settingsTabs.test.tsx": {
+      "fingerprint": "cf57d85500372e71",
+      "bytes": 2532
+    },
+    "src/__tests__/shellyClientAutomation.test.ts": {
+      "fingerprint": "c44e26a1f8822010",
+      "bytes": 7919
+    },
+    "src/__tests__/switchConfigPanel.test.tsx": {
+      "fingerprint": "da43dca756ffd6b4",
+      "bytes": 10345
+    },
+    "src/__tests__/systemSettingsSection.test.tsx": {
+      "fingerprint": "959818a4c99ec68c",
+      "bytes": 3045
+    },
+    "src/__tests__/wsStatusStore.test.ts": {
+      "fingerprint": "5a25fddcd0050d02",
+      "bytes": 3248
+    },
+    "src/components/common/AppLoader.tsx": {
+      "fingerprint": "74b2f04edbdddf52",
+      "bytes": 162
+    },
+    "src/components/common/ConfirmModal.tsx": {
+      "fingerprint": "f5256089e0b15245",
+      "bytes": 987
+    },
+    "src/components/common/ErrorAlert.tsx": {
+      "fingerprint": "9e2bafb0f41c34fb",
+      "bytes": 1549
+    },
+    "src/components/common/LoadingOverlay.tsx": {
+      "fingerprint": "d5ff1b45346425e2",
+      "bytes": 503
+    },
+    "src/components/devices/ComponentList.tsx": {
+      "fingerprint": "ca0af1077e872c2c",
+      "bytes": 4660
+    },
+    "src/components/devices/DeviceCard.tsx": {
+      "fingerprint": "b9917a93fddfd1f1",
+      "bytes": 2571
+    },
+    "src/components/devices/DeviceCardInlineControl.tsx": {
+      "fingerprint": "77bf910c0b0b69c1",
+      "bytes": 5836
+    },
+    "src/components/devices/DeviceGrid.tsx": {
+      "fingerprint": "e2e74a4248d0f124",
+      "bytes": 502
+    },
+    "src/components/devices/DeviceQuickActions.tsx": {
+      "fingerprint": "62621a7741c04ac9",
+      "bytes": 4312
+    },
+    "src/components/devices/DeviceStatusBadge.tsx": {
+      "fingerprint": "862cb8ea2e457a30",
+      "bytes": 593
+    },
+    "src/components/devices/DeviceTypeIcon.tsx": {
+      "fingerprint": "ef19a241ec74543d",
+      "bytes": 963
+    },
+    "src/components/devices/ScheduleForm.tsx": {
+      "fingerprint": "60831ab6c1062e6c",
+      "bytes": 5973
+    },
+    "src/components/devices/ScheduleSection.tsx": {
+      "fingerprint": "12fa5244a3c50f6f",
+      "bytes": 7001
+    },
+    "src/components/devices/controls/CCTControl.tsx": {
+      "fingerprint": "3d7509296f7eaa17",
+      "bytes": 3042
+    },
+    "src/components/devices/controls/CoverCalibrateRow.tsx": {
+      "fingerprint": "03e5972e57d0ecc9",
+      "bytes": 1713
+    },
+    "src/components/devices/controls/CoverConfigPanel.tsx": {
+      "fingerprint": "635825a8fa84dc69",
+      "bytes": 7702
+    },
+    "src/components/devices/controls/CoverControl.tsx": {
+      "fingerprint": "8e7b0aadfbab41d7",
+      "bytes": 5762
+    },
+    "src/components/devices/controls/DimmerControl.tsx": {
+      "fingerprint": "cadac8b385944232",
+      "bytes": 2313
+    },
+    "src/components/devices/controls/ErrorBadges.tsx": {
+      "fingerprint": "2bf4f9de21486b54",
+      "bytes": 626
+    },
+    "src/components/devices/controls/InputConfigPanel.tsx": {
+      "fingerprint": "c2edfa50dcbb3c17",
+      "bytes": 9767
+    },
+    "src/components/devices/controls/InputConfigRow.tsx": {
+      "fingerprint": "77820a1ec86ed92e",
+      "bytes": 1154
+    },
+    "src/components/devices/controls/InputDisplay.tsx": {
+      "fingerprint": "068f36fec8e3a18a",
+      "bytes": 1578
+    },
+    "src/components/devices/controls/LightConfigPanel.tsx": {
+      "fingerprint": "ba9b5a1ac21c449a",
+      "bytes": 5663
+    },
+    "src/components/devices/controls/LightEnergyPanel.tsx": {
+      "fingerprint": "11a93e7306d63836",
+      "bytes": 2644
+    },
+    "src/components/devices/controls/RGBCCTConfigPanel.tsx": {
+      "fingerprint": "a70c818dccc5bfeb",
+      "bytes": 7145
+    },
+    "src/components/devices/controls/RGBCCTControl.tsx": {
+      "fingerprint": "6f10bc9494e27d62",
+      "bytes": 4438
+    },
+    "src/components/devices/controls/RGBControl.tsx": {
+      "fingerprint": "c3ed89d18e267097",
+      "bytes": 3452
+    },
+    "src/components/devices/controls/RGBWControl.tsx": {
+      "fingerprint": "5135a43ee0b5c831",
+      "bytes": 3873
+    },
+    "src/components/devices/controls/RgbConfigPanel.tsx": {
+      "fingerprint": "3ffb9283b3b3791a",
+      "bytes": 6463
+    },
+    "src/components/devices/controls/RgbwConfigPanel.tsx": {
+      "fingerprint": "ed14c7622ff9c34b",
+      "bytes": 6793
+    },
+    "src/components/devices/controls/SwitchConfigPanel.tsx": {
+      "fingerprint": "7630bdd4bbc37534",
+      "bytes": 11437
+    },
+    "src/components/devices/controls/SwitchConfigRow.tsx": {
+      "fingerprint": "6c2c6eedda34c45c",
+      "bytes": 1166
+    },
+    "src/components/devices/controls/SwitchControl.tsx": {
+      "fingerprint": "98bc33412fe2f474",
+      "bytes": 1871
+    },
+    "src/components/devices/controls/SwitchEnergyPanel.tsx": {
+      "fingerprint": "253d69f0d6123a29",
+      "bytes": 3181
+    },
+    "src/components/devices/energy/EM1Display.tsx": {
+      "fingerprint": "8c8bb73398f00ec8",
+      "bytes": 2614
+    },
+    "src/components/devices/energy/EMDisplay.tsx": {
+      "fingerprint": "81db3e3ba038ab5b",
+      "bytes": 4721
+    },
+    "src/components/devices/energy/EnergyDataPanel.tsx": {
+      "fingerprint": "61d9c0879a6c9e02",
+      "bytes": 3949
+    },
+    "src/components/devices/energy/EnergyHistoryChart.tsx": {
+      "fingerprint": "c8c1c938430882e6",
+      "bytes": 1649
+    },
+    "src/components/devices/energy/PM1Display.tsx": {
+      "fingerprint": "9cdc80a8ac823a64",
+      "bytes": 2867
+    },
+    "src/components/devices/info/DeviceInfoPanel.tsx": {
+      "fingerprint": "97bfeecad408badb",
+      "bytes": 4245
+    },
+    "src/components/devices/info/FirmwareCard.tsx": {
+      "fingerprint": "47413e452f4de387",
+      "bytes": 6375
+    },
+    "src/components/devices/kvs/KVSCard.tsx": {
+      "fingerprint": "0b118290e0df08cf",
+      "bytes": 1443
+    },
+    "src/components/devices/kvs/KVSCardList.tsx": {
+      "fingerprint": "fb463c1c69873654",
+      "bytes": 479
+    },
+    "src/components/devices/kvs/KVSEditor.tsx": {
+      "fingerprint": "8323abf9461896d8",
+      "bytes": 3884
+    },
+    "src/components/devices/kvs/KVSKeyTable.tsx": {
+      "fingerprint": "4fa6a4af7c67ae2d",
+      "bytes": 2145
+    },
+    "src/components/devices/kvs/KVSModal.tsx": {
+      "fingerprint": "7a8bfada2023beb7",
+      "bytes": 3030
+    },
+    "src/components/devices/scripts/CreateScriptModal.tsx": {
+      "fingerprint": "6bb840b875074101",
+      "bytes": 1616
+    },
+    "src/components/devices/scripts/ScriptCard.tsx": {
+      "fingerprint": "6de31e0a49081b32",
+      "bytes": 3194
+    },
+    "src/components/devices/scripts/ScriptCardList.tsx": {
+      "fingerprint": "405e596d40532ac6",
+      "bytes": 861
+    },
+    "src/components/devices/scripts/ScriptCodeModal.tsx": {
+      "fingerprint": "848c55946021b9ba",
+      "bytes": 2320
+    },
+    "src/components/devices/scripts/ScriptEvalModal.tsx": {
+      "fingerprint": "3bd88a9aaceea045",
+      "bytes": 1911
+    },
+    "src/components/devices/scripts/ScriptManager.tsx": {
+      "fingerprint": "94eb4c599caa8d7d",
+      "bytes": 4851
+    },
+    "src/components/devices/scripts/ScriptTable.tsx": {
+      "fingerprint": "d8aac62809e9880c",
+      "bytes": 4510
+    },
+    "src/components/devices/sensors/BTHomeSensor.tsx": {
+      "fingerprint": "60b7e0121142bb0a",
+      "bytes": 2775
+    },
+    "src/components/devices/sensors/BatteryIndicator.tsx": {
+      "fingerprint": "9f01258f501b281a",
+      "bytes": 1574
+    },
+    "src/components/devices/sensors/FloodSensor.tsx": {
+      "fingerprint": "d2511de96f0862e3",
+      "bytes": 1015
+    },
+    "src/components/devices/sensors/GenericComponentDisplay.tsx": {
+      "fingerprint": "d04583d8b68ecbec",
+      "bytes": 933
+    },
+    "src/components/devices/sensors/HttpClientDisplay.tsx": {
+      "fingerprint": "428de16b149a53c1",
+      "bytes": 1180
+    },
+    "src/components/devices/sensors/HumiditySensor.tsx": {
+      "fingerprint": "8bfcc09ae989808c",
+      "bytes": 971
+    },
+    "src/components/devices/sensors/IlluminanceSensor.tsx": {
+      "fingerprint": "9c3f81f1409fc910",
+      "bytes": 1160
+    },
+    "src/components/devices/sensors/MotionSensor.tsx": {
+      "fingerprint": "f278f955d851b1c6",
+      "bytes": 1502
+    },
+    "src/components/devices/sensors/PresenceSensor.tsx": {
+      "fingerprint": "e4c6a47d6971edf8",
+      "bytes": 1369
+    },
+    "src/components/devices/sensors/PresenceZoneSensor.tsx": {
+      "fingerprint": "ea34facf37a60434",
+      "bytes": 1645
+    },
+    "src/components/devices/sensors/SensorCard.tsx": {
+      "fingerprint": "67f99a12af9b3e59",
+      "bytes": 879
+    },
+    "src/components/devices/sensors/SmokeSensor.tsx": {
+      "fingerprint": "4c49f66c68e43f35",
+      "bytes": 2170
+    },
+    "src/components/devices/sensors/TemperatureSensor.tsx": {
+      "fingerprint": "ab59a5d68dae0a40",
+      "bytes": 1019
+    },
+    "src/components/devices/sensors/VoltmeterDisplay.tsx": {
+      "fingerprint": "45a0bc21267f8f4e",
+      "bytes": 809
+    },
+    "src/components/devices/settings/APModeSection.tsx": {
+      "fingerprint": "b78087a60dfe7922",
+      "bytes": 4506
+    },
+    "src/components/devices/settings/AuthManagementSection.tsx": {
+      "fingerprint": "74943139ea40bf47",
+      "bytes": 4263
+    },
+    "src/components/devices/settings/DangerZoneSection.tsx": {
+      "fingerprint": "b27188a0a110cf85",
+      "bytes": 3731
+    },
+    "src/components/devices/settings/DeviceProfileSection.tsx": {
+      "fingerprint": "4b2f4b1129f031ad",
+      "bytes": 2648
+    },
+    "src/components/devices/settings/EthernetSection.tsx": {
+      "fingerprint": "3f568e20a3f15ccf",
+      "bytes": 3677
+    },
+    "src/components/devices/settings/FirmwareSection.tsx": {
+      "fingerprint": "f03b8d5b67a1f257",
+      "bytes": 459
+    },
+    "src/components/devices/settings/IntegrationStatusSection.tsx": {
+      "fingerprint": "d0f0d0c40ede1998",
+      "bytes": 3923
+    },
+    "src/components/devices/settings/MethodDiscoverySection.tsx": {
+      "fingerprint": "2c6300390fe0e240",
+      "bytes": 2571
+    },
+    "src/components/devices/settings/SettingsTabs.tsx": {
+      "fingerprint": "7b5af3a6ce3d7f94",
+      "bytes": 2962
+    },
+    "src/components/devices/settings/SystemSettingsSection.tsx": {
+      "fingerprint": "0fd7324e411fb2b8",
+      "bytes": 3464
+    },
+    "src/components/devices/settings/WiFiConnectModal.tsx": {
+      "fingerprint": "40c2bd2e3972eec5",
+      "bytes": 3137
+    },
+    "src/components/devices/settings/WiFiScanModal.tsx": {
+      "fingerprint": "d54560489c48c21d",
+      "bytes": 3608
+    },
+    "src/components/devices/settings/WiFiSection.tsx": {
+      "fingerprint": "3c8f91037fd61be4",
+      "bytes": 2448
+    },
+    "src/components/devices/webhooks/CreateWebhookModal.tsx": {
+      "fingerprint": "525d01b80ec706fa",
+      "bytes": 4177
+    },
+    "src/components/devices/webhooks/EditWebhookModal.tsx": {
+      "fingerprint": "ddb0fa58d8c9f42e",
+      "bytes": 4502
+    },
+    "src/components/devices/webhooks/WebhookCard.tsx": {
+      "fingerprint": "6f7f41dc09a3dc3c",
+      "bytes": 2145
+    },
+    "src/components/devices/webhooks/WebhookCardList.tsx": {
+      "fingerprint": "0091de25c492a55e",
+      "bytes": 716
+    },
+    "src/components/devices/webhooks/WebhookManager.tsx": {
+      "fingerprint": "c7a8c56b7b326b98",
+      "bytes": 5145
+    },
+    "src/components/devices/webhooks/WebhookTable.tsx": {
+      "fingerprint": "59fb716b27514303",
+      "bytes": 3045
+    },
+    "src/components/discovery/DiscoveryMethodSelect.tsx": {
+      "fingerprint": "2986f92a755e7095",
+      "bytes": 3436
+    },
+    "src/components/discovery/DiscoveryProgress.tsx": {
+      "fingerprint": "a5727731bb72c14d",
+      "bytes": 3109
+    },
+    "src/components/discovery/FoundDevicesList.tsx": {
+      "fingerprint": "d2cb878dbe1ee636",
+      "bytes": 3195
+    },
+    "src/components/discovery/ManualAddForm.tsx": {
+      "fingerprint": "0789b06a6e5fa5b8",
+      "bytes": 3121
+    },
+    "src/components/discovery/SubnetAutoDetect.tsx": {
+      "fingerprint": "9dae1245cddf1856",
+      "bytes": 3891
+    },
+    "src/components/firmware/FirmwareDeviceCard.tsx": {
+      "fingerprint": "3d1ec04f57172d90",
+      "bytes": 4331
+    },
+    "src/components/firmware/FirmwareDeviceList.tsx": {
+      "fingerprint": "3bb053f899a41cb9",
+      "bytes": 2219
+    },
+    "src/components/firmware/FirmwareRowActions.tsx": {
+      "fingerprint": "45e297c869f3a4c5",
+      "bytes": 4653
+    },
+    "src/components/firmware/FirmwareTable.tsx": {
+      "fingerprint": "e1b6d98fa5cb5b8b",
+      "bytes": 3741
+    },
+    "src/components/layout/AppShellLayout.tsx": {
+      "fingerprint": "aa8239e4f796656f",
+      "bytes": 952
+    },
+    "src/components/layout/BottomNav.tsx": {
+      "fingerprint": "072d6b583dcc0bb4",
+      "bytes": 1444
+    },
+    "src/components/layout/SidebarNav.tsx": {
+      "fingerprint": "2709de2d1c878345",
+      "bytes": 1167
+    },
+    "src/components/settings/ClearAllDevicesButton.tsx": {
+      "fingerprint": "a915aa5136a1dcae",
+      "bytes": 1365
+    },
+    "src/components/settings/LanguageSelect.tsx": {
+      "fingerprint": "659ed4d77604526a",
+      "bytes": 1114
+    },
+    "src/hooks/useDeviceAutomation.ts": {
+      "fingerprint": "c06731d4cacad843",
+      "bytes": 7944
+    },
+    "src/hooks/useDeviceControl.ts": {
+      "fingerprint": "d3b07767ff057f44",
+      "bytes": 16018
+    },
+    "src/hooks/useDeviceInfo.ts": {
+      "fingerprint": "01e8eb2bbd4e507e",
+      "bytes": 622
+    },
+    "src/hooks/useDeviceSettings.ts": {
+      "fingerprint": "85003263ac92d988",
+      "bytes": 8134
+    },
+    "src/hooks/useDeviceStatus.ts": {
+      "fingerprint": "dd66fe69b6b16275",
+      "bytes": 1338
+    },
+    "src/hooks/useDiscovery.ts": {
+      "fingerprint": "4f0b2c6a7c245b7e",
+      "bytes": 1728
+    },
+    "src/hooks/useEnergyCollector.ts": {
+      "fingerprint": "f33b4467f302e951",
+      "bytes": 2226
+    },
+    "src/hooks/useFirmwareManager.ts": {
+      "fingerprint": "899fc2a54bf29cc9",
+      "bytes": 9222
+    },
+    "src/hooks/usePhase4Features.ts": {
+      "fingerprint": "1ac150fa865af785",
+      "bytes": 4463
+    },
+    "src/hooks/useWsStatus.ts": {
+      "fingerprint": "06548512a0c334c3",
+      "bytes": 291
+    },
+    "src/locales/de/common.json": {
+      "fingerprint": "5ea1aeec7fb21754",
+      "bytes": 1138
+    },
+    "src/locales/de/devices.json": {
+      "fingerprint": "d3da8c2c4c08b5d9",
+      "bytes": 14209
+    },
+    "src/locales/de/discovery.json": {
+      "fingerprint": "4f37960955af31db",
+      "bytes": 1386
+    },
+    "src/locales/de/settings.json": {
+      "fingerprint": "09a777d4473e714a",
+      "bytes": 1272
+    },
+    "src/locales/en/common.json": {
+      "fingerprint": "9958e5b42736393b",
+      "bytes": 1053
+    },
+    "src/locales/en/devices.json": {
+      "fingerprint": "3aa7c7bd6bdf8b11",
+      "bytes": 13747
+    },
+    "src/locales/en/discovery.json": {
+      "fingerprint": "ce299ac4d3f3a15b",
+      "bytes": 1224
+    },
+    "src/locales/en/settings.json": {
+      "fingerprint": "5c7129ee085f76e7",
+      "bytes": 1226
+    },
+    "src/locales/es/common.json": {
+      "fingerprint": "428b3f5ceb56ae62",
+      "bytes": 1139
+    },
+    "src/locales/es/devices.json": {
+      "fingerprint": "b3a9d0249f65079f",
+      "bytes": 14638
+    },
+    "src/locales/es/discovery.json": {
+      "fingerprint": "ba0de9087645c0a6",
+      "bytes": 1377
+    },
+    "src/locales/es/settings.json": {
+      "fingerprint": "479c6da48baf5dfe",
+      "bytes": 1293
+    },
+    "src/locales/fr/common.json": {
+      "fingerprint": "80efb4f29bc4b700",
+      "bytes": 1165
+    },
+    "src/locales/fr/devices.json": {
+      "fingerprint": "ceba56f4b0dffb5a",
+      "bytes": 14716
+    },
+    "src/locales/fr/discovery.json": {
+      "fingerprint": "7a3b6a171fa8f33d",
+      "bytes": 1411
+    },
+    "src/locales/fr/settings.json": {
+      "fingerprint": "1fcae1d009d1f318",
+      "bytes": 1274
+    },
+    "src/locales/ja/common.json": {
+      "fingerprint": "ffac7bbfd5ac2e61",
+      "bytes": 1304
+    },
+    "src/locales/ja/devices.json": {
+      "fingerprint": "80109689059433e5",
+      "bytes": 15114
+    },
+    "src/locales/ja/discovery.json": {
+      "fingerprint": "46208d2b075346e4",
+      "bytes": 1669
+    },
+    "src/locales/ja/settings.json": {
+      "fingerprint": "4d75ca7649b60f6e",
+      "bytes": 1351
+    },
+    "src/locales/zh/common.json": {
+      "fingerprint": "df37e9da8921d3d2",
+      "bytes": 1044
+    },
+    "src/locales/zh/devices.json": {
+      "fingerprint": "0673206b8e7803a2",
+      "bytes": 13667
+    },
+    "src/locales/zh/discovery.json": {
+      "fingerprint": "0f689700981be428",
+      "bytes": 1218
+    },
+    "src/locales/zh/settings.json": {
+      "fingerprint": "7f5e915967a86651",
+      "bytes": 1159
+    },
+    "src/main.tsx": {
+      "fingerprint": "cab2afbc1214cdeb",
+      "bytes": 1984
+    },
+    "src/routeTree.gen.ts": {
+      "fingerprint": "1b55bb09e1a9050c",
+      "bytes": 9254
+    },
+    "src/routes/__root.tsx": {
+      "fingerprint": "8906f29c5afc08e7",
+      "bytes": 1586
+    },
+    "src/routes/devices/$deviceId.config.tsx": {
+      "fingerprint": "79e2de7e7279634f",
+      "bytes": 7732
+    },
+    "src/routes/devices/$deviceId.kvs.tsx": {
+      "fingerprint": "c39f485909fa7677",
+      "bytes": 1354
+    },
+    "src/routes/devices/$deviceId.scripts.tsx": {
+      "fingerprint": "ff633ce8e689770f",
+      "bytes": 1382
+    },
+    "src/routes/devices/$deviceId.settings.tsx": {
+      "fingerprint": "75254307decb9079",
+      "bytes": 1383
+    },
+    "src/routes/devices/$deviceId.tsx": {
+      "fingerprint": "b4a7316ef6e60b71",
+      "bytes": 6943
+    },
+    "src/routes/devices/$deviceId.webhooks.tsx": {
+      "fingerprint": "218fa3cf48809147",
+      "bytes": 1389
+    },
+    "src/routes/discover.tsx": {
+      "fingerprint": "6f3d6b7e31cf0f39",
+      "bytes": 5713
+    },
+    "src/routes/firmware.tsx": {
+      "fingerprint": "7874cdf80c57f7af",
+      "bytes": 11275
+    },
+    "src/routes/index.tsx": {
+      "fingerprint": "fc64b67ba3b59682",
+      "bytes": 6738
+    },
+    "src/routes/settings.tsx": {
+      "fingerprint": "7b0e6c1eba7655dc",
+      "bytes": 6362
+    },
+    "src/services/devicePersistence.ts": {
+      "fingerprint": "607742123a6b970e",
+      "bytes": 996
+    },
+    "src/services/discovery.ts": {
+      "fingerprint": "1d0756d670f3fabc",
+      "bytes": 6664
+    },
+    "src/services/energyPersistence.ts": {
+      "fingerprint": "86a650bc6a5f9258",
+      "bytes": 677
+    },
+    "src/services/i18n.ts": {
+      "fingerprint": "c5f0928696bc6fc8",
+      "bytes": 837
+    },
+    "src/services/shellyClient.ts": {
+      "fingerprint": "354a94bf1abff5f1",
+      "bytes": 20657
+    },
+    "src/services/wsManager.ts": {
+      "fingerprint": "0190957e4e6b42b3",
+      "bytes": 5684
+    },
+    "src/store/appStore.ts": {
+      "fingerprint": "e1f650419af23929",
+      "bytes": 2751
+    },
+    "src/store/deviceStore.ts": {
+      "fingerprint": "475ce86a04e6953e",
+      "bytes": 1797
+    },
+    "src/store/energyHistoryStore.test.ts": {
+      "fingerprint": "6241e5efce363b31",
+      "bytes": 1905
+    },
+    "src/store/energyHistoryStore.ts": {
+      "fingerprint": "cd02b410145510b9",
+      "bytes": 2914
+    },
+    "src/store/wsStatusStore.ts": {
+      "fingerprint": "7f6850daf0fe12bc",
+      "bytes": 2723
+    },
+    "src/test/mocks/tauri.ts": {
+      "fingerprint": "66c8280ec624f080",
+      "bytes": 474
+    },
+    "src/test/renderWithProviders.tsx": {
+      "fingerprint": "90cc9c741899021b",
+      "bytes": 1636
+    },
+    "src/test/setup.ts": {
+      "fingerprint": "9790b6d80710ce40",
+      "bytes": 778
+    },
+    "src/types/device.ts": {
+      "fingerprint": "54afc7e3a5402ab6",
+      "bytes": 3048
+    },
+    "src/types/discovery.ts": {
+      "fingerprint": "d8f0d46932f3f078",
+      "bytes": 549
+    },
+    "src/types/i18n.d.ts": {
+      "fingerprint": "8dbc1635c76b48d4",
+      "bytes": 510
+    },
+    "src/types/shelly.ts": {
+      "fingerprint": "e991eedc72c023c4",
+      "bytes": 20547
+    },
+    "src/utils/auth.ts": {
+      "fingerprint": "0bdbd2779b976c90",
+      "bytes": 2163
+    },
+    "src/utils/deviceTypeMap.ts": {
+      "fingerprint": "d988bec5080950b6",
+      "bytes": 4324
+    },
+    "src/utils/firmware.ts": {
+      "fingerprint": "30f668da3090d667",
+      "bytes": 2653
+    },
+    "src/utils/formatters.ts": {
+      "fingerprint": "a61c720cf87603c3",
+      "bytes": 2179
+    },
+    "src/utils/networkError.ts": {
+      "fingerprint": "c65b5eaa29b82d2b",
+      "bytes": 1879
+    },
+    "src/utils/rpc.ts": {
+      "fingerprint": "ad2b295068109af8",
+      "bytes": 986
+    },
+    "src/vite-env.d.ts": {
+      "fingerprint": "8ca0fab1a16b8bee",
+      "bytes": 38
+    },
+    "tsconfig.json": {
+      "fingerprint": "f2f9cfc346f29122",
+      "bytes": 605
+    },
+    "tsconfig.node.json": {
+      "fingerprint": "98b7ab5b0e62953f",
+      "bytes": 236
+    },
+    "vite.config.ts": {
+      "fingerprint": "dfc0fc1b5acd197c",
+      "bytes": 1537
+    }
+  }
+}

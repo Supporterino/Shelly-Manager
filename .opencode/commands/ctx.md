@@ -10,4 +10,4 @@ Rules:
 - do not infer repository state from anything except the command output
 - do not rewrite slash commands into another format
 
-!`'/usr/local/bin/ctx' --repo-root '/Users/supporterino/WebstormProjects/Shelly-Manager' menu`
+!`'/opt/homebrew/bin/ctx' --repo-root '/Users/supporterino/WebstormProjects/Shelly-Manager' menu`

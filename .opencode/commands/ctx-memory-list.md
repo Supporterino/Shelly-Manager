@@ -8,5 +8,5 @@ Arguments:
 - `$1`: optional scope
 - `$2`: optional limit
 
-Run `'/usr/local/bin/ctx' --repo-root '/Users/supporterino/WebstormProjects/Shelly-Manager' memory list` with the provided filters.
+Run `'/opt/homebrew/bin/ctx' --repo-root '/Users/supporterino/WebstormProjects/Shelly-Manager' memory list` with the provided filters.
 Show the directives first, then summarize any patterns you notice.
