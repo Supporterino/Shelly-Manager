@@ -116,6 +116,7 @@
     "current": "电流",
     "powerFactor": "功率因数",
     "frequency": "频率",
+    "dailyEnergy": "今日电量",
     "totalEnergy": "总能耗",
     "returnedEnergy": "回馈电能",
     "energyStats": "能耗统计",

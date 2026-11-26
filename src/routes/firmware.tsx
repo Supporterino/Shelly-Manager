@@ -35,7 +35,10 @@ function FirmwarePage() {
   const { t: tc } = useTranslation('common');
 
   const devicesRecord = useDeviceStore((s) => s.devices);
-  const devices = useMemo(() => Object.values(devicesRecord), [devicesRecord]);
+  const devices = useMemo(
+    () => Object.values(devicesRecord).filter((d) => !d.provider || d.provider === 'shelly'),
+    [devicesRecord],
+  );
   const liveStatuses = useWsStatusStore((s) => s.statuses) as Record<
     string,
     Record<string, unknown>

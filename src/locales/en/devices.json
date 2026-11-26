@@ -116,6 +116,7 @@
     "current": "Current",
     "powerFactor": "Power Factor",
     "frequency": "Frequency",
+    "dailyEnergy": "Daily Energy",
     "totalEnergy": "Total Energy",
     "returnedEnergy": "Returned Energy",
     "energyStats": "Energy Stats",

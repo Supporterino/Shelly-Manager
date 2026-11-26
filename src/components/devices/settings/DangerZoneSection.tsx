@@ -42,6 +42,8 @@ export function DangerZoneSection({ deviceId }: Props) {
     onSettled: () => setResetConfirm(false),
   });
 
+  const isEz1 = device?.provider === 'apsystems-ez1';
+
   return (
     <Stack gap="md">
       {/* Danger zone */}
@@ -49,25 +51,29 @@ export function DangerZoneSection({ deviceId }: Props) {
         <Text fw={600} c="red">
           {t('dangerZone.title')}
         </Text>
-        <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="xs">
-          <Button
-            color="yellow"
-            variant="light"
-            size="sm"
-            fullWidth
-            onClick={() => setRebootConfirm(true)}
-          >
-            {t('dangerZone.reboot')}
-          </Button>
-          <Button
-            color="red"
-            variant="light"
-            size="sm"
-            fullWidth
-            onClick={() => setResetConfirm(true)}
-          >
-            {t('dangerZone.factoryReset')}
-          </Button>
+        <SimpleGrid cols={{ base: 1, sm: isEz1 ? 1 : 3 }} spacing="xs">
+          {!isEz1 && (
+            <>
+              <Button
+                color="yellow"
+                variant="light"
+                size="sm"
+                fullWidth
+                onClick={() => setRebootConfirm(true)}
+              >
+                {t('dangerZone.reboot')}
+              </Button>
+              <Button
+                color="red"
+                variant="light"
+                size="sm"
+                fullWidth
+                onClick={() => setResetConfirm(true)}
+              >
+                {t('dangerZone.factoryReset')}
+              </Button>
+            </>
+          )}
           <Button
             color="red"
             variant="subtle"
