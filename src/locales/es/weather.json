@@ -1,0 +1,56 @@
+{
+  "title": "Tiempo",
+  "status": {
+    "live": "En vivo",
+    "unavailable": "No disponible",
+    "updatedAt": "medido a las {{time}}"
+  },
+  "metric": {
+    "apparentTemperature": "Sensación térmica",
+    "humidity": "Humedad",
+    "cloudCover": "Nubosidad",
+    "precipitation": "Precipitación",
+    "windSpeed": "Viento",
+    "radiation": "Radiación solar"
+  },
+  "condition": {
+    "clear": "Despejado",
+    "partlyCloudy": "Parcialmente nublado",
+    "overcast": "Nublado",
+    "fog": "Niebla",
+    "drizzle": "Llovizna",
+    "rain": "Lluvia",
+    "snow": "Nieve",
+    "showers": "Chubascos",
+    "snowShowers": "Chubascos de nieve",
+    "thunderstorm": "Tormenta"
+  },
+  "chart": {
+    "temperature": "Temperatura (3 días)",
+    "radiation": "Radiación solar (3 días)",
+    "now": "Ahora",
+    "hint": "Ayer, hoy y mañana · valores de modelo cada 15 minutos (DWD ICON vía Open-Meteo)",
+    "wind": "Viento (3 días)",
+    "precipitation": "Precipitación (3 días)"
+  },
+  "settings": {
+    "label": "Ubicación del tiempo",
+    "change": "Cambiar ubicación",
+    "placeholder": "Ciudad o localidad",
+    "search": "Buscar",
+    "remove": "Eliminar",
+    "noResults": "No se encontró ninguna ubicación.",
+    "hint": "Los datos provienen de Open-Meteo (DWD ICON en esta región). Sin cuenta ni clave de API."
+  },
+  "empty": {
+    "description": "Aún no hay una ubicación configurada. Defínela en los ajustes y aparecerá en el panel.",
+    "openSettings": "Abrir ajustes"
+  },
+  "series": {
+    "temperature": "Temperatura",
+    "radiation": "Radiación solar",
+    "wind": "Viento",
+    "gust": "Rachas",
+    "precipitation": "Precipitación"
+  }
+}

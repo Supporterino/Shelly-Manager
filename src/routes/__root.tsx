@@ -6,6 +6,7 @@ import { EnergyCollector } from '../hooks/useEnergyCollector';
 import { useAppStore } from '../store/appStore';
 import { useDeviceStore } from '../store/deviceStore';
 import { useEnergyHistoryStore } from '../store/energyHistoryStore';
+import { useWeatherStore } from '../store/weatherStore';
 
 export const Route = createRootRoute({
   component: RootLayout,
@@ -15,6 +16,7 @@ function RootLayout() {
   const hydrateDevices = useDeviceStore((s) => s.hydrate);
   const hydrateApp = useAppStore((s) => s.hydrate);
   const hydrateEnergy = useEnergyHistoryStore((s) => s.hydrate);
+  const hydrateWeather = useWeatherStore((s) => s.hydrate);
   const isHydrated = useAppStore((s) => s.isHydrated);
   const theme = useAppStore((s) => s.preferences.theme);
   const { setColorScheme } = useMantineColorScheme();
@@ -24,7 +26,8 @@ function RootLayout() {
     hydrateDevices().catch(console.error);
     hydrateApp().catch(console.error);
     hydrateEnergy().catch(console.error);
-  }, [hydrateDevices, hydrateApp, hydrateEnergy]);
+    hydrateWeather().catch(console.error);
+  }, [hydrateDevices, hydrateApp, hydrateEnergy, hydrateWeather]);
 
   // Apply stored color scheme as soon as the app store is hydrated from disk.
   // This ensures the correct theme is visible on first render, not only when

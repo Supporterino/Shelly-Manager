@@ -1,0 +1,56 @@
+{
+  "title": "Wetter",
+  "status": {
+    "live": "Live",
+    "unavailable": "Nicht verfügbar",
+    "updatedAt": "gemessen um {{time}}"
+  },
+  "metric": {
+    "apparentTemperature": "Gefühlte Temperatur",
+    "humidity": "Luftfeuchtigkeit",
+    "cloudCover": "Bewölkung",
+    "precipitation": "Niederschlag",
+    "windSpeed": "Wind",
+    "radiation": "Solarstrahlung"
+  },
+  "condition": {
+    "clear": "Klar",
+    "partlyCloudy": "Teilweise bewölkt",
+    "overcast": "Bewölkt",
+    "fog": "Nebel",
+    "drizzle": "Nieselregen",
+    "rain": "Regen",
+    "snow": "Schnee",
+    "showers": "Schauer",
+    "snowShowers": "Schneeschauer",
+    "thunderstorm": "Gewitter"
+  },
+  "chart": {
+    "temperature": "Temperatur (3 Tage)",
+    "radiation": "Solarstrahlung (3 Tage)",
+    "now": "Jetzt",
+    "hint": "Gestern, heute und morgen · 15-Minuten-Modellwerte (DWD ICON über Open-Meteo)",
+    "wind": "Wind (3 Tage)",
+    "precipitation": "Niederschlag (3 Tage)"
+  },
+  "settings": {
+    "label": "Wetter-Standort",
+    "change": "Standort ändern",
+    "placeholder": "Ort oder Stadt",
+    "search": "Suchen",
+    "remove": "Entfernen",
+    "noResults": "Kein passender Ort gefunden.",
+    "hint": "Die Wetterdaten kommen von Open-Meteo (für diese Region DWD ICON). Kein Konto und kein API-Schlüssel nötig."
+  },
+  "empty": {
+    "description": "Noch kein Wetter-Standort eingerichtet. Lege einen in den Einstellungen fest — dann erscheint das Wetter auf dem Dashboard.",
+    "openSettings": "Einstellungen öffnen"
+  },
+  "series": {
+    "temperature": "Temperatur",
+    "radiation": "Solarstrahlung",
+    "wind": "Wind",
+    "gust": "Böen",
+    "precipitation": "Niederschlag"
+  }
+}

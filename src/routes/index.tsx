@@ -18,8 +18,10 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DeviceGrid } from '../components/devices/DeviceGrid';
+import { WeatherCard } from '../components/weather/WeatherCard';
 import { useAppStore } from '../store/appStore';
 import { useDeviceStore } from '../store/deviceStore';
+import { useWeatherStore } from '../store/weatherStore';
 import { useWsStatusStore } from '../store/wsStatusStore';
 import type { DeviceType, StoredDevice } from '../types/device';
 
@@ -40,6 +42,7 @@ function DashboardPage() {
   const locale = useAppStore((s) => s.preferences.locale || 'en');
   const wsConnected = useWsStatusStore((s) => s.connected);
   const httpConnected = useWsStatusStore((s) => s.httpConnected);
+  const weatherLocation = useWeatherStore((s) => s.location);
 
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
@@ -88,7 +91,7 @@ function DashboardPage() {
     return result;
   }, [devices, search, statusFilter, typeFilter, sortKey, wsConnected, httpConnected]);
 
-  if (devices.length === 0) {
+  if (devices.length === 0 && !weatherLocation) {
     return (
       <Center h="60vh">
         <Stack align="center" gap="md">
@@ -243,7 +246,11 @@ function DashboardPage() {
       </Group>
 
       <ScrollArea style={{ flex: 1 }}>
-        <DeviceGrid devices={filtered} locale={locale} />
+        <DeviceGrid
+          devices={filtered}
+          locale={locale}
+          leading={weatherLocation ? <WeatherCard location={weatherLocation} /> : null}
+        />
       </ScrollArea>
     </Stack>
   );

@@ -1,0 +1,56 @@
+{
+  "title": "天气",
+  "status": {
+    "live": "实时",
+    "unavailable": "不可用",
+    "updatedAt": "{{time}} 测量"
+  },
+  "metric": {
+    "apparentTemperature": "体感温度",
+    "humidity": "湿度",
+    "cloudCover": "云量",
+    "precipitation": "降水量",
+    "windSpeed": "风速",
+    "radiation": "太阳辐射"
+  },
+  "condition": {
+    "clear": "晴",
+    "partlyCloudy": "多云间晴",
+    "overcast": "阴",
+    "fog": "雾",
+    "drizzle": "毛毛雨",
+    "rain": "雨",
+    "snow": "雪",
+    "showers": "阵雨",
+    "snowShowers": "阵雪",
+    "thunderstorm": "雷暴"
+  },
+  "chart": {
+    "temperature": "气温（3 天）",
+    "radiation": "太阳辐射（3 天）",
+    "now": "现在",
+    "hint": "昨天、今天和明天 · 每 15 分钟的模型值（经 Open-Meteo 的 DWD ICON）",
+    "wind": "风速（3 天）",
+    "precipitation": "降水量（3 天）"
+  },
+  "settings": {
+    "label": "天气地点",
+    "change": "更改地点",
+    "placeholder": "城市或城镇",
+    "search": "搜索",
+    "remove": "移除",
+    "noResults": "未找到匹配的地点。",
+    "hint": "数据来自 Open-Meteo（该地区使用 DWD ICON）。无需账号或 API 密钥。"
+  },
+  "empty": {
+    "description": "尚未设置天气地点。在设置中指定后即可在设备总览中显示。",
+    "openSettings": "打开设置"
+  },
+  "series": {
+    "temperature": "温度",
+    "radiation": "太阳辐射",
+    "wind": "风速",
+    "gust": "阵风",
+    "precipitation": "降水量"
+  }
+}
