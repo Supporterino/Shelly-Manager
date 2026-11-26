@@ -1,0 +1,56 @@
+{
+  "title": "天気",
+  "status": {
+    "live": "ライブ",
+    "unavailable": "利用不可",
+    "updatedAt": "{{time}} 時点"
+  },
+  "metric": {
+    "apparentTemperature": "体感温度",
+    "humidity": "湿度",
+    "cloudCover": "雲量",
+    "precipitation": "降水量",
+    "windSpeed": "風速",
+    "radiation": "日射量"
+  },
+  "condition": {
+    "clear": "晴れ",
+    "partlyCloudy": "晴れ時々曇り",
+    "overcast": "曇り",
+    "fog": "霧",
+    "drizzle": "霧雨",
+    "rain": "雨",
+    "snow": "雪",
+    "showers": "にわか雨",
+    "snowShowers": "にわか雪",
+    "thunderstorm": "雷雨"
+  },
+  "chart": {
+    "temperature": "気温（3日間）",
+    "radiation": "日射量（3日間）",
+    "now": "現在",
+    "hint": "昨日・今日・明日 · 15 分ごとのモデル値（Open-Meteo 経由の DWD ICON）",
+    "wind": "風速（3日間）",
+    "precipitation": "降水量（3日間）"
+  },
+  "settings": {
+    "label": "天気の地点",
+    "change": "地点を変更",
+    "placeholder": "都市・町名",
+    "search": "検索",
+    "remove": "削除",
+    "noResults": "該当する地点が見つかりません。",
+    "hint": "データは Open-Meteo（この地域では DWD ICON）を使用しています。アカウントも API キーも不要です。"
+  },
+  "empty": {
+    "description": "天気の地点が未設定です。設定で指定するとダッシュボードに表示されます。",
+    "openSettings": "設定を開く"
+  },
+  "series": {
+    "temperature": "気温",
+    "radiation": "日射量",
+    "wind": "風速",
+    "gust": "突風",
+    "precipitation": "降水量"
+  }
+}

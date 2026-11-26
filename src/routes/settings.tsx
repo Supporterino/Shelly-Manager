@@ -17,6 +17,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ClearAllDevicesButton } from '../components/settings/ClearAllDevicesButton';
 import { LanguageSelect } from '../components/settings/LanguageSelect';
+import { WeatherLocationSection } from '../components/settings/WeatherLocationSection';
 import { useAppStore } from '../store/appStore';
 
 export const Route = createFileRoute('/settings')({
@@ -122,6 +123,16 @@ function SettingsPage() {
               <Text>{t('language.label')}</Text>
               <LanguageSelect />
             </Group>
+          </Stack>
+
+          <Divider />
+
+          {/* Weather */}
+          <Stack gap="xs">
+            <Text fw={600} size="sm" tt="uppercase" c="dimmed">
+              {t('sections.weather')}
+            </Text>
+            <WeatherLocationSection />
           </Stack>
 
           <Divider />

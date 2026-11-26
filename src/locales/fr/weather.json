@@ -1,0 +1,56 @@
+{
+  "title": "Météo",
+  "status": {
+    "live": "En direct",
+    "unavailable": "Indisponible",
+    "updatedAt": "mesuré à {{time}}"
+  },
+  "metric": {
+    "apparentTemperature": "Température ressentie",
+    "humidity": "Humidité",
+    "cloudCover": "Couverture nuageuse",
+    "precipitation": "Précipitations",
+    "windSpeed": "Vent",
+    "radiation": "Rayonnement solaire"
+  },
+  "condition": {
+    "clear": "Dégagé",
+    "partlyCloudy": "Partiellement nuageux",
+    "overcast": "Couvert",
+    "fog": "Brouillard",
+    "drizzle": "Bruine",
+    "rain": "Pluie",
+    "snow": "Neige",
+    "showers": "Averses",
+    "snowShowers": "Averses de neige",
+    "thunderstorm": "Orage"
+  },
+  "chart": {
+    "temperature": "Température (3 jours)",
+    "radiation": "Rayonnement solaire (3 jours)",
+    "now": "Maintenant",
+    "hint": "Hier, aujourd’hui et demain · valeurs de modèle toutes les 15 minutes (DWD ICON via Open-Meteo)",
+    "wind": "Vent (3 jours)",
+    "precipitation": "Précipitations (3 jours)"
+  },
+  "settings": {
+    "label": "Lieu météo",
+    "change": "Changer de lieu",
+    "placeholder": "Ville ou commune",
+    "search": "Rechercher",
+    "remove": "Supprimer",
+    "noResults": "Aucun lieu correspondant.",
+    "hint": "Les données proviennent d’Open-Meteo (DWD ICON pour cette région). Aucun compte ni clé API requis."
+  },
+  "empty": {
+    "description": "Aucun lieu météo configuré. Définissez-en un dans les paramètres : il apparaîtra sur le tableau de bord.",
+    "openSettings": "Ouvrir les paramètres"
+  },
+  "series": {
+    "temperature": "Température",
+    "radiation": "Rayonnement solaire",
+    "wind": "Vent",
+    "gust": "Rafales",
+    "precipitation": "Précipitations"
+  }
+}

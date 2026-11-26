@@ -1,0 +1,56 @@
+{
+  "title": "Weather",
+  "status": {
+    "live": "Live",
+    "unavailable": "Unavailable",
+    "updatedAt": "measured at {{time}}"
+  },
+  "metric": {
+    "apparentTemperature": "Feels like",
+    "humidity": "Humidity",
+    "cloudCover": "Cloud cover",
+    "precipitation": "Precipitation",
+    "windSpeed": "Wind",
+    "radiation": "Solar radiation"
+  },
+  "condition": {
+    "clear": "Clear",
+    "partlyCloudy": "Partly cloudy",
+    "overcast": "Overcast",
+    "fog": "Fog",
+    "drizzle": "Drizzle",
+    "rain": "Rain",
+    "snow": "Snow",
+    "showers": "Showers",
+    "snowShowers": "Snow showers",
+    "thunderstorm": "Thunderstorm"
+  },
+  "chart": {
+    "temperature": "Temperature (3 days)",
+    "radiation": "Solar radiation (3 days)",
+    "now": "Now",
+    "hint": "Yesterday, today and tomorrow · 15 minute model values (DWD ICON via Open-Meteo)",
+    "wind": "Wind (3 days)",
+    "precipitation": "Precipitation (3 days)"
+  },
+  "settings": {
+    "label": "Weather location",
+    "change": "Change location",
+    "placeholder": "City or town",
+    "search": "Search",
+    "remove": "Remove",
+    "noResults": "No matching place found.",
+    "hint": "Weather data comes from Open-Meteo (DWD ICON for this region). No account or API key required."
+  },
+  "empty": {
+    "description": "No weather location configured yet. Set one up in the settings and it will appear on your dashboard.",
+    "openSettings": "Open settings"
+  },
+  "series": {
+    "temperature": "Temperature",
+    "radiation": "Solar radiation",
+    "wind": "Wind",
+    "gust": "Gusts",
+    "precipitation": "Precipitation"
+  }
+}

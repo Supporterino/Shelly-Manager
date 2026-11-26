@@ -15,7 +15,7 @@ i18next
   .init({
     fallbackLng: 'en',
     supportedLngs: ['en', 'de', 'fr', 'es', 'zh', 'ja'],
-    ns: ['common', 'devices', 'discovery', 'settings'],
+    ns: ['common', 'devices', 'discovery', 'settings', 'weather'],
     defaultNS: 'common',
     interpolation: { escapeValue: false },
     detection: {

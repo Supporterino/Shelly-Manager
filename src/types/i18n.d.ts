@@ -10,6 +10,7 @@ declare module 'i18next' {
       devices: typeof import('../locales/en/devices.json');
       discovery: typeof import('../locales/en/discovery.json');
       settings: typeof import('../locales/en/settings.json');
+      weather: typeof import('../locales/en/weather.json');
     };
   }
 }
