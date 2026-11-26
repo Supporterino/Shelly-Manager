@@ -1,7 +1,7 @@
 import { AreaChart } from '@mantine/charts';
 import { Group, Stack, Text } from '@mantine/core';
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
-import type { MouseHandlerDataParam } from 'recharts';
+import type { AreaProps, MouseHandlerDataParam } from 'recharts';
 
 export interface ZoomWindow {
   /** Timestamp of the first visible point. */
@@ -12,11 +12,23 @@ export interface ZoomWindow {
 
 type Domain = [number | 'auto', number | 'auto'];
 
+/** Per-series overrides handed to the underlying recharts `Area`. */
+type AreaStyleProps = Partial<Omit<AreaProps<Record<string, unknown>, string>, 'ref'>>;
+
 interface Props<Point> {
   data: Point[];
   /** Field holding the timestamp in milliseconds. */
   dataKey: keyof Point & string;
-  series: Array<{ name: string; color: string; label: string }>;
+  /**
+   * One entry per curve. `strokeDasharray` draws just the outline, which is how
+   * a second metric (e.g. wind gusts next to wind speed) stays readable.
+   */
+  series: Array<{
+    name: string;
+    color: string;
+    label: string;
+    strokeDasharray?: string | number;
+  }>;
   /** Timestamp field of the series values used for the y axis defaults. */
   height?: number;
   title?: React.ReactNode;
@@ -32,6 +44,15 @@ interface Props<Point> {
   zoomedYDomain?: Domain;
   withLegend?: boolean;
   tooltipAnimationDuration?: number;
+  /** Y axis width in px — widen it when tick labels carry a unit. */
+  yAxisWidth?: number;
+  /** Vertical markers, e.g. "now" on a past/forecast series. */
+  markers?: Array<{ at: number | string; label?: string }>;
+  /**
+   * Per-series recharts `Area` props, either static or derived from the series.
+   * Used to drop the fill of a dashed companion curve (`fillOpacity: 0`).
+   */
+  areaProps?: ((series: { name?: string }) => AreaStyleProps) | AreaStyleProps;
 }
 
 /**
@@ -61,6 +82,9 @@ export function ZoomableAreaChart<Point extends Record<string, unknown>>({
   zoomedYDomain = ['auto', 'auto'],
   withLegend = true,
   tooltipAnimationDuration = 200,
+  yAxisWidth,
+  markers,
+  areaProps,
 }: Props<Point>) {
   const selectionGradientId = useId();
   const boxRef = useRef<HTMLDivElement>(null);
@@ -152,11 +176,16 @@ export function ZoomableAreaChart<Point extends Record<string, unknown>>({
   // reading, which is all that is needed and does not depend on recharts.
   const plotBox = useCallback(() => {
     const svg = boxRef.current?.querySelector('svg.recharts-surface');
-    const curve = svg?.querySelector<SVGPathElement>('.recharts-area-curve');
-    if (!svg || !curve) return null;
+    if (!svg) return null;
     const rect = svg.getBoundingClientRect();
-    const box = curve.getBBox();
-    if (rect.width <= 0 || !(box.width > 0)) return null;
+    // A chart may draw several curves; the widest one spans the full data range
+    // even when a companion series starts later or has gaps.
+    let box: DOMRect | null = null;
+    for (const curve of svg.querySelectorAll<SVGPathElement>('.recharts-area-curve')) {
+      const candidate = curve.getBBox();
+      if (candidate.width > (box?.width ?? 0)) box = candidate;
+    }
+    if (rect.width <= 0 || !box || !(box.width > 0)) return null;
     const gridLine = svg.querySelector<SVGLineElement>('.recharts-cartesian-grid line');
     const y1 = gridLine?.getAttribute('y1') ?? `${box.y}`;
     const y2 = gridLine?.getAttribute('y2') ?? `${box.y + box.height}`;
@@ -287,6 +316,7 @@ export function ZoomableAreaChart<Point extends Record<string, unknown>>({
           data={visible as Array<Record<string, unknown>>}
           dataKey={dataKey}
           series={series}
+          areaProps={areaProps as never}
           curveType="monotone"
           withLegend={withLegend}
           withDots={false}
@@ -296,9 +326,23 @@ export function ZoomableAreaChart<Point extends Record<string, unknown>>({
           tickLine="y"
           xAxisProps={{ tickFormatter: tickFormatter }}
           {...(formatTooltipLabel ? { tooltipProps: { labelFormatter: formatTooltipLabel } } : {})}
-          yAxisProps={{ domain: zoomed ? zoomedYDomain : yDomain }}
+          yAxisProps={{
+            domain: zoomed ? zoomedYDomain : yDomain,
+            ...(yAxisWidth != null ? { width: yAxisWidth } : {}),
+          }}
           areaChartProps={{ onMouseDown: handleMouseDown, onMouseMove: handleMouseMove }}
           valueFormatter={(value) => valueFormatter(Number(value))}
+          {...(markers && markers.length > 0
+            ? {
+                referenceLines: markers.map((marker) => ({
+                  x: marker.at,
+                  label: marker.label,
+                  labelPosition: 'insideTopRight' as const,
+                  color: 'gray.6' as const,
+                  strokeDasharray: '4 4',
+                })),
+              }
+            : {})}
         >
           <g
             ref={selectionRef}
