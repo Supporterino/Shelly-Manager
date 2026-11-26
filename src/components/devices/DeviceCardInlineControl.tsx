@@ -94,10 +94,66 @@ function DimmerInline({
   );
 }
 
+function extractDevicePower(
+  device: StoredDevice,
+  status: ShellyGetStatusResult,
+): number | undefined {
+  const em = device.components.find((c) => c.type === 'em');
+  if (em) {
+    const es = status[`em:${em.id}`] as EMStatus | undefined;
+    if (typeof es?.total_act_power === 'number') return es.total_act_power;
+  }
+
+  const em1s = device.components.filter((c) => c.type === 'em1');
+  if (em1s.length > 0) {
+    let sum = 0;
+    let found = false;
+    for (const c of em1s) {
+      const es = status[`em1:${c.id}`] as EM1Status | undefined;
+      if (typeof es?.act_power === 'number') {
+        sum += es.act_power;
+        found = true;
+      }
+    }
+    if (found) return sum;
+  }
+
+  if (device.provider === 'apsystems-ez1') {
+    const ps = status['pm1:0'] as PM1Status | undefined;
+    return typeof ps?.apower === 'number' ? ps.apower : undefined;
+  }
+
+  let total = 0;
+  let hasPower = false;
+  for (const comp of device.components) {
+    const key = comp.type === 'light_cct' ? `light:${comp.id}` : `${comp.type}:${comp.id}`;
+    const cs = status[key] as { apower?: number } | undefined;
+    if (typeof cs?.apower === 'number') {
+      total += cs.apower;
+      hasPower = true;
+    }
+  }
+  return hasPower ? total : undefined;
+}
+
+function withPowerLabel(control: React.ReactNode, power: number | undefined, locale: string) {
+  if (power === undefined) return control;
+  return (
+    <Group justify="space-between" align="center" wrap="nowrap">
+      {control}
+      <Text size="sm" fw={500} style={{ whiteSpace: 'nowrap' }}>
+        {formatPower(power, locale)}
+      </Text>
+    </Group>
+  );
+}
+
 export function DeviceCardInlineControl({ device, status, locale }: Props) {
   const { t } = useTranslation('devices');
 
   if (!status) return null;
+
+  const power = extractDevicePower(device, status);
 
   const switches = device.components
     .filter((c) => c.type === 'switch')
@@ -112,28 +168,42 @@ export function DeviceCardInlineControl({ device, status, locale }: Props) {
 
   // Switch(es)
   if (switches.length === 1) {
-    return <SingleSwitchInline deviceId={device.id} switchId={0} status={switches[0].status} />;
+    return withPowerLabel(
+      <SingleSwitchInline
+        deviceId={device.id}
+        switchId={switches[0].id}
+        status={switches[0].status}
+      />,
+      power,
+      locale,
+    );
   }
   if (switches.length > 1) {
-    return <MultiSwitchInline deviceId={device.id} switches={switches} />;
+    return withPowerLabel(
+      <MultiSwitchInline deviceId={device.id} switches={switches} />,
+      power,
+      locale,
+    );
   }
 
   // Single dimmer
   if (lights.length === 1) {
     const lightStatus = status[`light:${lights[0].id}`] as LightStatus | undefined;
-    return (
+    return withPowerLabel(
       <DimmerInline
         deviceId={device.id}
         lightId={lights[0].id}
         status={lightStatus}
         locale={locale}
-      />
+      />,
+      power,
+      locale,
     );
   }
 
   // Multiple dimmers — badges only
   if (lights.length > 1) {
-    return (
+    return withPowerLabel(
       <Group gap="xs">
         {lights.map((l) => {
           const ls = status[`light:${l.id}`] as LightStatus | undefined;
@@ -143,18 +213,24 @@ export function DeviceCardInlineControl({ device, status, locale }: Props) {
             </Badge>
           );
         })}
-      </Group>
+      </Group>,
+      power,
+      locale,
     );
   }
 
   // Single cover
   if (covers.length === 1) {
-    return <CoverControlsInline deviceId={device.id} coverId={covers[0].id} />;
+    return withPowerLabel(
+      <CoverControlsInline deviceId={device.id} coverId={covers[0].id} />,
+      power,
+      locale,
+    );
   }
 
   // Multiple covers — state badges
   if (covers.length > 1) {
-    return (
+    return withPowerLabel(
       <Group gap="xs">
         {covers.map((c) => {
           const cs = status[`cover:${c.id}`] as CoverStatus | undefined;
@@ -164,7 +240,9 @@ export function DeviceCardInlineControl({ device, status, locale }: Props) {
             </Badge>
           );
         })}
-      </Group>
+      </Group>,
+      power,
+      locale,
     );
   }
 
