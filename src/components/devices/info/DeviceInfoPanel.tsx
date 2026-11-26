@@ -53,13 +53,15 @@ export function DeviceInfoPanel({
   const ramSize = sysStatus?.ram_size as number | undefined;
   const restartRequired = sysStatus?.restart_required as boolean | undefined;
 
+  const isEz1 = device.provider === 'apsystems-ez1';
+
   return (
     <Stack gap={6}>
       {/* ── Identity (no network call) ───────────────────────────────── */}
       <InfoRow label={t('info.model')} value={device.model} />
       <InfoRow label={t('info.appName')} value={device.app} />
-      <InfoRow label={t('info.generation')} value={genLabel} />
-      <InfoRow label={t('info.macAddress')} value={formatMac(device.id)} />
+      {!isEz1 && <InfoRow label={t('info.generation')} value={genLabel} />}
+      <InfoRow label={t('info.macAddress')} value={isEz1 ? device.id : formatMac(device.id)} />
       <InfoRow label={t('info.ipAddress')} value={`${device.ip}:${device.port}`} />
 
       {/* ── From GetDeviceInfo (may still be loading) ────────────────── */}
@@ -67,20 +69,22 @@ export function DeviceInfoPanel({
         label={t('info.firmwareVersion')}
         value={deviceInfoLoading ? <Skeleton height={14} width={80} /> : (deviceInfo?.ver ?? '—')}
       />
-      <InfoRow
-        label={t('info.authEnabled')}
-        value={
-          deviceInfoLoading ? (
-            <Skeleton height={18} width={100} />
-          ) : deviceInfo == null ? (
-            '—'
-          ) : (
-            <Badge size="sm" color={deviceInfo.auth_en ? 'orange' : 'gray'} variant="light">
-              {deviceInfo.auth_en ? t('info.authOn') : t('info.authOff')}
-            </Badge>
-          )
-        }
-      />
+      {!isEz1 && (
+        <InfoRow
+          label={t('info.authEnabled')}
+          value={
+            deviceInfoLoading ? (
+              <Skeleton height={18} width={100} />
+            ) : deviceInfo == null ? (
+              '—'
+            ) : (
+              <Badge size="sm" color={deviceInfo.auth_en ? 'orange' : 'gray'} variant="light">
+                {deviceInfo.auth_en ? t('info.authOn') : t('info.authOff')}
+              </Badge>
+            )
+          }
+        />
+      )}
 
       {/* ── Runtime stats (from status.sys) ──────────────────────────── */}
       {restartRequired && (

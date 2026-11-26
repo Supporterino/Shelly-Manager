@@ -177,9 +177,12 @@ function DeviceDetailPage() {
         </Group>
 
         {/* Automation quick-links */}
-        <DeviceQuickActions deviceId={deviceId} />
-
-        <Divider />
+        {device.provider !== 'apsystems-ez1' && (
+          <>
+            <DeviceQuickActions deviceId={deviceId} />
+            <Divider />
+          </>
+        )}
 
         {/* Device info */}
         <DeviceInfoPanel

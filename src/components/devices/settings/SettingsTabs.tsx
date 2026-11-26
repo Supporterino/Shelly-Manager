@@ -46,6 +46,10 @@ export function SettingsTabs({ deviceId }: Props) {
     ((status?.sys as Record<string, unknown> | undefined)?.fw_id as string | undefined) ??
     device?.model;
 
+  if (device?.provider === 'apsystems-ez1') {
+    return <DangerZoneSection deviceId={deviceId} />;
+  }
+
   return (
     <Tabs defaultValue="general" keepMounted={false}>
       <Tabs.List style={{ flexWrap: 'nowrap', overflowX: 'auto' }}>

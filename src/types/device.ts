@@ -1,5 +1,7 @@
 export type DeviceGeneration = 'gen2' | 'gen3' | 'gen4';
 
+export type DeviceProvider = 'shelly' | 'apsystems-ez1';
+
 /**
  * The primary functional category of a device.
  * Determined once at add-time from Shelly.GetStatus component keys.
@@ -26,6 +28,7 @@ export interface StoredDevice {
   name: string; // User-given label or device-reported name
   ip: string;
   port: number; // default 80
+  provider?: DeviceProvider; // default 'shelly'
   generation: DeviceGeneration;
   model: string; // Shelly model string, e.g. "Plus2PM", "Pro4PM"
   app: string; // Shelly app string, e.g. "Switch", "Cover", "RGB"

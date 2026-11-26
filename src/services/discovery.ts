@@ -19,6 +19,13 @@ interface ShellyInfo {
   auth: boolean;
 }
 
+interface Ez1DeviceInfo {
+  deviceId: string;
+  devVer?: string;
+}
+
+const EZ1_DEFAULT_PORT = 8050;
+
 /**
  * Calls GET /shelly on a candidate IP to confirm it is a Gen2+ Shelly device.
  * Returns device info or null if not a supported Shelly device.
@@ -36,6 +43,50 @@ export async function verifyShellyHost(ip: string, port = 80): Promise<ShellyInf
   } catch {
     return null;
   }
+}
+
+/**
+ * Calls GET /getDeviceInfo on a candidate IP/port to confirm an APsystems EZ1 inverter.
+ */
+export async function verifyEz1Host(
+  ip: string,
+  port = EZ1_DEFAULT_PORT,
+): Promise<Ez1DeviceInfo | null> {
+  try {
+    const response = await fetch(`http://${ip}:${port}/getDeviceInfo`, {
+      method: 'GET',
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!response.ok) return null;
+    const body = (await response.json()) as { data?: Ez1DeviceInfo };
+    if (!body?.data?.deviceId) return null;
+    return body.data;
+  } catch {
+    return null;
+  }
+}
+
+function buildEz1StoredDevice(ip: string, port: number, info: Ez1DeviceInfo): StoredDevice {
+  const id = info.deviceId.toUpperCase();
+  const now = Date.now();
+  return {
+    id,
+    name: `APsystems EZ1 (${id})`,
+    ip,
+    port,
+    provider: 'apsystems-ez1',
+    generation: 'gen2',
+    model: 'APsystems EZ1-M',
+    app: 'Inverter',
+    type: 'energy',
+    components: [
+      { type: 'pm1', id: 0, name: 'Total' },
+      { type: 'pm1', id: 1, name: 'MPPT 1' },
+      { type: 'pm1', id: 2, name: 'MPPT 2' },
+    ],
+    addedAt: now,
+    lastSeenAt: now,
+  };
 }
 
 /**
@@ -108,15 +159,33 @@ export async function runDiscovery(
         })
         .catch(console.error),
     );
+    if (port !== EZ1_DEFAULT_PORT) {
+      promises.push(
+        invoke<DiscoveredHost[]>('scan_subnet', {
+          cidr,
+          port: EZ1_DEFAULT_PORT,
+          timeoutMs: 500,
+          onProgress: new Channel<ScanProgress>(),
+        })
+          .then((hosts) => {
+            for (const h of hosts) {
+              onProgress(h);
+              allHosts.push(h);
+            }
+          })
+          .catch(console.error),
+      );
+    }
   }
 
   await Promise.all(promises);
 
-  // --- Step 2: Deduplicate by IP (keep first seen) ---
+  // --- Step 2: Deduplicate by IP:port (keep first seen) ---
   const seen = new Set<string>();
   const uniqueHosts = allHosts.filter((h) => {
-    if (seen.has(h.ip)) return false;
-    seen.add(h.ip);
+    const key = `${h.ip}:${h.port}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
     return true;
   });
 
@@ -125,6 +194,12 @@ export async function runDiscovery(
 
   await Promise.all(
     uniqueHosts.map(async (host) => {
+      if (host.port === EZ1_DEFAULT_PORT) {
+        const ez1 = await verifyEz1Host(host.ip, host.port);
+        if (ez1) devices.push(buildEz1StoredDevice(host.ip, host.port, ez1));
+        return;
+      }
+
       const shellyInfo = await verifyShellyHost(host.ip, host.port);
       if (!shellyInfo) return; // Not a valid Shelly Gen2+ device
 
@@ -197,8 +272,19 @@ export async function verifyManualHost(
   port = 80,
   auth?: { username: string; password: string },
 ): Promise<StoredDevice | null> {
+  if (port === EZ1_DEFAULT_PORT) {
+    const ez1 = await verifyEz1Host(ip, port);
+    if (ez1) return buildEz1StoredDevice(ip, port, ez1);
+  }
+
   const shellyInfo = await verifyShellyHost(ip, port);
-  if (!shellyInfo) return null;
+  if (!shellyInfo) {
+    if (port === 80) {
+      const ez1 = await verifyEz1Host(ip, EZ1_DEFAULT_PORT);
+      if (ez1) return buildEz1StoredDevice(ip, EZ1_DEFAULT_PORT, ez1);
+    }
+    return null;
+  }
 
   const id = normalizeMAC(shellyInfo.mac);
   const tempDevice: StoredDevice = {

@@ -116,6 +116,7 @@
     "current": "Strom",
     "powerFactor": "Leistungsfaktor",
     "frequency": "Frequenz",
+    "dailyEnergy": "Tagesertrag",
     "totalEnergy": "Gesamtenergie",
     "returnedEnergy": "Rückgesp. Energie",
     "energyStats": "Energiewerte",

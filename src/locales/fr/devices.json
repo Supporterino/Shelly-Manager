@@ -116,6 +116,7 @@
     "current": "Courant",
     "powerFactor": "Facteur de puissance",
     "frequency": "Fréquence",
+    "dailyEnergy": "Énergie quotidienne",
     "totalEnergy": "Énergie totale",
     "returnedEnergy": "Énergie retournée",
     "energyStats": "Statistiques d'énergie",
