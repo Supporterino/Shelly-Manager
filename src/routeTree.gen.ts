@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WeatherRouteImport } from './routes/weather'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as FirmwareRouteImport } from './routes/firmware'
 import { Route as DiscoverRouteImport } from './routes/discover'
@@ -20,6 +21,11 @@ import { Route as DevicesDeviceIdScriptsRouteImport } from './routes/devices/$de
 import { Route as DevicesDeviceIdKvsRouteImport } from './routes/devices/$deviceId.kvs'
 import { Route as DevicesDeviceIdConfigRouteImport } from './routes/devices/$deviceId.config'
 
+const WeatherRoute = WeatherRouteImport.update({
+  id: '/weather',
+  path: '/weather',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -76,6 +82,7 @@ export interface FileRoutesByFullPath {
   '/discover': typeof DiscoverRoute
   '/firmware': typeof FirmwareRoute
   '/settings': typeof SettingsRoute
+  '/weather': typeof WeatherRoute
   '/devices/$deviceId': typeof DevicesDeviceIdRouteWithChildren
   '/devices/$deviceId/config': typeof DevicesDeviceIdConfigRoute
   '/devices/$deviceId/kvs': typeof DevicesDeviceIdKvsRoute
@@ -88,6 +95,7 @@ export interface FileRoutesByTo {
   '/discover': typeof DiscoverRoute
   '/firmware': typeof FirmwareRoute
   '/settings': typeof SettingsRoute
+  '/weather': typeof WeatherRoute
   '/devices/$deviceId': typeof DevicesDeviceIdRouteWithChildren
   '/devices/$deviceId/config': typeof DevicesDeviceIdConfigRoute
   '/devices/$deviceId/kvs': typeof DevicesDeviceIdKvsRoute
@@ -101,6 +109,7 @@ export interface FileRoutesById {
   '/discover': typeof DiscoverRoute
   '/firmware': typeof FirmwareRoute
   '/settings': typeof SettingsRoute
+  '/weather': typeof WeatherRoute
   '/devices/$deviceId': typeof DevicesDeviceIdRouteWithChildren
   '/devices/$deviceId/config': typeof DevicesDeviceIdConfigRoute
   '/devices/$deviceId/kvs': typeof DevicesDeviceIdKvsRoute
@@ -115,6 +124,7 @@ export interface FileRouteTypes {
     | '/discover'
     | '/firmware'
     | '/settings'
+    | '/weather'
     | '/devices/$deviceId'
     | '/devices/$deviceId/config'
     | '/devices/$deviceId/kvs'
@@ -127,6 +137,7 @@ export interface FileRouteTypes {
     | '/discover'
     | '/firmware'
     | '/settings'
+    | '/weather'
     | '/devices/$deviceId'
     | '/devices/$deviceId/config'
     | '/devices/$deviceId/kvs'
@@ -139,6 +150,7 @@ export interface FileRouteTypes {
     | '/discover'
     | '/firmware'
     | '/settings'
+    | '/weather'
     | '/devices/$deviceId'
     | '/devices/$deviceId/config'
     | '/devices/$deviceId/kvs'
@@ -152,11 +164,19 @@ export interface RootRouteChildren {
   DiscoverRoute: typeof DiscoverRoute
   FirmwareRoute: typeof FirmwareRoute
   SettingsRoute: typeof SettingsRoute
+  WeatherRoute: typeof WeatherRoute
   DevicesDeviceIdRoute: typeof DevicesDeviceIdRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/weather': {
+      id: '/weather'
+      path: '/weather'
+      fullPath: '/weather'
+      preLoaderRoute: typeof WeatherRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/settings': {
       id: '/settings'
       path: '/settings'
@@ -255,6 +275,7 @@ const rootRouteChildren: RootRouteChildren = {
   DiscoverRoute: DiscoverRoute,
   FirmwareRoute: FirmwareRoute,
   SettingsRoute: SettingsRoute,
+  WeatherRoute: WeatherRoute,
   DevicesDeviceIdRoute: DevicesDeviceIdRouteWithChildren,
 }
 export const routeTree = rootRouteImport
