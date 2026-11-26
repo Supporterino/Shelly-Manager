@@ -429,12 +429,14 @@ export interface EM1DataStatus {
 export interface PM1Status {
   id: number;
   apower: number;
-  voltage: number;
-  current: number;
-  pf: number;
-  freq: number;
+  voltage?: number;
+  current?: number;
+  pf?: number;
+  freq?: number;
   aenergy: AEnergy;
+  daily_aenergy?: number;
   ret_aenergy?: AEnergy;
+  temperature?: Temperature;
   errors?: string[];
 }
 

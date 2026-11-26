@@ -121,10 +121,108 @@ export class ShellyClient {
   // ── Device-level ─────────────────────────────────────────────────────────
 
   async getDeviceInfo(): Promise<ShellyGetDeviceInfoResult> {
+    if (this.device.provider === 'apsystems-ez1') {
+      const response = await fetch(`${this.baseUrl}/getDeviceInfo`, {
+        method: 'GET',
+        signal: AbortSignal.timeout(5000),
+      });
+      if (!response.ok) {
+        throw new ShellyError(`HTTP error: ${response.status} ${response.statusText}`);
+      }
+      const body = (await response.json()) as {
+        data?: { deviceId?: string; devVer?: string };
+      };
+      const id = body.data?.deviceId ?? this.device.id;
+      const ver = body.data?.devVer ?? '—';
+      return {
+        name: this.device.name || `APsystems EZ1 (${id})`,
+        id,
+        mac: id,
+        model: 'APsystems EZ1-M',
+        gen: 2,
+        fw_id: ver,
+        ver,
+        app: 'Inverter',
+        auth_en: false,
+        auth_domain: null,
+      };
+    }
     return this.call<ShellyGetDeviceInfoResult>('Shelly.GetDeviceInfo');
   }
 
   async getStatus(signal?: AbortSignal): Promise<ShellyGetStatusResult> {
+    if (this.device.provider === 'apsystems-ez1') {
+      let response = await fetch(`${this.baseUrl}/getOutputDataDetail`, {
+        method: 'GET',
+        signal,
+      });
+      if (!response.ok) {
+        response = await fetch(`${this.baseUrl}/getOutputData`, {
+          method: 'GET',
+          signal,
+        });
+      }
+      if (!response.ok) {
+        throw new ShellyError(`HTTP error: ${response.status} ${response.statusText}`);
+      }
+      const body = (await response.json()) as {
+        data?: {
+          p1?: number;
+          e1?: number;
+          te1?: number;
+          v1?: number;
+          c1?: number;
+          p2?: number;
+          e2?: number;
+          te2?: number;
+          v2?: number;
+          c2?: number;
+          gv?: number;
+          gf?: number;
+          t?: number;
+        };
+      };
+      const d = body.data;
+      if (!d) {
+        throw new ShellyError('Invalid EZ1 output data');
+      }
+      const p1 = Number(d.p1) || 0;
+      const p2 = Number(d.p2) || 0;
+      const e1Wh = (Number(d.e1) || 0) * 1000;
+      const e2Wh = (Number(d.e2) || 0) * 1000;
+      const te1Wh = (Number(d.te1) || 0) * 1000;
+      const te2Wh = (Number(d.te2) || 0) * 1000;
+      const tC = d.t != null ? Number(d.t) : undefined;
+      return {
+        'pm1:0': {
+          id: 0,
+          apower: p1 + p2,
+          ...(d.gv != null ? { voltage: Number(d.gv) } : {}),
+          ...(d.gf != null ? { freq: Number(d.gf) } : {}),
+          ...(tC != null && Number.isFinite(tC)
+            ? { temperature: { tC, tF: (tC * 9) / 5 + 32 } }
+            : {}),
+          daily_aenergy: e1Wh + e2Wh,
+          aenergy: { total: te1Wh + te2Wh, by_minute: [], minute_ts: 0 },
+        },
+        'pm1:1': {
+          id: 1,
+          apower: p1,
+          ...(d.v1 != null ? { voltage: Number(d.v1) } : {}),
+          ...(d.c1 != null ? { current: Number(d.c1) } : {}),
+          daily_aenergy: e1Wh,
+          aenergy: { total: te1Wh, by_minute: [], minute_ts: 0 },
+        },
+        'pm1:2': {
+          id: 2,
+          apower: p2,
+          ...(d.v2 != null ? { voltage: Number(d.v2) } : {}),
+          ...(d.c2 != null ? { current: Number(d.c2) } : {}),
+          daily_aenergy: e2Wh,
+          aenergy: { total: te2Wh, by_minute: [], minute_ts: 0 },
+        },
+      };
+    }
     return this.call<ShellyGetStatusResult>('Shelly.GetStatus', undefined, signal);
   }
 

@@ -49,6 +49,7 @@ class WsManager {
   // ── Public API ─────────────────────────────────────────────────────────────
 
   async connect(device: StoredDevice): Promise<void> {
+    if (device.provider && device.provider !== 'shelly') return;
     // Skip if already connected
     if (this.connections.has(device.id)) return;
 

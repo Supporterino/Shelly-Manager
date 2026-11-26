@@ -74,7 +74,7 @@ export function DiscoveryProgress({
         {progress.map((host) => {
           const Icon = SOURCE_ICON[host.source];
           return (
-            <Group key={host.ip} gap="sm">
+            <Group key={`${host.ip}:${host.port}`} gap="sm">
               <ThemeIcon size="sm" variant="light" color="blue">
                 <Icon size={12} />
               </ThemeIcon>
